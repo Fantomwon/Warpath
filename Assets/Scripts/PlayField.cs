@@ -10,8 +10,9 @@ public class PlayField : MonoBehaviour {
 	public bool placedHero = false;
 	public bool player1Turn = true;
 	public Text turnIndicator;
-	public List<Vector2> heroCoords;
-	public List<Vector2> sortedCoords;
+	public List<Vector2> myHeroCoords;
+	public List<Vector2> sortedHeroCoords;
+	public List<Vector2> fullHeroCoords;
 
 	private GameObject player1, player2;
 
@@ -44,14 +45,16 @@ public class PlayField : MonoBehaviour {
 			x.gameObject.tag = "player1";
 		} else if (!player1Turn) {
 			//Flip the hero so it faces to the left
-			Vector3 newScale = x.transform.localScale;
-			newScale.x *= -1;
-			x.transform.localScale = newScale;
+			x.GetComponentInChildren<SpriteRenderer>().transform.localScale *= -1;
+
+			//Move the text so that it sits on the left side of the hero
+			Vector3 newTextPosition = x.GetComponentInChildren<Text>().rectTransform.localPosition;
+			newTextPosition.x *= -1;
+			x.GetComponentInChildren<Text>().rectTransform.localPosition = newTextPosition;
 
 			x.transform.parent = player2.transform;
 			x.gameObject.tag = "player2";
 		}
-
 		placedHero = true;
 	}
 	
@@ -92,7 +95,7 @@ public class PlayField : MonoBehaviour {
 	void MoveHeroes () {
 
 		//Empty the heroCoords list so we can build it again
-		heroCoords.Clear();
+		myHeroCoords.Clear();
 
 		//Find each hero the player has placed and add the hero coordinates into a list
 		if (player1Turn) {
@@ -100,56 +103,114 @@ public class PlayField : MonoBehaviour {
 				float x = child.transform.position.x;
 				float y = child.transform.position.y;
 				Vector2 coord = new Vector2(x, y);
-				heroCoords.Add(coord);
+				myHeroCoords.Add(coord);
 			}
 		} else if (!player1Turn) {
 				foreach (Transform child in player2.transform) {
 				float x = child.transform.position.x;
 				float y = child.transform.position.y;
 				Vector2 coord = new Vector2(x, y);
-				heroCoords.Add(coord);
+				myHeroCoords.Add(coord);
 			}
 		}
 
 		//Sort all of the hero coordinates in the order we want them to be evaluated for movement/attacking
 		if (player1Turn) {
-			Debug.Log("Trying to sort player 1's heroes");
-			sortedCoords = heroCoords.OrderByDescending(value => value.y).ThenByDescending(value => value.x).ToList();
+			//Debug.Log("Trying to sort player 1's heroes");
+			sortedHeroCoords = myHeroCoords.OrderByDescending(value => value.y).ThenByDescending(value => value.x).ToList();
 		} else if (!player1Turn) {
-			Debug.Log("Trying to sort player 2's heroes");
-			sortedCoords = heroCoords.OrderByDescending(value => value.y).ThenBy(value => value.x).ToList();
+			//Debug.Log("Trying to sort player 2's heroes");
+			sortedHeroCoords = myHeroCoords.OrderByDescending(value => value.y).ThenBy(value => value.x).ToList();
 		}
 
 		//Search each hero to see if their coords match the first set of coords in the 'sortedCoords' list. If they do, move that hero, then do the same thing for the next set of coords until
 		//we've gone through all of them
 		if (player1Turn) {
-			for (int i=0; i < sortedCoords.ToArray().Length; i++ ) {
+			for (int i=0; i < sortedHeroCoords.ToArray().Length; i++ ) {
 				foreach (Transform child in player1.transform) {
-//					foreach (Transform enemy in player2.transform) {
-//						if (enemy.transform.position.x == child.transform.position.x+child.GetComponent<Hero>().range) {
-//							//ATTACK ENEMY
-//							Debug.Log(child.name + " TRYING TO ATTACK ENEMY " + enemy.name);
-//						}
-//					}
-					if (child.transform.position.x == sortedCoords[i].x && child.transform.position.y == sortedCoords[i].y) {
-						child.transform.Translate(Vector2.right * child.GetComponent<Hero>().speed);
-						}
+					if (child.transform.position.x == sortedHeroCoords[i].x && child.transform.position.y == sortedHeroCoords[i].y) {
+						Player1MoveCheck(child);
+						Player1EnemyCheck(child);
 					}
+				}
 			}
 		} else if (!player1Turn) {
-			for (int i=0; i < sortedCoords.ToArray().Length; i++ ) {
+			for (int i=0; i < sortedHeroCoords.ToArray().Length; i++ ) {
 				foreach (Transform child in player2.transform) {
-//					foreach (Transform enemy in player1.transform) {
-//						if (enemy.transform.position.x == child.transform.position.x-child.GetComponent<Hero>().range) {
-//							//ATTACK ENEMY
-//							Debug.Log(child.name + " TRYING TO ATTACK ENEMY " + enemy.name);
-//						}
-//					}
-					if (child.transform.position.x == sortedCoords[i].x && child.transform.position.y == sortedCoords[i].y) {
-						child.transform.Translate(Vector2.right * child.GetComponent<Hero>().speed);
-						}
+					if (child.transform.position.x == sortedHeroCoords[i].x && child.transform.position.y == sortedHeroCoords[i].y) {
+						Player2MoveCheck(child);
+						Player2EnemyCheck(child);
 					}
+				}
 			}
 		}
+	}
+
+	void Player1MoveCheck (Transform currentHero) {
+		BuildFullHeroList ();
+		float closestHero = 999f;
+		foreach (Vector2 hero in fullHeroCoords) {
+			if (hero.y == currentHero.transform.position.y && ((hero.x - currentHero.transform.position.x) < closestHero) && ((hero.x - currentHero.transform.position.x) > 0)) {
+				closestHero = hero.x - currentHero.transform.position.x;
+			}
+		}
+		if (currentHero.GetComponent<Hero>().speed < closestHero) {
+			currentHero.transform.Translate(Vector2.right * currentHero.GetComponent<Hero>().speed);
+		} else if (currentHero.GetComponent<Hero>().speed == closestHero) {
+			currentHero.transform.Translate(Vector2.right * (closestHero - 1));
+		}
+	}
+
+	void Player2MoveCheck (Transform currentHero) {
+		BuildFullHeroList ();
+		float closestHero = 999f;
+		foreach (Vector2 hero in fullHeroCoords) {
+			if (hero.y == currentHero.transform.position.y && ((currentHero.transform.position.x - hero.x) < closestHero) && ((currentHero.transform.position.x - hero.x) > 0)) {
+				closestHero = currentHero.transform.position.x - hero.x;
+			}
+		}
+		if (currentHero.GetComponent<Hero>().speed < closestHero) {
+			currentHero.transform.Translate(Vector2.left * currentHero.GetComponent<Hero>().speed);
+		} else if (currentHero.GetComponent<Hero>().speed == closestHero) {
+			currentHero.transform.Translate(Vector2.left * (closestHero - 1));
+		}
+	}
+
+	void BuildFullHeroList () {
+		fullHeroCoords.Clear();
+		foreach (Transform hero in player1.transform) {
+			float x = hero.transform.position.x;
+			float y = hero.transform.position.y;
+			Vector2 coord = new Vector2(x, y);
+			fullHeroCoords.Add(coord);
+		}
+		foreach (Transform hero in player2.transform) {
+			float x = hero.transform.position.x;
+			float y = hero.transform.position.y;
+			Vector2 coord = new Vector2(x, y);
+			fullHeroCoords.Add(coord);
+		}
+	}
+
+	private void Player1EnemyCheck (Transform currentHero) {
+
+		foreach (Transform enemy in player2.transform) {
+			if (enemy.transform.position.x == currentHero.transform.position.x+currentHero.GetComponent<Hero>().range && enemy.transform.position.y == currentHero.transform.position.y) {
+				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().damage);
+				Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
+				Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
+			}
+		}
+	}
+
+	private void Player2EnemyCheck (Transform currentHero) {
+		foreach (Transform enemy in player1.transform) {
+			if (enemy.transform.position.x == currentHero.transform.position.x-currentHero.GetComponent<Hero>().range && enemy.transform.position.y == currentHero.transform.position.y) {
+				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().damage);
+				Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
+				Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
+			}
+		}
+
 	}
 }
