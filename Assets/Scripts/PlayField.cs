@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 
 public class PlayField : MonoBehaviour {
 
@@ -22,7 +21,7 @@ public class PlayField : MonoBehaviour {
 	void Start () {
 		player1 = new GameObject("player1");
 		player2 = new GameObject("player2");
-		turnIndicator.text = "<color=blue>Player 1's Turn</color>";
+		Player1TurnStart();
 	}
 	
 	// Update is called once per frame
@@ -31,6 +30,9 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void OnMouseDown(){
+		//Remove the card that I just played from my hand
+		Destroy(Card.selectedCard);
+
 		//print (Input.mousePosition);
 		//print (SnapToGrid(CalculateWorldPointOfMouseClick()));
 			
@@ -54,9 +56,12 @@ public class PlayField : MonoBehaviour {
 			newTextPosition.x *= -1;
 			x.GetComponentInChildren<Text>().rectTransform.localPosition = newTextPosition;
 
+			//Child the newly spawned hero to the appropriate player
 			x.transform.parent = player2.transform;
 			x.gameObject.tag = "player2";
 		}
+		//Reset the 'selectedHero' variable so players can't place another hero before selecting another card
+		Card.selectedHero = default(GameObject);
 		placedHero = true;
 	}
 	
@@ -125,12 +130,13 @@ public class PlayField : MonoBehaviour {
 	public void MoveHeroes ()
 	{
 		Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
+		// If there are no more heroes left to move then end my turn
 		if (sortedHeroCoords.ToArray().Length <= 0) {
 			player1Turn = !player1Turn;
 			if (player1Turn) {
-				turnIndicator.text = "<color=blue>Player 1's Turn</color>";
+				Player1TurnStart ();
 			} else if (!player1Turn) {
-				turnIndicator.text = "<color=red>Player 2's Turn</color>";
+				Player2TurnStart ();
 			}
 			return;
 		}
@@ -139,7 +145,6 @@ public class PlayField : MonoBehaviour {
 		//coords from the sortedHeroCoords list and wait for this "MoveHeroes" method to be called again.
 		if (player1Turn) {
 			for (int i = 0; i < 1; i++) {
-				print ("FOR LOOP IS AT: " + i);
 				foreach (Transform child in player1.transform) {
 					if (child.transform.position.x == sortedHeroCoords [i].x && child.transform.position.y == sortedHeroCoords [i].y) {
 						Player1MoveCheck (child);
@@ -150,7 +155,6 @@ public class PlayField : MonoBehaviour {
 			}
 		} else if (!player1Turn) {
 			for (int i = 0; i < 1; i++) {
-				print ("FOR LOOP IS AT: " + i);
 				foreach (Transform child in player2.transform) {
 					if (child.transform.position.x == sortedHeroCoords [i].x && child.transform.position.y == sortedHeroCoords [i].y) {
 						Player2MoveCheck (child);
@@ -214,9 +218,10 @@ public class PlayField : MonoBehaviour {
 	}
 
 	public void Player1EnemyCheck (Transform currentHero) {
-
 		foreach (Transform enemy in player2.transform) {
-			if ((Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range) && enemy.transform.position.y == currentHero.transform.position.y) {
+			if ((Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+				&& (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
+				&& enemy.transform.position.y == currentHero.transform.position.y) {
 				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().damage);
 				Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
 				Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
@@ -228,13 +233,59 @@ public class PlayField : MonoBehaviour {
 
 	public void Player2EnemyCheck (Transform currentHero) {
 		foreach (Transform enemy in player1.transform) {
-			if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) <= currentHero.GetComponent<Hero>().range) && enemy.transform.position.y == currentHero.transform.position.y) {
+			if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+			&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) > 0)
+			&& enemy.transform.position.y == currentHero.transform.position.y) {
 				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().damage);
 				Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
 				Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
 			}
 		}
 
+	}
+
+	void Player1TurnStart () {
+		turnIndicator.text = "<color=blue>Player 1's Turn</color>";
+		//Enable collision on player 1 cards
+		BoxCollider2D[] player1Cards = GameObject.Find("Player1 Hand").GetComponentsInChildren<BoxCollider2D>();
+		foreach (BoxCollider2D col in player1Cards) {
+			col.enabled = true;
+		}
+		//Disable collision on player 2 cards
+		BoxCollider2D[] player2Cards = GameObject.Find("Player2 Hand").GetComponentsInChildren<BoxCollider2D>();
+		foreach (BoxCollider2D col in player2Cards) {
+			col.enabled = false;
+		}
+		//Visually show player 1 cards and hide player 2 cards
+		GameObject.Find("Player1 Hand").GetComponentInChildren<CanvasGroup>().alpha = 1;
+		GameObject.Find("Player1 Hand").GetComponentInChildren<CanvasGroup>().blocksRaycasts = true;
+		GameObject.Find("Player2 Hand").GetComponentInChildren<CanvasGroup>().alpha = 0;
+		GameObject.Find("Player2 Hand").GetComponentInChildren<CanvasGroup>().blocksRaycasts = false;
+
+		//Checks your current hand size and deals you back up to max
+		FindObjectOfType<Deck>().Player1DealCards();
+	}
+
+	void Player2TurnStart () {
+		turnIndicator.text = "<color=red>Player 2's Turn</color>";
+		//Disable collision on player 1 cards
+		BoxCollider2D[] player1Cards = GameObject.Find("Player1 Hand").GetComponentsInChildren<BoxCollider2D>();
+		foreach (BoxCollider2D col in player1Cards) {
+			col.enabled = false;
+		}
+		//Enable collision on player 2 cards
+		BoxCollider2D[] player2Cards = GameObject.Find("Player2 Hand").GetComponentsInChildren<BoxCollider2D>();
+		foreach (BoxCollider2D col in player2Cards) {
+			col.enabled = true;
+		}
+		//Visually show player 2 cards and hide player 1 cards
+		GameObject.Find("Player1 Hand").GetComponentInChildren<CanvasGroup>().alpha = 0;
+		GameObject.Find("Player1 Hand").GetComponentInChildren<CanvasGroup>().blocksRaycasts = false;
+		GameObject.Find("Player2 Hand").GetComponentInChildren<CanvasGroup>().alpha = 1;
+		GameObject.Find("Player2 Hand").GetComponentInChildren<CanvasGroup>().blocksRaycasts = true;
+
+		//Checks your current hand size and deals you back up to max
+		FindObjectOfType<Deck>().Player2DealCards();
 	}
 
 	public void TestTest () {
