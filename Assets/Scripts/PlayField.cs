@@ -30,9 +30,6 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void OnMouseDown(){
-		//Remove the card that I just played from my hand
-		Destroy(Card.selectedCard);
-
 		//print (Input.mousePosition);
 		//print (SnapToGrid(CalculateWorldPointOfMouseClick()));
 			
@@ -41,12 +38,17 @@ public class PlayField : MonoBehaviour {
 		//Use SnapToGrid method to turn rawPos into rounded integer units in world space coordinates
 		Vector2 roundedPos = SnapToGrid(rawPos);
 
+		//Spawn the selectedHero at the appropriate location on the game grid
 		GameObject x = Instantiate(Card.selectedHero, roundedPos, Quaternion.identity) as GameObject;
 
-		//Child the newly spawned hero to the appropriate player
 		if (player1Turn) {
+			//Child the newly spawned hero to the appropriate player
 			x.transform.parent = player1.transform;
 			x.gameObject.tag = "player1";
+
+			//Put the card that was just played into the appropriate player's discard pile
+			FindObjectOfType<Deck>().Player1AddCardToDiscard(Card.selectedCard);
+
 		} else if (!player1Turn) {
 			//Flip the hero so it faces to the left
 			x.GetComponentInChildren<SpriteRenderer>().transform.localScale *= -1;
@@ -59,9 +61,16 @@ public class PlayField : MonoBehaviour {
 			//Child the newly spawned hero to the appropriate player
 			x.transform.parent = player2.transform;
 			x.gameObject.tag = "player2";
+
+			//Put the card that was just played into the appropriate player's discard pile
+			FindObjectOfType<Deck>().Player2AddCardToDiscard(Card.selectedCard);
 		}
+		//Remove the card that I just played from my hand
+		//Destroy(Card.selectedCard);
 		//Reset the 'selectedHero' variable so players can't place another hero before selecting another card
 		Card.selectedHero = default(GameObject);
+		//Reset the 'selectedCard' variable so players can't add multiple of them to their discard pile
+		Card.selectedCard = default(GameObject);
 		placedHero = true;
 	}
 	
@@ -90,8 +99,11 @@ public class PlayField : MonoBehaviour {
 	} 
 
 	public void EndTurn () {
-			BuildSortedHeroList ();
+		BuildSortedHeroList ();
+		for (int i=0; i<FindObjectOfType<Deck>().player1Discard.Count; i++) {
+			Debug.LogError("DISCARD PILE HAS " + FindObjectOfType<Deck>().player1Discard[i]);
 		}
+	}
 
 	void BuildSortedHeroList () {
 		Debug.LogWarning("BUILDING SORTED HERO LIST");
@@ -129,7 +141,7 @@ public class PlayField : MonoBehaviour {
 
 	public void MoveHeroes ()
 	{
-		Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
+		//Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
 		// If there are no more heroes left to move then end my turn
 		if (sortedHeroCoords.ToArray().Length <= 0) {
 			player1Turn = !player1Turn;
@@ -140,7 +152,7 @@ public class PlayField : MonoBehaviour {
 			}
 			return;
 		}
-		Debug.LogWarning("RUNNING MOVEHEROES");
+		//Debug.LogWarning("RUNNING MOVEHEROES");
 		//Search each hero to see if their coords match the first set of coords in the 'sortedCoords' list. If they do, move that hero, then remove that hero's
 		//coords from the sortedHeroCoords list and wait for this "MoveHeroes" method to be called again.
 		if (player1Turn) {

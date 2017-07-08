@@ -8,6 +8,8 @@ public class Card : MonoBehaviour {
 	public static GameObject selectedHero;
 	public GameObject heroPrefab;
 	public static GameObject selectedCard;
+	public static GameObject cardPrefab;
+	//public GameObject selectedPhysicalCard;
 	public Text text;
 	public string cardName;
 	public int quantity;
@@ -18,10 +20,9 @@ public class Card : MonoBehaviour {
 	}
 
 	void OnMouseDown () {
-		Debug.Log(name + " selected");
 		selectedHero = heroPrefab;
-		selectedCard = this.gameObject;
+		selectedCard = gameObject;
+		//selectedPhysicalCard = this.gameObject;
 		Debug.Log("Current Selected Game Object is " + selectedCard);
 	}
-
 }

@@ -41,25 +41,6 @@ public class Deck : MonoBehaviour {
 		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
 			player2Deck.Add (card2);
 		}
-
-//		if (FindObjectOfType<PlayField>().player1Turn) {
-//			//TEMP: Just manually adding knight and cavalry to the deck for now. Eventually will need to hook up deck loadouts.
-//			for (int i=0; i < card1.GetComponent<Card>().quantity; i++) {
-//				player1Deck.Add (card1);
-//			}
-//			for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
-//				player1Deck.Add (card2);
-//			}
-//		} else if (!FindObjectOfType<PlayField>().player1Turn) {
-//			//TEMP: Just manually adding knight and cavalry to the deck for now. Eventually will need to hook up deck loadouts.
-//			for (int i=0; i < card1.GetComponent<Card>().quantity; i++) {
-//				player2Deck.Add (card1);
-//			}
-//			for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
-//				player2Deck.Add (card2);
-//			}
-//		}
-
 	}
 
 	void ShuffleDeck (List<GameObject> myDeck) {
@@ -73,6 +54,8 @@ public class Deck : MonoBehaviour {
 
 	public void Player1DealCards () {
 		int currentCards = GameObject.Find("Player1 Hand").transform.childCount;
+		//If my current hand size is under maxHandSize then deal me cards until I'm back up to max
+		//As cards are dealt they are removed from the deck
 		if (currentCards < maxHandSize) {
 			for (int i = 0; i < maxHandSize-currentCards; i++) {
 				GameObject newCard = Instantiate (player1Deck [0]) as GameObject;
@@ -93,5 +76,15 @@ public class Deck : MonoBehaviour {
 			}
 		}
 		cardsRemaining.text = player2Deck.Count.ToString ();
+	}
+
+	public void Player1AddCardToDiscard (GameObject card) {
+		player1Discard.Add(card);
+		Debug.LogError("CARD ADDED TO DISCARD PILE: " + card.name);
+		Debug.LogError("NUMBER OF CARDS IN DISCARD PILE: " + player1Discard.Count);
+	}
+
+	public void Player2AddCardToDiscard (GameObject card) {
+		player2Discard.Add(card);
 	}
 }
