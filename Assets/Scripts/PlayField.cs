@@ -47,7 +47,7 @@ public class PlayField : MonoBehaviour {
 			x.gameObject.tag = "player1";
 
 			//Put the card that was just played into the appropriate player's discard pile
-			FindObjectOfType<Deck>().Player1AddCardToDiscard(Card.selectedCard);
+			FindObjectOfType<Deck>().Player1AddCardToDiscard(Card.selectedHero.GetComponent<Hero>().cardPrefab);
 
 		} else if (!player1Turn) {
 			//Flip the hero so it faces to the left
@@ -63,10 +63,10 @@ public class PlayField : MonoBehaviour {
 			x.gameObject.tag = "player2";
 
 			//Put the card that was just played into the appropriate player's discard pile
-			FindObjectOfType<Deck>().Player2AddCardToDiscard(Card.selectedCard);
+			FindObjectOfType<Deck>().Player2AddCardToDiscard(Card.selectedHero.GetComponent<Hero>().cardPrefab);
 		}
 		//Remove the card that I just played from my hand
-		//Destroy(Card.selectedCard);
+		Destroy(Card.selectedCard);
 		//Reset the 'selectedHero' variable so players can't place another hero before selecting another card
 		Card.selectedHero = default(GameObject);
 		//Reset the 'selectedCard' variable so players can't add multiple of them to their discard pile
@@ -100,13 +100,21 @@ public class PlayField : MonoBehaviour {
 
 	public void EndTurn () {
 		BuildSortedHeroList ();
-		for (int i=0; i<FindObjectOfType<Deck>().player1Discard.Count; i++) {
-			Debug.LogError("DISCARD PILE HAS " + FindObjectOfType<Deck>().player1Discard[i]);
+		if (player1Turn) {
+			for (int i=0; i<FindObjectOfType<Deck>().player1Discard.Count; i++) {
+				Debug.LogError("P1 DISCARD PILE HAS " + FindObjectOfType<Deck>().player1Discard[i]);
+			}
+		} else if (!player1Turn) {
+			for (int i=0; i<FindObjectOfType<Deck>().player2Discard.Count; i++) {
+				Debug.LogError("P2 DISCARD PILE HAS " + FindObjectOfType<Deck>().player2Discard[i]);
+			}
 		}
+
 	}
 
 	void BuildSortedHeroList () {
-		Debug.LogWarning("BUILDING SORTED HERO LIST");
+		//Debug.LogWarning("BUILDING SORTED HERO LIST");
+
 		//Empty the heroCoords list so we can build it again
 		myHeroCoords.Clear();
 
@@ -142,6 +150,7 @@ public class PlayField : MonoBehaviour {
 	public void MoveHeroes ()
 	{
 		//Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
+
 		// If there are no more heroes left to move then end my turn
 		if (sortedHeroCoords.ToArray().Length <= 0) {
 			player1Turn = !player1Turn;
@@ -153,6 +162,7 @@ public class PlayField : MonoBehaviour {
 			return;
 		}
 		//Debug.LogWarning("RUNNING MOVEHEROES");
+
 		//Search each hero to see if their coords match the first set of coords in the 'sortedCoords' list. If they do, move that hero, then remove that hero's
 		//coords from the sortedHeroCoords list and wait for this "MoveHeroes" method to be called again.
 		if (player1Turn) {
@@ -235,10 +245,10 @@ public class PlayField : MonoBehaviour {
 				&& (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
 				&& enemy.transform.position.y == currentHero.transform.position.y) {
 				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().damage);
-				Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
-				Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
+				//Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
+				//Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
 			} else {
-				Debug.Log("DIDN'T FIND ANYONE TO ATTACK");
+				//Debug.Log("DIDN'T FIND ANYONE TO ATTACK");
 			}
 		}
 	}
@@ -249,8 +259,8 @@ public class PlayField : MonoBehaviour {
 			&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) > 0)
 			&& enemy.transform.position.y == currentHero.transform.position.y) {
 				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().damage);
-				Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
-				Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
+				//Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
+				//Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
 			}
 		}
 

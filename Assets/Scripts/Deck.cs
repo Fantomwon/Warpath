@@ -16,7 +16,6 @@ public class Deck : MonoBehaviour {
 
 	private int maxHandSize = 5;
 
-
 	// Use this for initialization
 	void Start () {
 		BuildDeck ();
@@ -58,11 +57,25 @@ public class Deck : MonoBehaviour {
 		//As cards are dealt they are removed from the deck
 		if (currentCards < maxHandSize) {
 			for (int i = 0; i < maxHandSize-currentCards; i++) {
+				//If I don't have any cards in my Deck, then shuffle my discard pile and make it my new deck
+				if (player1Deck.Count == 0) {
+					//Shuffle the discard pile
+					ShuffleDeck(player1Discard);
+
+					//Copy the contents of the discard pile over to the deck pile
+					GameObject[] deckArray = new GameObject[player1Discard.Count];
+					player1Discard.CopyTo(deckArray);
+					player1Deck = deckArray.ToList();
+
+					//Clear out the discard pile list (this WILL NOT effect the deck pile b/c we copied the list over here, we didn't just link the two lists together by setting them equal to each other.
+					player1Discard.Clear();
+				}
 				GameObject newCard = Instantiate (player1Deck [0]) as GameObject;
 				newCard.transform.SetParent (GameObject.Find ("Player1 Hand").transform, false);
 				player1Deck.RemoveAt (0);
 			}
 		}
+
 		cardsRemaining.text = player1Deck.Count.ToString ();
 	}
 
@@ -70,11 +83,25 @@ public class Deck : MonoBehaviour {
 		int currentCards = GameObject.Find("Player2 Hand").transform.childCount;
 		if (currentCards < maxHandSize) {
 			for (int i = 0; i < maxHandSize-currentCards; i++) {
+				//If I don't have any cards in my Deck, then shuffle my discard pile and make it my new deck
+				if (player2Deck.Count == 0) {
+					//Shuffle the discard pile
+					ShuffleDeck(player2Discard);
+
+					//Copy the contents of the discard pile over to the deck pile
+					GameObject[] deckArray = new GameObject[player2Discard.Count];
+					player2Discard.CopyTo(deckArray);
+					player2Deck = deckArray.ToList();
+
+					//Clear out the discard pile list (this WILL NOT effect the deck pile b/c we copied the list over here, we didn't just link the two lists together by setting them equal to each other.
+					player2Discard.Clear();
+				}
 				GameObject newCard = Instantiate (player2Deck [0]) as GameObject;
 				newCard.transform.SetParent (GameObject.Find ("Player2 Hand").transform, false);
 				player2Deck.RemoveAt (0);
 			}
 		}
+
 		cardsRemaining.text = player2Deck.Count.ToString ();
 	}
 
@@ -86,5 +113,7 @@ public class Deck : MonoBehaviour {
 
 	public void Player2AddCardToDiscard (GameObject card) {
 		player2Discard.Add(card);
+		Debug.LogError("CARD ADDED TO DISCARD PILE: " + card.name);
+		Debug.LogError("NUMBER OF CARDS IN DISCARD PILE: " + player2Discard.Count);
 	}
 }
