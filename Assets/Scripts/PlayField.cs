@@ -43,7 +43,7 @@ public class PlayField : MonoBehaviour {
 
 		if (player1Turn) {
 			//Child the newly spawned hero to the appropriate player
-			x.transform.parent = player1.transform;
+			x.transform.SetParent(player1.transform, false);
 			x.gameObject.tag = "player1";
 
 			//Put the card that was just played into the appropriate player's discard pile
@@ -59,7 +59,7 @@ public class PlayField : MonoBehaviour {
 			x.GetComponentInChildren<Text>().rectTransform.localPosition = newTextPosition;
 
 			//Child the newly spawned hero to the appropriate player
-			x.transform.parent = player2.transform;
+			x.transform.SetParent(player2.transform, false);
 			x.gameObject.tag = "player2";
 
 			//Put the card that was just played into the appropriate player's discard pile
@@ -100,16 +100,6 @@ public class PlayField : MonoBehaviour {
 
 	public void EndTurn () {
 		BuildSortedHeroList ();
-		if (player1Turn) {
-			for (int i=0; i<FindObjectOfType<Deck>().player1Discard.Count; i++) {
-				Debug.LogError("P1 DISCARD PILE HAS " + FindObjectOfType<Deck>().player1Discard[i]);
-			}
-		} else if (!player1Turn) {
-			for (int i=0; i<FindObjectOfType<Deck>().player2Discard.Count; i++) {
-				Debug.LogError("P2 DISCARD PILE HAS " + FindObjectOfType<Deck>().player2Discard[i]);
-			}
-		}
-
 	}
 
 	void BuildSortedHeroList () {

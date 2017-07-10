@@ -107,13 +107,9 @@ public class Deck : MonoBehaviour {
 
 	public void Player1AddCardToDiscard (GameObject card) {
 		player1Discard.Add(card);
-		Debug.LogError("CARD ADDED TO DISCARD PILE: " + card.name);
-		Debug.LogError("NUMBER OF CARDS IN DISCARD PILE: " + player1Discard.Count);
 	}
 
 	public void Player2AddCardToDiscard (GameObject card) {
 		player2Discard.Add(card);
-		Debug.LogError("CARD ADDED TO DISCARD PILE: " + card.name);
-		Debug.LogError("NUMBER OF CARDS IN DISCARD PILE: " + player2Discard.Count);
 	}
 }
