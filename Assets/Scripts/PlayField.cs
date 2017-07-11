@@ -189,11 +189,22 @@ public class PlayField : MonoBehaviour {
 				closestHero = hero.x - currentHero.transform.position.x;
 			}
 		}
-		//If there's nothing in my way move me forward by my full 'speed' stat
-		if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
-			currentHero.GetComponent<Hero>().MoveSingleHeroRight(currentHero.GetComponent<Hero>().speed);
+
+		//Check to see if I have any enemies in range. If I do, run MoveSingleHeroRightAndAttack but don't actually move the hero
+		foreach (Transform enemy in player2.transform) {
+			if ((Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+				&& (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
+				&& enemy.transform.position.y == currentHero.transform.position.y) {
+					currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(0);
+					return;
+			}
+		}
+
+		 //If there's nothing in my way move me forward by my full 'speed' stat
+		 if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
+			currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(currentHero.GetComponent<Hero>().speed);
 		} else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
-			currentHero.GetComponent<Hero>().MoveSingleHeroRight(Mathf.RoundToInt(closestHero)-1);
+			currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(Mathf.RoundToInt(closestHero)-1);
 
 		}
 	}
@@ -207,11 +218,21 @@ public class PlayField : MonoBehaviour {
 				closestHero = currentHero.transform.position.x - hero.x;
 			}
 		}
+
+		foreach (Transform enemy in player1.transform) {
+			if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+			&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) > 0)
+			&& enemy.transform.position.y == currentHero.transform.position.y) {
+				currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(0);
+				return;
+			}
+		}
+
 		//If there's nothing in my way move me forward by my full 'speed' stat
 		if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
-			currentHero.GetComponent<Hero>().MoveSingleHeroLeft(currentHero.GetComponent<Hero>().speed);
+			currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(currentHero.GetComponent<Hero>().speed);
 		} else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
-			currentHero.GetComponent<Hero>().MoveSingleHeroLeft(Mathf.RoundToInt(closestHero)-1);
+			currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(Mathf.RoundToInt(closestHero)-1);
 		}
 	}
 
@@ -236,9 +257,9 @@ public class PlayField : MonoBehaviour {
 			if ((Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
 				&& (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
 				&& enemy.transform.position.y == currentHero.transform.position.y) {
-				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().damage);
-				//Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
-				//Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
+					enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().damage);
+					//Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
+					//Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
 			} else {
 				//Debug.Log("DIDN'T FIND ANYONE TO ATTACK");
 			}
@@ -255,7 +276,6 @@ public class PlayField : MonoBehaviour {
 				//Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
 			}
 		}
-
 	}
 
 	void Player1TurnStart () {

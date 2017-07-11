@@ -12,6 +12,7 @@ public class Deck : MonoBehaviour {
 	public List<GameObject> player2Discard;
 	public GameObject card1;
 	public GameObject card2;
+	public GameObject card3;
 	public Text cardsRemaining;
 
 	private int maxHandSize = 5;
@@ -32,6 +33,9 @@ public class Deck : MonoBehaviour {
 		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
 			player1Deck.Add (card2);
 		}
+		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
+			player1Deck.Add (card3);
+		}
 
 		//TEMP: Just manually adding knight and cavalry to the deck for now. Eventually will need to hook up deck loadouts.
 		for (int i=0; i < card1.GetComponent<Card>().quantity; i++) {
@@ -39,6 +43,9 @@ public class Deck : MonoBehaviour {
 		}
 		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
 			player2Deck.Add (card2);
+		}
+		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
+			player2Deck.Add (card3);
 		}
 	}
 
