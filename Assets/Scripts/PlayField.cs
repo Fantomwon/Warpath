@@ -7,14 +7,14 @@ using System.Collections.Generic;
 public class PlayField : MonoBehaviour {
 
 	public Camera myCamera;
-	public bool placedHero = false;
+	//public bool placedHero = false;
 	public bool player1Turn = true;
 	public Text turnIndicator;
 	public List<Vector2> myHeroCoords;
 	public List<Vector2> sortedHeroCoords;
 	public List<Vector2> fullHeroCoords;
-
-	private GameObject player1, player2;
+	public Vector2 roundedPos;
+	public GameObject player1, player2;
 
 
 	// Use this for initialization
@@ -36,11 +36,26 @@ public class PlayField : MonoBehaviour {
 		//Use CalculateWorldPointOfMouseClick method to get the 'raw position' (position in pixels) of where the player clicked in the world
 		Vector2 rawPos = CalculateWorldPointOfMouseClick();
 		//Use SnapToGrid method to turn rawPos into rounded integer units in world space coordinates
-		Vector2 roundedPos = SnapToGrid(rawPos);
+		roundedPos = SnapToGrid(rawPos);
 
+		//If the selected card is a spell card, cast it, ELSE treat the card as a hero card
+		if (Card.selectedCard.GetComponent<Card>().type == "spell") {
+			Card.selectedCard.GetComponent<Card>().CastSpell();
+			//Remove the card that I just played from my hand
+			return;
+		} 
+
+		//Build full hero list then check to make sure that there aren't any other heroes already at that location on the board. If there are, return.
+		BuildFullHeroList();
+		foreach (Vector2 heroCoords in fullHeroCoords) {
+			if (heroCoords == roundedPos) {
+				Debug.Log("CAN'T PLACE HERO HERE, THERE'S ALREADY A HERO OCCUPYING THIS LOCATION");
+				return;
+			}
+		}
+			
 		//Spawn the selectedHero at the appropriate location on the game grid
 		GameObject x = Instantiate(Card.selectedHero, roundedPos, Quaternion.identity) as GameObject;
-
 		if (player1Turn) {
 			//Child the newly spawned hero to the appropriate player
 			x.transform.SetParent(player1.transform, false);
@@ -67,13 +82,14 @@ public class PlayField : MonoBehaviour {
 			//Put the card that was just played into the appropriate player's discard pile
 			FindObjectOfType<Deck>().Player2AddCardToDiscard(Card.selectedHero.GetComponent<Hero>().cardPrefab);
 		}
+	
 		//Remove the card that I just played from my hand
 		Destroy(Card.selectedCard);
 		//Reset the 'selectedHero' variable so players can't place another hero before selecting another card
 		Card.selectedHero = default(GameObject);
 		//Reset the 'selectedCard' variable so players can't add multiple of them to their discard pile
 		Card.selectedCard = default(GameObject);
-		placedHero = true;
+		//placedHero = true;
 	}
 	
 	Vector2 SnapToGrid(Vector2 rawWorldPosition){
@@ -102,6 +118,7 @@ public class PlayField : MonoBehaviour {
 
 	public void EndTurn () {
 		BuildSortedHeroList ();
+		MoveHeroes ();
 	}
 
 	void BuildSortedHeroList () {
@@ -136,7 +153,6 @@ public class PlayField : MonoBehaviour {
 			sortedHeroCoords = myHeroCoords.OrderByDescending(value => value.y).ThenBy(value => value.x).ToList();
 		}
 
-		MoveHeroes ();
 	}
 
 	public void MoveHeroes ()
