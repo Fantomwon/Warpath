@@ -51,7 +51,9 @@ public class PlayField : MonoBehaviour {
 
 		} else if (!player1Turn) {
 			//Flip the hero so it faces to the left
-			x.GetComponentInChildren<SpriteRenderer>().transform.localScale *= -1;
+			Vector3 scale = x.GetComponentInChildren<SpriteRenderer>().transform.localScale;
+			scale.x = scale.x *= -1;
+			x.GetComponentInChildren<SpriteRenderer>().transform.localScale = scale;
 
 			//Move the text so that it sits on the left side of the hero
 			Vector3 newTextPosition = x.GetComponentInChildren<Text>().rectTransform.localPosition;
