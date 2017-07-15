@@ -10,18 +10,25 @@ public class PlayField : MonoBehaviour {
 	//public bool placedHero = false;
 	public bool player1Turn = true;
 	public Text turnIndicator;
+	public Text player1HealthText, player2HealthText;
+	public int player1Health = 5, player2Health = 5;
 	public List<Vector2> myHeroCoords;
 	public List<Vector2> sortedHeroCoords;
 	public List<Vector2> fullHeroCoords;
 	public Vector2 roundedPos;
 	public GameObject player1, player2;
 
+	private Hero hero;
+
 
 	// Use this for initialization
 	void Start () {
 		player1 = new GameObject("player1");
 		player2 = new GameObject("player2");
+		hero = FindObjectOfType<Hero>();
 		Player1TurnStart();
+		player1HealthText.text = player1Health.ToString();
+		player2HealthText.text = player2Health.ToString();
 	}
 	
 	// Update is called once per frame
@@ -39,7 +46,7 @@ public class PlayField : MonoBehaviour {
 		roundedPos = SnapToGrid(rawPos);
 
 		//If the selected card is a spell card, cast it, ELSE treat the card as a hero card
-		if (Card.selectedCard.GetComponent<Card>().type == "spell") {
+		if (Card.selectedCard.GetComponent<Card>().type == "Spell") {
 			Card.selectedCard.GetComponent<Card>().CastSpell();
 			//Remove the card that I just played from my hand
 			return;
@@ -259,6 +266,7 @@ public class PlayField : MonoBehaviour {
 			float y = hero.transform.position.y;
 			Vector2 coord = new Vector2(x, y);
 			fullHeroCoords.Add(coord);
+			Debug.Log("ADDING FULL HERO COORDS: " + coord);
 		}
 		foreach (Transform hero in player2.transform) {
 			float x = hero.transform.position.x;
@@ -273,7 +281,7 @@ public class PlayField : MonoBehaviour {
 			if ((Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
 				&& (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
 				&& enemy.transform.position.y == currentHero.transform.position.y) {
-					enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().damage);
+					enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
 					//Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
 					//Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
 			} else {
@@ -287,7 +295,7 @@ public class PlayField : MonoBehaviour {
 			if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) <= currentHero.GetComponent<Hero>().range)
 			&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) > 0)
 			&& enemy.transform.position.y == currentHero.transform.position.y) {
-				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().damage);
+				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
 				//Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
 				//Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
 			}
@@ -336,6 +344,17 @@ public class PlayField : MonoBehaviour {
 
 		//Checks your current hand size and deals you back up to max
 		FindObjectOfType<Deck>().Player2DealCards();
+	}
+
+	public void LosePlayerHealth (int dmg) {
+		if (player1Turn) {
+			Debug.Log("RUNNING LosePlayerHealth");
+			player2Health -= dmg;
+			player2HealthText.text = player2Health.ToString();
+		} else if (!player1Turn) {
+			player1Health -= dmg;
+			player1HealthText.text = player1Health.ToString();
+		}
 	}
 
 	public void TestTest () {

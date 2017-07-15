@@ -8,7 +8,7 @@ public class Card : MonoBehaviour {
 	public static GameObject selectedHero;
 	public GameObject heroPrefab;
 	public static GameObject selectedCard;
-	public Text text;
+	public Text NameText, TypeText, PowerText, HealthText, SpeedText, RangeText;
 	public string cardName;
 	public string type;
 	public int quantity;
@@ -18,21 +18,29 @@ public class Card : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		text.text = cardName.ToString();
+		NameText.text = cardName.ToString();
+		TypeText.text = type.ToString();
 		playField = FindObjectOfType<PlayField>();
+		if (type == "Hero") {
+			PowerText.text = heroPrefab.GetComponent<Hero>().power.ToString();
+			HealthText.text = heroPrefab.GetComponent<Hero>().maxHealth.ToString();
+			SpeedText.text = heroPrefab.GetComponent<Hero>().speed.ToString();
+			RangeText.text = heroPrefab.GetComponent<Hero>().range.ToString();
+		}
 	}
 
 	void OnMouseDown () {
-		selectedHero = heroPrefab;
 		selectedCard = gameObject;
-		//Debug.Log("selectedCard: " + selectedCard);
+		if (type == "Hero") {
+			selectedHero = heroPrefab;
+		}
 	}
 
 	public void CastSpell () {
 		if (cardName == "Fireball") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
-					//If there is an enemy in the square I clicked on then do spell damage to him
+					//If there is an enemy in the square I clicked on then do spell damage to them
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
 						hero.GetComponent<Hero>().TakeDamage(spellDamage);
 						Destroy(Card.selectedCard);
@@ -41,7 +49,7 @@ public class Card : MonoBehaviour {
 				}
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
-					//If there is an enemy in the square I clicked on then do spell damage to him
+					//If there is an enemy in the square I clicked on then do spell damage to them
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
 						hero.GetComponent<Hero>().TakeDamage(spellDamage);
 						Destroy(Card.selectedCard);
@@ -49,7 +57,7 @@ public class Card : MonoBehaviour {
 					}
 				}
 			}
-			Debug.Log("NOT A VALID TARGET FOR SPELL");
+			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		} else if (cardName == "Heal") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
