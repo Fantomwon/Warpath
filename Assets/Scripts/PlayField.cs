@@ -18,14 +18,10 @@ public class PlayField : MonoBehaviour {
 	public Vector2 roundedPos;
 	public GameObject player1, player2;
 
-	private Hero hero;
-
-
 	// Use this for initialization
 	void Start () {
 		player1 = new GameObject("player1");
 		player2 = new GameObject("player2");
-		hero = FindObjectOfType<Hero>();
 		Player1TurnStart();
 		player1HealthText.text = player1Health.ToString();
 		player2HealthText.text = player2Health.ToString();
@@ -266,7 +262,6 @@ public class PlayField : MonoBehaviour {
 			float y = hero.transform.position.y;
 			Vector2 coord = new Vector2(x, y);
 			fullHeroCoords.Add(coord);
-			Debug.Log("ADDING FULL HERO COORDS: " + coord);
 		}
 		foreach (Transform hero in player2.transform) {
 			float x = hero.transform.position.x;
@@ -348,7 +343,6 @@ public class PlayField : MonoBehaviour {
 
 	public void LosePlayerHealth (int dmg) {
 		if (player1Turn) {
-			Debug.Log("RUNNING LosePlayerHealth");
 			player2Health -= dmg;
 			player2HealthText.text = player2Health.ToString();
 		} else if (!player1Turn) {

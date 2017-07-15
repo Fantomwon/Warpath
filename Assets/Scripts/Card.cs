@@ -78,7 +78,7 @@ public class Card : MonoBehaviour {
 					}
 				}
 			}
-			Debug.Log("NOT A VALID TARGET FOR SPELL");
+			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		}
 	}
 }
