@@ -13,6 +13,7 @@ public class Card : MonoBehaviour {
 	public string type;
 	public int quantity;
 	public int spellDamage;
+	public Image cardImage;
 
 	private PlayField playField;
 
@@ -79,6 +80,28 @@ public class Card : MonoBehaviour {
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
+		} else if (cardName == "Haste") {
+			if (playField.player1Turn) {
+				foreach (Transform hero in playField.player1.transform) {
+					//If one of my heroes is in the square I clicked on set 'movingRight' variable in Hero.cs to true
+					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+						hero.GetComponent<Hero>().usingHaste = true;
+						playField.Player1MoveHasteCheck(hero);
+						Destroy(Card.selectedCard);
+						return;
+					} 
+				}
+			} else if (!playField.player1Turn) {
+				foreach (Transform hero in playField.player2.transform) {
+					//If one of my heroes is in the square I clicked on set 'movingLeft' variable in Hero.cs to true
+					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+						hero.GetComponent<Hero>().usingHaste = true;
+						playField.Player2MoveHasteCheck(hero);
+						Destroy(Card.selectedCard);
+						return;
+					} 
+				}
+			}
 		}
 	}
 }

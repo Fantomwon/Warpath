@@ -160,7 +160,7 @@ public class PlayField : MonoBehaviour {
 
 	public void MoveHeroes ()
 	{
-		//Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
+		Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
 
 		// If there are no more heroes left to move then end my turn
 		if (sortedHeroCoords.ToArray().Length <= 0) {
@@ -219,7 +219,7 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 
-		 //If there's nothing in my way move me forward by my full 'speed' stat
+		//If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
 		 if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
 			currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(currentHero.GetComponent<Hero>().speed);
 		} else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
@@ -247,7 +247,7 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 
-		//If there's nothing in my way move me forward by my full 'speed' stat
+		//If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
 		if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
 			currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(currentHero.GetComponent<Hero>().speed);
 		} else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
@@ -296,6 +296,63 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 	}
+
+
+	public void Player1MoveHasteCheck (Transform currentHero) {
+		float closestHero = 999f;
+		foreach (Vector2 hero in fullHeroCoords) {
+			//Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
+			if (hero.y == currentHero.transform.position.y && ((hero.x - currentHero.transform.position.x) < closestHero) && ((hero.x - currentHero.transform.position.x) > 0)) {
+				closestHero = hero.x - currentHero.transform.position.x;
+			}
+		}
+
+		//Check to see if I have any enemies in range. If I do, run MoveSingleHeroRightAndAttack but don't actually move the hero
+		foreach (Transform enemy in player2.transform) {
+			if ((Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+				&& (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
+				&& enemy.transform.position.y == currentHero.transform.position.y) {
+					currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(0);
+					return;
+			}
+		}
+
+		//If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
+		 if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
+			currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(currentHero.GetComponent<Hero>().speed);
+		} else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
+			currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(Mathf.RoundToInt(closestHero)-1);
+
+		}
+	}
+
+	public void Player2MoveHasteCheck (Transform currentHero) {
+		float closestHero = 999f;
+		foreach (Vector2 hero in fullHeroCoords) {
+			//Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
+			if (hero.y == currentHero.transform.position.y && ((currentHero.transform.position.x - hero.x) < closestHero) && ((currentHero.transform.position.x - hero.x) > 0)) {
+				closestHero = currentHero.transform.position.x - hero.x;
+			}
+		}
+
+		foreach (Transform enemy in player1.transform) {
+			if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+			&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) > 0)
+			&& enemy.transform.position.y == currentHero.transform.position.y) {
+				currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(0);
+				return;
+			}
+		}
+
+		//If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
+		if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
+			currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(currentHero.GetComponent<Hero>().speed);
+		} else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
+			currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(Mathf.RoundToInt(closestHero)-1);
+		}
+	}
+
+
 
 	void Player1TurnStart () {
 		turnIndicator.text = "<color=blue>Player 1's Turn</color>";

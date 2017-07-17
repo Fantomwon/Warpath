@@ -10,7 +10,7 @@ public class Deck : MonoBehaviour {
 	public List<GameObject> player2Deck;
 	public List<GameObject> player1Discard;
 	public List<GameObject> player2Discard;
-	public GameObject card1, card2, card3, card4, card5;
+	public GameObject card1, card2, card3, card4, card5, card6;
 	public Text cardsRemaining;
 
 	private int maxHandSize = 5;
@@ -31,14 +31,17 @@ public class Deck : MonoBehaviour {
 		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
 			player1Deck.Add (card2);
 		}
-		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
+		for (int i=0; i < card3.GetComponent<Card>().quantity; i++) {
 			player1Deck.Add (card3);
 		}
-		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
+		for (int i=0; i < card4.GetComponent<Card>().quantity; i++) {
 			player1Deck.Add (card4);
 		}
-		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
+		for (int i=0; i < card5.GetComponent<Card>().quantity; i++) {
 			player1Deck.Add (card5);
+		}
+		for (int i=0; i < card6.GetComponent<Card>().quantity; i++) {
+			player1Deck.Add (card6);
 		}
 
 		//TEMP: Just manually adding cards to the deck for now. Eventually will need to hook up deck loadouts.
@@ -48,14 +51,17 @@ public class Deck : MonoBehaviour {
 		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
 			player2Deck.Add (card2);
 		}
-		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
+		for (int i=0; i < card3.GetComponent<Card>().quantity; i++) {
 			player2Deck.Add (card3);
 		}
-		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
+		for (int i=0; i < card4.GetComponent<Card>().quantity; i++) {
 			player2Deck.Add (card4);
 		}
-		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
+		for (int i=0; i < card5.GetComponent<Card>().quantity; i++) {
 			player2Deck.Add (card5);
+		}
+		for (int i=0; i < card6.GetComponent<Card>().quantity; i++) {
+			player2Deck.Add (card6);
 		}
 	}
 
