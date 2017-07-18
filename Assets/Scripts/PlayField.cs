@@ -70,7 +70,7 @@ public class PlayField : MonoBehaviour {
 		} else if (!player1Turn) {
 			//Flip the hero so it faces to the left
 			Vector3 scale = x.GetComponentInChildren<SpriteRenderer>().transform.localScale;
-			scale.x = scale.x *= -1;
+			scale.x = (scale.x *= -1);
 			x.GetComponentInChildren<SpriteRenderer>().transform.localScale = scale;
 
 			//Move the text so that it sits on the left side of the hero
@@ -160,7 +160,7 @@ public class PlayField : MonoBehaviour {
 
 	public void MoveHeroes ()
 	{
-		Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
+//		Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
 
 		// If there are no more heroes left to move then end my turn
 		if (sortedHeroCoords.ToArray().Length <= 0) {
@@ -238,6 +238,7 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 
+		//Check to see if I have any enemies in range. If I do, run MoveSingleHeroRightAndAttack but don't actually move the hero
 		foreach (Transform enemy in player1.transform) {
 			if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) <= currentHero.GetComponent<Hero>().range)
 			&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) > 0)
