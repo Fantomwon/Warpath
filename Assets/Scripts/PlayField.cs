@@ -299,6 +299,7 @@ public class PlayField : MonoBehaviour {
 
 
 	public void Player1MoveHasteCheck (Transform currentHero) {
+		BuildFullHeroList ();
 		float closestHero = 999f;
 		foreach (Vector2 hero in fullHeroCoords) {
 			//Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
@@ -327,6 +328,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	public void Player2MoveHasteCheck (Transform currentHero) {
+		BuildFullHeroList ();
 		float closestHero = 999f;
 		foreach (Vector2 hero in fullHeroCoords) {
 			//Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
