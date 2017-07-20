@@ -274,40 +274,15 @@ public class PlayField : MonoBehaviour {
 	}
 
 	//Gets called from hero.cs after the hero has finished moving
-	public void Player1EnemyCheck (Transform currentHero) {
+	public void HeroTargetCheck (Transform currentHero) {
 		if (currentHero.GetComponent<Hero>().id == "rogue") {
 			AttackEnemiesInList(currentHero, TargetCheckCardinalDirections(currentHero, "enemy"));
 		} else if (currentHero.GetComponent<Hero>().id == "tower") {
 			AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy"));
+		} else if (currentHero.GetComponent<Hero>().id == "archer") {
+			AttackEnemiesInList(currentHero, TargetCheckAllHeroesInRange(currentHero, "enemy"));
 		} else {
-			foreach (Transform enemy in player2.transform) {
-				//If enemy is in range and NOT behind me, then attack them
-				if ((Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
-					&& (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
-					&& enemy.transform.position.y == currentHero.transform.position.y) {
-						enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
-				} else {
-					//Debug.Log("DIDN'T FIND ANYONE TO ATTACK");
-				}
-			}			
-		}
-	}
-
-	//Gets called from hero.cs after the hero has finished moving
-	public void Player2EnemyCheck (Transform currentHero) {
-		if (currentHero.GetComponent<Hero>().id == "rogue") {
-			AttackEnemiesInList(currentHero, TargetCheckCardinalDirections(currentHero, "enemy"));
-		} else if (currentHero.GetComponent<Hero>().id == "tower") {
-			AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy"));
-		} else {
-			foreach (Transform enemy in player1.transform) {
-				//If enemy is in range and NOT behind me, then attack them
-				if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) <= currentHero.GetComponent<Hero>().range)
-					&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) > 0)
-					&& enemy.transform.position.y == currentHero.transform.position.y) {
-						enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
-				}
-			}
+			AttackEnemiesInList(currentHero, TargetCheckClosestHeroInRange(currentHero, "enemy"));
 		}
 	}
 
@@ -375,6 +350,109 @@ public class PlayField : MonoBehaviour {
 							validHeroes.Add(otherHero);
 						}
 					}
+			}
+		}
+		return validHeroes;
+	}
+
+	private List<Transform> TargetCheckAllHeroesInRange (Transform currentHero, string heroTypeToSearchFor) {
+		List<Transform> validHeroes = new List<Transform>();
+		BuildFullHeroTransformList();
+		float currentHeroX = currentHero.transform.position.x;
+		float currentHeroY = currentHero.transform.position.y;
+		int currentHeroRange = currentHero.GetComponent<Hero>().range;
+
+		if (player1Turn) {
+			foreach (Transform otherHero in fullHeroTransformList) {
+				//Check if the otherHero is in range and NOT behind me
+				if ((Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+					&& (Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
+					&& otherHero.transform.position.y == currentHero.transform.position.y) {
+					//Of the otherHeroes that are in range and NOT behind me, add the appropriate ones to my target list based on which hero type I'm looking for ('enemy' or 'ally')
+					if (heroTypeToSearchFor == "enemy") {
+						if (currentHero.tag != otherHero.tag) {
+							validHeroes.Add(otherHero);
+						}
+					} else if (heroTypeToSearchFor == "ally") {
+						if (currentHero.tag == otherHero.tag) {
+							validHeroes.Add(otherHero);
+						}
+					}
+				}
+			}
+		} else if (!player1Turn) {
+			foreach (Transform otherHero in player1.transform) {
+				//Check if the otherHero is in range and NOT behind me
+				if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+					&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x) > 0)
+					&& otherHero.transform.position.y == currentHero.transform.position.y) {
+					//Of the otherHeroes that are in range and NOT behind me, add the appropriate ones to my target list based on which hero type I'm looking for ('enemy' or 'ally')
+					if (heroTypeToSearchFor == "enemy") {
+						if (currentHero.tag != otherHero.tag) {
+							validHeroes.Add(otherHero);
+						}
+					} else if (heroTypeToSearchFor == "ally") {
+						if (currentHero.tag == otherHero.tag) {
+							validHeroes.Add(otherHero);
+						}
+					}
+				}
+			}
+		}
+		return validHeroes;
+	}
+
+	private List<Transform> TargetCheckClosestHeroInRange (Transform currentHero, string heroTypeToSearchFor) {
+		List<Transform> validHeroes = new List<Transform>();
+		float closestHeroX = 999f;
+		BuildFullHeroTransformList();
+		float currentHeroX = currentHero.transform.position.x;
+		float currentHeroY = currentHero.transform.position.y;
+		int currentHeroRange = currentHero.GetComponent<Hero>().range;
+
+		if (player1Turn) {
+			foreach (Transform otherHero in fullHeroTransformList) {
+				//Check if the otherHero is in range and NOT behind me
+				if ((Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+					&& (Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
+					&& otherHero.transform.position.y == currentHero.transform.position.y) {
+					//Of the otherHeroes that are in range and NOT behind me, add the appropriate one to my target list based on which hero type I'm looking for ('enemy' or 'ally') AND if that hero is the closest hero to me
+					if (heroTypeToSearchFor == "enemy") {
+						if (currentHero.tag != otherHero.tag && Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) < closestHeroX) {
+							validHeroes.Clear();
+							validHeroes.Add(otherHero);
+							closestHeroX = Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x);
+						}
+					} else if (heroTypeToSearchFor == "ally") {
+						if (currentHero.tag == otherHero.tag && Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) < closestHeroX) {
+							validHeroes.Clear();
+							validHeroes.Add(otherHero);
+							closestHeroX = Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x);
+						}
+					}
+				}
+			}
+		} else if (!player1Turn) {
+			foreach (Transform otherHero in player1.transform) {
+				//Check if the otherHero is in range and NOT behind me
+				if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+					&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x) > 0)
+					&& otherHero.transform.position.y == currentHero.transform.position.y) {
+					//Of the otherHeroes that are in range and NOT behind me, add the appropriate one to my target list based on which hero type I'm looking for ('enemy' or 'ally') AND if that hero is the closest hero to me
+					if (heroTypeToSearchFor == "enemy") {
+						if (currentHero.tag != otherHero.tag && Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x) < closestHeroX) {
+							validHeroes.Clear();
+							validHeroes.Add(otherHero);
+							closestHeroX = Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x);
+						}
+					} else if (heroTypeToSearchFor == "ally") {
+						if (currentHero.tag == otherHero.tag && Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x) < closestHeroX) {
+							validHeroes.Clear();
+							validHeroes.Add(otherHero);
+							closestHeroX = Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x);
+						}
+					}
+				}
 			}
 		}
 		return validHeroes;
