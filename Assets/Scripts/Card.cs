@@ -13,7 +13,6 @@ public class Card : MonoBehaviour {
 	public string type;
 	public int quantity;
 	public int spellDamage;
-	public Image cardImage;
 
 	private PlayField playField;
 

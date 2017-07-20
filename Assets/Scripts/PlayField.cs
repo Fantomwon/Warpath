@@ -15,6 +15,7 @@ public class PlayField : MonoBehaviour {
 	public List<Vector2> myHeroCoords;
 	public List<Vector2> sortedHeroCoords;
 	public List<Vector2> fullHeroCoords;
+	public List<Transform> fullHeroTransformList;
 	public Vector2 roundedPos;
 	public GameObject player1, player2;
 
@@ -272,32 +273,121 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
+	//Gets called from hero.cs after the hero has finished moving
 	public void Player1EnemyCheck (Transform currentHero) {
-		foreach (Transform enemy in player2.transform) {
-			if ((Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
-				&& (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
-				&& enemy.transform.position.y == currentHero.transform.position.y) {
-					enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
-					//Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
-					//Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
-			} else {
-				//Debug.Log("DIDN'T FIND ANYONE TO ATTACK");
-			}
+		if (currentHero.GetComponent<Hero>().id == "rogue") {
+			AttackEnemiesInList(currentHero, EnemyCheckCardinalDirections02(currentHero));
+			//EnemyCheckCardinalDirections (currentHero);
+		} else if (currentHero.GetComponent<Hero>().id == "tower") {
+			EnemyCheckAllDirections (currentHero);
+		} else {
+			foreach (Transform enemy in player2.transform) {
+				//If enemy is in range and NOT behind me, then attack them
+				if ((Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+					&& (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
+					&& enemy.transform.position.y == currentHero.transform.position.y) {
+						enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+				} else {
+					//Debug.Log("DIDN'T FIND ANYONE TO ATTACK");
+				}
+			}			
 		}
 	}
 
+	//Gets called from hero.cs after the hero has finished moving
 	public void Player2EnemyCheck (Transform currentHero) {
-		foreach (Transform enemy in player1.transform) {
-			if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) <= currentHero.GetComponent<Hero>().range)
-			&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) > 0)
-			&& enemy.transform.position.y == currentHero.transform.position.y) {
-				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
-				//Debug.Log("ATTACKING FOR: " + currentHero.GetComponent<Hero>().damage);
-				//Debug.Log("ENEMY HP IS: " + enemy.GetComponent<Hero>().health);
+		if (currentHero.GetComponent<Hero>().id == "rogue") {
+			EnemyCheckCardinalDirections (currentHero);
+		} else if (currentHero.GetComponent<Hero>().id == "tower") {
+			EnemyCheckAllDirections (currentHero);
+		} else {
+			foreach (Transform enemy in player1.transform) {
+				//If enemy is in range and NOT behind me, then attack them
+				if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+					&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) > 0)
+					&& enemy.transform.position.y == currentHero.transform.position.y) {
+						enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+				}
 			}
 		}
 	}
 
+	public void EnemyCheckAllDirections (Transform currentHero) {
+		BuildFullHeroTransformList();
+		float currentHeroX = currentHero.transform.position.x;
+		float currentHeroY = currentHero.transform.position.y;
+		int currentHeroRange = currentHero.GetComponent<Hero>().range;
+
+		foreach (Transform enemy in fullHeroTransformList) {
+			//Check through the full list of heroes that are on the board and if they are not on my team then check if they are in range
+			if (currentHero.tag != enemy.tag) {
+				if ( //Check all of the squares around my hero (including diagonal squares) to see if an enemy is in range... I know there has to be a more efficient way to do this, but for now this will work
+					(enemy.transform.position.x == currentHeroX - currentHeroRange && enemy.transform.position.y == currentHeroY - currentHeroRange) || 
+					(enemy.transform.position.x == currentHeroX - currentHeroRange && enemy.transform.position.y == currentHeroY) ||
+					(enemy.transform.position.x == currentHeroX - currentHeroRange && enemy.transform.position.y == currentHeroY + currentHeroRange) ||
+					(enemy.transform.position.x == currentHeroX && enemy.transform.position.y == currentHeroY - currentHeroRange) ||
+					(enemy.transform.position.x == currentHeroX && enemy.transform.position.y == currentHeroY + currentHeroRange) ||
+					(enemy.transform.position.x == currentHeroX + currentHeroRange && enemy.transform.position.y == currentHeroY - currentHeroRange) ||
+					(enemy.transform.position.x == currentHeroX + currentHeroRange && enemy.transform.position.y == currentHeroY) ||
+					(enemy.transform.position.x == currentHeroX + currentHeroRange && enemy.transform.position.y == currentHeroY + currentHeroRange)
+					) {
+						//Damage the enemy if they are in one of the squares around me
+						enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+				}
+			}
+		}
+	}
+
+	public void EnemyCheckCardinalDirections (Transform currentHero) {
+		BuildFullHeroTransformList();
+		float currentHeroX = currentHero.transform.position.x;
+		float currentHeroY = currentHero.transform.position.y;
+		int currentHeroRange = currentHero.GetComponent<Hero>().range;
+
+		foreach (Transform enemy in fullHeroTransformList) {
+			//Check through the full list of heroes that are on the board and if they are not on my team then check if they are in range
+			if (currentHero.tag != enemy.tag) {
+				if ( //Check all of the squares around my hero (cardinal directions only) to see if an enemy is in range... I know there has to be a more efficient way to do this, but for now this will work
+					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
+					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
+					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange) ||
+					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY) - currentHeroRange)
+					) {
+						//Damage the enemy if they are in one of the squares around me
+						enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+				}
+			}
+		}
+	}
+
+	private List<Transform> EnemyCheckCardinalDirections02 (Transform currentHero) {
+		List<Transform> validHeroes = new List<Transform>();
+		BuildFullHeroTransformList();
+		float currentHeroX = currentHero.transform.position.x;
+		float currentHeroY = currentHero.transform.position.y;
+		int currentHeroRange = currentHero.GetComponent<Hero>().range;
+
+		foreach (Transform enemy in fullHeroTransformList) {
+			//Check through the full list of heroes that are on the board and if they are not on my team then check if they are in range
+			if (currentHero.tag != enemy.tag) {
+				if ( //Check all of the squares around my hero (cardinal directions only) to see if an enemy is in range... I know there has to be a more efficient way to do this, but for now this will work
+					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
+					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
+					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange) ||
+					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY) - currentHeroRange)
+					) {
+						validHeroes.Add(enemy);
+				}
+			}
+		}
+		return validHeroes;
+	}
+
+	private void AttackEnemiesInList (Transform currentHero, List<Transform> enemies) {
+		foreach (Transform enemy in enemies) {
+			enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+		}
+	}
 
 	public void Player1MoveHasteCheck (Transform currentHero) {
 		BuildFullHeroList ();
@@ -355,8 +445,6 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
-
-
 	void Player1TurnStart () {
 		turnIndicator.text = "<color=blue>Player 1's Turn</color>";
 		//Enable collision on player 1 cards
@@ -408,6 +496,16 @@ public class PlayField : MonoBehaviour {
 		} else if (!player1Turn) {
 			player1Health -= dmg;
 			player1HealthText.text = player1Health.ToString();
+		}
+	}
+
+	void BuildFullHeroTransformList () {
+		fullHeroTransformList.Clear();
+		foreach (Transform hero in player1.transform) {
+			fullHeroTransformList.Add(hero);
+		}
+		foreach (Transform hero in player2.transform) {
+			fullHeroTransformList.Add(hero);
 		}
 	}
 
