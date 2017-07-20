@@ -276,10 +276,9 @@ public class PlayField : MonoBehaviour {
 	//Gets called from hero.cs after the hero has finished moving
 	public void Player1EnemyCheck (Transform currentHero) {
 		if (currentHero.GetComponent<Hero>().id == "rogue") {
-			AttackEnemiesInList(currentHero, EnemyCheckCardinalDirections02(currentHero));
-			//EnemyCheckCardinalDirections (currentHero);
+			AttackEnemiesInList(currentHero, TargetCheckCardinalDirections(currentHero, "enemy"));
 		} else if (currentHero.GetComponent<Hero>().id == "tower") {
-			EnemyCheckAllDirections (currentHero);
+			AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy"));
 		} else {
 			foreach (Transform enemy in player2.transform) {
 				//If enemy is in range and NOT behind me, then attack them
@@ -297,9 +296,9 @@ public class PlayField : MonoBehaviour {
 	//Gets called from hero.cs after the hero has finished moving
 	public void Player2EnemyCheck (Transform currentHero) {
 		if (currentHero.GetComponent<Hero>().id == "rogue") {
-			EnemyCheckCardinalDirections (currentHero);
+			AttackEnemiesInList(currentHero, TargetCheckCardinalDirections(currentHero, "enemy"));
 		} else if (currentHero.GetComponent<Hero>().id == "tower") {
-			EnemyCheckAllDirections (currentHero);
+			AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy"));
 		} else {
 			foreach (Transform enemy in player1.transform) {
 				//If enemy is in range and NOT behind me, then attack them
@@ -312,81 +311,73 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
-	public void EnemyCheckAllDirections (Transform currentHero) {
-		BuildFullHeroTransformList();
-		float currentHeroX = currentHero.transform.position.x;
-		float currentHeroY = currentHero.transform.position.y;
-		int currentHeroRange = currentHero.GetComponent<Hero>().range;
-
-		foreach (Transform enemy in fullHeroTransformList) {
-			//Check through the full list of heroes that are on the board and if they are not on my team then check if they are in range
-			if (currentHero.tag != enemy.tag) {
-				if ( //Check all of the squares around my hero (including diagonal squares) to see if an enemy is in range... I know there has to be a more efficient way to do this, but for now this will work
-					(enemy.transform.position.x == currentHeroX - currentHeroRange && enemy.transform.position.y == currentHeroY - currentHeroRange) || 
-					(enemy.transform.position.x == currentHeroX - currentHeroRange && enemy.transform.position.y == currentHeroY) ||
-					(enemy.transform.position.x == currentHeroX - currentHeroRange && enemy.transform.position.y == currentHeroY + currentHeroRange) ||
-					(enemy.transform.position.x == currentHeroX && enemy.transform.position.y == currentHeroY - currentHeroRange) ||
-					(enemy.transform.position.x == currentHeroX && enemy.transform.position.y == currentHeroY + currentHeroRange) ||
-					(enemy.transform.position.x == currentHeroX + currentHeroRange && enemy.transform.position.y == currentHeroY - currentHeroRange) ||
-					(enemy.transform.position.x == currentHeroX + currentHeroRange && enemy.transform.position.y == currentHeroY) ||
-					(enemy.transform.position.x == currentHeroX + currentHeroRange && enemy.transform.position.y == currentHeroY + currentHeroRange)
-					) {
-						//Damage the enemy if they are in one of the squares around me
-						enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
-				}
-			}
+	//Takes a 'currentHero' and a list of enemy heroes, then the currentHero attacks all of the enemy heroes in the list
+	private void AttackEnemiesInList (Transform currentHero, List<Transform> enemies) {
+		foreach (Transform enemy in enemies) {
+			enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
 		}
 	}
 
-	public void EnemyCheckCardinalDirections (Transform currentHero) {
-		BuildFullHeroTransformList();
-		float currentHeroX = currentHero.transform.position.x;
-		float currentHeroY = currentHero.transform.position.y;
-		int currentHeroRange = currentHero.GetComponent<Hero>().range;
-
-		foreach (Transform enemy in fullHeroTransformList) {
-			//Check through the full list of heroes that are on the board and if they are not on my team then check if they are in range
-			if (currentHero.tag != enemy.tag) {
-				if ( //Check all of the squares around my hero (cardinal directions only) to see if an enemy is in range... I know there has to be a more efficient way to do this, but for now this will work
-					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
-					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
-					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange) ||
-					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY) - currentHeroRange)
-					) {
-						//Damage the enemy if they are in one of the squares around me
-						enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
-				}
-			}
-		}
-	}
-
-	private List<Transform> EnemyCheckCardinalDirections02 (Transform currentHero) {
+	//Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a list of the given herotypes that are currently located in ANY direction around the currenthero, including diagonals
+	private List<Transform> TargetCheckAllDirections (Transform currentHero, string heroTypeToSearchFor) {
 		List<Transform> validHeroes = new List<Transform>();
 		BuildFullHeroTransformList();
 		float currentHeroX = currentHero.transform.position.x;
 		float currentHeroY = currentHero.transform.position.y;
 		int currentHeroRange = currentHero.GetComponent<Hero>().range;
 
-		foreach (Transform enemy in fullHeroTransformList) {
-			//Check through the full list of heroes that are on the board and if they are not on my team then check if they are in range
-			if (currentHero.tag != enemy.tag) {
-				if ( //Check all of the squares around my hero (cardinal directions only) to see if an enemy is in range... I know there has to be a more efficient way to do this, but for now this will work
-					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
-					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
-					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange) ||
-					(Mathf.RoundToInt(enemy.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(enemy.transform.position.y) == Mathf.RoundToInt(currentHeroY) - currentHeroRange)
-					) {
-						validHeroes.Add(enemy);
-				}
+		foreach (Transform otherHero in fullHeroTransformList) {
+			if ( //Check all of the squares around "currentHero" (including diagonal squares) to see if "otherHero" is in range... then based on which type I'm checking for ("enemy" or "ally") add them to the list if appropriate
+				(otherHero.transform.position.x == currentHeroX - currentHeroRange && otherHero.transform.position.y == currentHeroY - currentHeroRange) || 
+				(otherHero.transform.position.x == currentHeroX - currentHeroRange && otherHero.transform.position.y == currentHeroY) ||
+				(otherHero.transform.position.x == currentHeroX - currentHeroRange && otherHero.transform.position.y == currentHeroY + currentHeroRange) ||
+				(otherHero.transform.position.x == currentHeroX && otherHero.transform.position.y == currentHeroY - currentHeroRange) ||
+				(otherHero.transform.position.x == currentHeroX && otherHero.transform.position.y == currentHeroY + currentHeroRange) ||
+				(otherHero.transform.position.x == currentHeroX + currentHeroRange && otherHero.transform.position.y == currentHeroY - currentHeroRange) ||
+				(otherHero.transform.position.x == currentHeroX + currentHeroRange && otherHero.transform.position.y == currentHeroY) ||
+				(otherHero.transform.position.x == currentHeroX + currentHeroRange && otherHero.transform.position.y == currentHeroY + currentHeroRange)
+				) {
+					if (heroTypeToSearchFor == "enemy") {
+						if (currentHero.tag != otherHero.tag) {
+							validHeroes.Add(otherHero);
+						}
+					} else if (heroTypeToSearchFor == "ally") {
+						if (currentHero.tag == otherHero.tag) {
+							validHeroes.Add(otherHero);
+						}
+					}	
 			}
 		}
 		return validHeroes;
 	}
 
-	private void AttackEnemiesInList (Transform currentHero, List<Transform> enemies) {
-		foreach (Transform enemy in enemies) {
-			enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+	//Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a list of the given herotypes that are currently located in any CARDINAL direction around the currenthero, NOT including diagonals
+	private List<Transform> TargetCheckCardinalDirections (Transform currentHero, string heroTypeToSearchFor) {
+		List<Transform> validHeroes = new List<Transform>();
+		BuildFullHeroTransformList();
+		float currentHeroX = currentHero.transform.position.x;
+		float currentHeroY = currentHero.transform.position.y;
+		int currentHeroRange = currentHero.GetComponent<Hero>().range;
+
+		foreach (Transform otherHero in fullHeroTransformList) {
+			if ( //Check all of the squares around my hero (cardinal directions only) to see if "otherHero" is in range... then based on which type I'm checking for ("enemy" or "ally") add them to the list if appropriate
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) - currentHeroRange)
+				) {
+					if (heroTypeToSearchFor == "enemy") {
+						if (currentHero.tag != otherHero.tag) {
+							validHeroes.Add(otherHero);
+						}
+					} else if (heroTypeToSearchFor == "ally") {
+						if (currentHero.tag == otherHero.tag) {
+							validHeroes.Add(otherHero);
+						}
+					}
+			}
 		}
+		return validHeroes;
 	}
 
 	public void Player1MoveHasteCheck (Transform currentHero) {
