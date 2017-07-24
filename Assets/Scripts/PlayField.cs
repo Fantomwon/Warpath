@@ -19,6 +19,8 @@ public class PlayField : MonoBehaviour {
 	public Vector2 roundedPos;
 	public GameObject player1, player2;
 
+	private Card card;
+
 	// Use this for initialization
 	void Start () {
 		player1 = new GameObject("player1");
@@ -26,6 +28,7 @@ public class PlayField : MonoBehaviour {
 		Player1TurnStart();
 		player1HealthText.text = player1Health.ToString();
 		player2HealthText.text = player2Health.ToString();
+		card = FindObjectOfType<Card>();
 	}
 
 	void OnMouseDown(){
@@ -61,7 +64,7 @@ public class PlayField : MonoBehaviour {
 			x.gameObject.tag = "player1";
 
 			//Put the card that was just played into the appropriate player's discard pile
-			FindObjectOfType<Deck>().Player1AddCardToDiscard(Card.selectedHero.GetComponent<Hero>().cardPrefab);
+			card.RemoveCardFromHandAndAddToDiscard();
 
 		} else if (!player1Turn) {
 			//Flip the hero so it faces to the left
@@ -79,7 +82,7 @@ public class PlayField : MonoBehaviour {
 			x.gameObject.tag = "player2";
 
 			//Put the card that was just played into the appropriate player's discard pile
-			FindObjectOfType<Deck>().Player2AddCardToDiscard(Card.selectedHero.GetComponent<Hero>().cardPrefab);
+			card.RemoveCardFromHandAndAddToDiscard();
 		}
 	
 		//Remove the card that I just played from my hand
@@ -584,13 +587,11 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void EndOfTurnEffects () {
-		Debug.Log("RUNNING END OF TURN EFFECTS");
 		BuildFullHeroTransformList ();
 
 		List<Transform> druidList = new List<Transform>();
 		foreach (Transform hero in fullHeroTransformList) {
 			if (hero.GetComponent<Hero>().id == "druid") {
-				Debug.Log("FOUND A FUCKING DRUID");
 				druidList.Add(hero);
 			}
 		}

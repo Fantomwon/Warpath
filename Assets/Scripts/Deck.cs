@@ -14,12 +14,16 @@ public class Deck : MonoBehaviour {
 	public Text cardsRemaining;
 
 	private int maxHandSize = 5;
+	private PlayField playField;
+	private Card card;
 
 	// Use this for initialization
 	void Start () {
 		BuildDeck ();
 		ShuffleDeck (player1Deck);
 		ShuffleDeck (player2Deck);
+		playField = GameObject.FindObjectOfType<PlayField>();
+		card = FindObjectOfType<Card>();
 	}
 
 	void BuildDeck () {
@@ -89,6 +93,34 @@ public class Deck : MonoBehaviour {
 		}
 	}
 
+	public void RedealHand () {
+		if (playField.player1Turn) {
+			//Cycle through each card in my hand and remove it and add it to my discard pile
+			foreach (Transform currentCard in GameObject.Find("Player1 Hand").transform) {
+				Card.selectedCard = currentCard.gameObject;
+				Card.selectedCard.GetComponent<Card>().RemoveCardFromHandAndAddToDiscard();
+			}
+			//Here we manually remove children from the "Player1 Hand" game object b/c they are destroyed, and when objects are destroyed they are not removed from
+			//their parent object until the end of the frame, which causes Player1DealCards to think that the player still has 5 cards in their hand even though they have zero
+			GameObject.Find("Player1 Hand").transform.DetachChildren();
+
+			Player1DealCards ();
+		} else if (!playField.player1Turn) {
+			//Cycle through each card in my hand and remove it and add it to my discard pile
+			foreach (Transform currentCard in GameObject.Find("Player2 Hand").transform) {
+				Card.selectedCard = currentCard.gameObject;
+				Card.selectedCard.GetComponent<Card>().RemoveCardFromHandAndAddToDiscard();
+			}
+			//Here we manually remove children from the "Player1 Hand" game object b/c they are destroyed, and when objects are destroyed they are not removed from
+			//their parent object until the end of the frame, which causes Player2DealCards to think that the player still has 5 cards in their hand even though they have zero
+			GameObject.Find("Player2 Hand").transform.DetachChildren();
+
+			Player2DealCards ();
+		}
+
+
+	}
+
 	void ShuffleDeck (List<GameObject> myDeck) {
 		for (int i=0; i < myDeck.Count; i++) {
 			GameObject temp = myDeck[i];
@@ -122,7 +154,6 @@ public class Deck : MonoBehaviour {
 				player1Deck.RemoveAt (0);
 			}
 		}
-
 		cardsRemaining.text = player1Deck.Count.ToString ();
 	}
 
@@ -154,9 +185,15 @@ public class Deck : MonoBehaviour {
 
 	public void Player1AddCardToDiscard (GameObject card) {
 		player1Discard.Add(card);
+//		for (int i=0; i<player1Discard.Count(); i++) {
+//			Debug.Log(player1Discard[i].name);
+//		}
 	}
 
 	public void Player2AddCardToDiscard (GameObject card) {
 		player2Discard.Add(card);
+//		for (int i=0; i<player2Discard.Count(); i++) {
+//			Debug.Log(player2Discard[i].name);
+//		}
 	}
 }
