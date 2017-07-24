@@ -58,6 +58,27 @@ public class Card : MonoBehaviour {
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
+		} else if (cardName == "Flame Strike") {
+			if (playField.player1Turn) {
+				foreach (Transform hero in playField.player2.transform) {
+					//If there is an enemy in the square I clicked on then do spell damage to them
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x) {
+						hero.GetComponent<Hero>().TakeDamage(spellDamage);
+						Destroy(Card.selectedCard);
+//						return;
+					} 
+				}
+			} else if (!playField.player1Turn) {
+				foreach (Transform hero in playField.player1.transform) {
+					//If there is an enemy in the square I clicked on then do spell damage to them
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x) {
+						hero.GetComponent<Hero>().TakeDamage(spellDamage);
+						Destroy(Card.selectedCard);
+//						return;
+					}
+				}
+			}
+			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		} else if (cardName == "Heal") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
