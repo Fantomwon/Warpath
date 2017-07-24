@@ -307,16 +307,14 @@ public class PlayField : MonoBehaviour {
 	}
 
 	//Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a list of the given herotypes that are currently located in ANY direction around the currenthero, including diagonals
+	//IMPORTANT: This target check currently only supports checking all directions at a range of 1. That is to say that a hero's range WILL NOT AFFECT HOW FAR THIS METHOD CHECKS TO RETURN TARGETS
 	private List<Transform> TargetCheckAllDirections (Transform currentHero, string heroTypeToSearchFor) {
 		List<Transform> validHeroes = new List<Transform>();
 		BuildFullHeroTransformList();
 		float currentHeroX = currentHero.transform.position.x;
 		float currentHeroY = currentHero.transform.position.y;
-		int currentHeroRange = currentHero.GetComponent<Hero>().range;
-		//Manually setting this to 1 for the druid so that his heal range is only 1 while his attack range can remain 2 (attack uses TargetCheckClosestHeroInRange and his heal uses TargetCheckAllDirections)
-		if (currentHero.GetComponent<Hero>().id == "druid") {
-			currentHeroRange = 1;
-		}
+		//IMPORTANT: This is where I manually set this method to ONLY CHECK ALL DIRECTIONS AT A RANGE OF 1. I.E. A HERO'S RANGE WILL NOT AFFECT HOW FAR THIS METHOD CHECKS TO RETURN TARGETS
+		int currentHeroRange = 1;
 
 		foreach (Transform otherHero in fullHeroTransformList) {
 			if ( //Check all of the squares around "currentHero" (including diagonal squares) to see if "otherHero" is in range... then based on which type I'm checking for ("enemy" or "ally") add them to the list if appropriate
