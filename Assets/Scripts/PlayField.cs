@@ -27,11 +27,6 @@ public class PlayField : MonoBehaviour {
 		player1HealthText.text = player1Health.ToString();
 		player2HealthText.text = player2Health.ToString();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
 	void OnMouseDown(){
 		//print (Input.mousePosition);
@@ -165,6 +160,7 @@ public class PlayField : MonoBehaviour {
 
 		// If there are no more heroes left to move then end my turn
 		if (sortedHeroCoords.ToArray().Length <= 0) {
+			EndOfTurnEffects ();
 			player1Turn = !player1Turn;
 			if (player1Turn) {
 				Player1TurnStart ();
@@ -273,6 +269,16 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
+	void BuildFullHeroTransformList () {
+		fullHeroTransformList.Clear();
+		foreach (Transform hero in player1.transform) {
+			fullHeroTransformList.Add(hero);
+		}
+		foreach (Transform hero in player2.transform) {
+			fullHeroTransformList.Add(hero);
+		}
+	}
+
 	//Gets called from hero.cs after the hero has finished moving
 	public void HeroTargetCheck (Transform currentHero) {
 		if (currentHero.GetComponent<Hero>().id == "rogue") {
@@ -286,10 +292,17 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
-	//Takes a 'currentHero' and a list of enemy heroes, then the currentHero attacks all of the enemy heroes in the list
+	//Takes a 'currentHero' and a list of enemy heroes, then the currentHero attacks all of the enemy heroes in the list using the 'TakeDamage()' method
 	private void AttackEnemiesInList (Transform currentHero, List<Transform> enemies) {
 		foreach (Transform enemy in enemies) {
 			enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+		}
+	}
+
+	//Takes a 'currentHero' and a list of other heroes, then the currentHero heals all of the heroes in the list using the 'HealPartial()' method
+	private void HealHeroesInList (Transform currentHero, List<Transform> heroes) {
+		foreach (Transform hero in heroes) {
+			hero.GetComponent<Hero>().HealPartial(currentHero.GetComponent<Hero>().healValue);
 		}
 	}
 
@@ -300,17 +313,21 @@ public class PlayField : MonoBehaviour {
 		float currentHeroX = currentHero.transform.position.x;
 		float currentHeroY = currentHero.transform.position.y;
 		int currentHeroRange = currentHero.GetComponent<Hero>().range;
+		//Manually setting this to 1 for the druid so that his heal range is only 1 while his attack range can remain 2 (attack uses TargetCheckClosestHeroInRange and his heal uses TargetCheckAllDirections)
+		if (currentHero.GetComponent<Hero>().id == "druid") {
+			currentHeroRange = 1;
+		}
 
 		foreach (Transform otherHero in fullHeroTransformList) {
 			if ( //Check all of the squares around "currentHero" (including diagonal squares) to see if "otherHero" is in range... then based on which type I'm checking for ("enemy" or "ally") add them to the list if appropriate
-				(otherHero.transform.position.x == currentHeroX - currentHeroRange && otherHero.transform.position.y == currentHeroY - currentHeroRange) || 
-				(otherHero.transform.position.x == currentHeroX - currentHeroRange && otherHero.transform.position.y == currentHeroY) ||
-				(otherHero.transform.position.x == currentHeroX - currentHeroRange && otherHero.transform.position.y == currentHeroY + currentHeroRange) ||
-				(otherHero.transform.position.x == currentHeroX && otherHero.transform.position.y == currentHeroY - currentHeroRange) ||
-				(otherHero.transform.position.x == currentHeroX && otherHero.transform.position.y == currentHeroY + currentHeroRange) ||
-				(otherHero.transform.position.x == currentHeroX + currentHeroRange && otherHero.transform.position.y == currentHeroY - currentHeroRange) ||
-				(otherHero.transform.position.x == currentHeroX + currentHeroRange && otherHero.transform.position.y == currentHeroY) ||
-				(otherHero.transform.position.x == currentHeroX + currentHeroRange && otherHero.transform.position.y == currentHeroY + currentHeroRange)
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) - currentHeroRange) || 
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) - currentHeroRange) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) - currentHeroRange) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange)
 				) {
 					if (heroTypeToSearchFor == "enemy") {
 						if (currentHero.tag != otherHero.tag) {
@@ -365,9 +382,9 @@ public class PlayField : MonoBehaviour {
 		if (player1Turn) {
 			foreach (Transform otherHero in fullHeroTransformList) {
 				//Check if the otherHero is in range and NOT behind me
-				if ((Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
-					&& (Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
-					&& otherHero.transform.position.y == currentHero.transform.position.y) {
+				if ((Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHeroX) <= currentHeroRange)
+					&& (Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHeroX) > 0)
+					&& otherHero.transform.position.y == currentHeroY) {
 					//Of the otherHeroes that are in range and NOT behind me, add the appropriate ones to my target list based on which hero type I'm looking for ('enemy' or 'ally')
 					if (heroTypeToSearchFor == "enemy") {
 						if (currentHero.tag != otherHero.tag) {
@@ -383,9 +400,9 @@ public class PlayField : MonoBehaviour {
 		} else if (!player1Turn) {
 			foreach (Transform otherHero in player1.transform) {
 				//Check if the otherHero is in range and NOT behind me
-				if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
-					&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x) > 0)
-					&& otherHero.transform.position.y == currentHero.transform.position.y) {
+				if ((Mathf.RoundToInt(currentHeroX) - Mathf.RoundToInt(otherHero.transform.position.x) <= currentHeroRange)
+					&& (Mathf.RoundToInt(currentHeroX) - Mathf.RoundToInt(otherHero.transform.position.x) > 0)
+					&& otherHero.transform.position.y == currentHeroY) {
 					//Of the otherHeroes that are in range and NOT behind me, add the appropriate ones to my target list based on which hero type I'm looking for ('enemy' or 'ally')
 					if (heroTypeToSearchFor == "enemy") {
 						if (currentHero.tag != otherHero.tag) {
@@ -413,21 +430,21 @@ public class PlayField : MonoBehaviour {
 		if (player1Turn) {
 			foreach (Transform otherHero in fullHeroTransformList) {
 				//Check if the otherHero is in range and NOT behind me
-				if ((Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
-					&& (Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) > 0)
-					&& otherHero.transform.position.y == currentHero.transform.position.y) {
+				if ((Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHeroX) <= currentHeroRange)
+					&& (Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHeroX) > 0)
+					&& otherHero.transform.position.y == currentHeroY) {
 					//Of the otherHeroes that are in range and NOT behind me, add the appropriate one to my target list based on which hero type I'm looking for ('enemy' or 'ally') AND if that hero is the closest hero to me
 					if (heroTypeToSearchFor == "enemy") {
-						if (currentHero.tag != otherHero.tag && Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) < closestHeroX) {
+						if (currentHero.tag != otherHero.tag && Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHeroX) < closestHeroX) {
 							validHeroes.Clear();
 							validHeroes.Add(otherHero);
-							closestHeroX = Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x);
+							closestHeroX = Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHeroX);
 						}
 					} else if (heroTypeToSearchFor == "ally") {
-						if (currentHero.tag == otherHero.tag && Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) < closestHeroX) {
+						if (currentHero.tag == otherHero.tag && Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHeroX) < closestHeroX) {
 							validHeroes.Clear();
 							validHeroes.Add(otherHero);
-							closestHeroX = Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x);
+							closestHeroX = Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHeroX);
 						}
 					}
 				}
@@ -435,21 +452,21 @@ public class PlayField : MonoBehaviour {
 		} else if (!player1Turn) {
 			foreach (Transform otherHero in player1.transform) {
 				//Check if the otherHero is in range and NOT behind me
-				if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x) <= currentHero.GetComponent<Hero>().range)
-					&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x) > 0)
-					&& otherHero.transform.position.y == currentHero.transform.position.y) {
+				if ((Mathf.RoundToInt(currentHeroX) - Mathf.RoundToInt(otherHero.transform.position.x) <= currentHeroRange)
+					&& (Mathf.RoundToInt(currentHeroX) - Mathf.RoundToInt(otherHero.transform.position.x) > 0)
+					&& otherHero.transform.position.y == currentHeroY) {
 					//Of the otherHeroes that are in range and NOT behind me, add the appropriate one to my target list based on which hero type I'm looking for ('enemy' or 'ally') AND if that hero is the closest hero to me
 					if (heroTypeToSearchFor == "enemy") {
-						if (currentHero.tag != otherHero.tag && Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x) < closestHeroX) {
+						if (currentHero.tag != otherHero.tag && Mathf.RoundToInt(currentHeroX) - Mathf.RoundToInt(otherHero.transform.position.x) < closestHeroX) {
 							validHeroes.Clear();
 							validHeroes.Add(otherHero);
-							closestHeroX = Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x);
+							closestHeroX = Mathf.RoundToInt(currentHeroX) - Mathf.RoundToInt(otherHero.transform.position.x);
 						}
 					} else if (heroTypeToSearchFor == "ally") {
-						if (currentHero.tag == otherHero.tag && Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x) < closestHeroX) {
+						if (currentHero.tag == otherHero.tag && Mathf.RoundToInt(currentHeroX) - Mathf.RoundToInt(otherHero.transform.position.x) < closestHeroX) {
 							validHeroes.Clear();
 							validHeroes.Add(otherHero);
-							closestHeroX = Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(otherHero.transform.position.x);
+							closestHeroX = Mathf.RoundToInt(currentHeroX) - Mathf.RoundToInt(otherHero.transform.position.x);
 						}
 					}
 				}
@@ -568,15 +585,27 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
-	void BuildFullHeroTransformList () {
-		fullHeroTransformList.Clear();
-		foreach (Transform hero in player1.transform) {
-			fullHeroTransformList.Add(hero);
+	void EndOfTurnEffects () {
+		Debug.Log("RUNNING END OF TURN EFFECTS");
+		BuildFullHeroTransformList ();
+
+		List<Transform> druidList = new List<Transform>();
+		foreach (Transform hero in fullHeroTransformList) {
+			if (hero.GetComponent<Hero>().id == "druid") {
+				Debug.Log("FOUND A FUCKING DRUID");
+				druidList.Add(hero);
+			}
 		}
-		foreach (Transform hero in player2.transform) {
-			fullHeroTransformList.Add(hero);
+		foreach (Transform druid in druidList) {
+			if (player1Turn && druid.tag == "player1") {
+				HealHeroesInList(druid, TargetCheckAllDirections(druid, "ally"));
+			} else if (!player1Turn && druid.tag == "player2") {
+				HealHeroesInList(druid, TargetCheckAllDirections(druid, "ally"));
+			}
 		}
 	}
+
+
 
 	public void TestTest () {
 		Debug.LogWarning("TEST TEST");
