@@ -121,6 +121,7 @@ public class PlayField : MonoBehaviour {
 	public void EndTurn () {
 		BuildSortedHeroList ();
 		MoveHeroes ();
+		FindObjectOfType<HandHider>().GetComponent<CanvasGroup>().alpha = 1f;
 	}
 
 	void BuildSortedHeroList () {

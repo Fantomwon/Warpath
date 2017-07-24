@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\CardReference.cs" />
      <Compile Include="Assets\Scripts\Deck.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
+     <Compile Include="Assets\Scripts\HandHider.cs" />
      <Compile Include="Assets\Scripts\Hero.cs" />
      <Compile Include="Assets\Scripts\PlayField.cs" />
  <Reference Include="UnityEngine.UI">
