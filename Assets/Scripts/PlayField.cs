@@ -18,7 +18,7 @@ public class PlayField : MonoBehaviour {
 	public List<Transform> fullHeroTransformList;
 	public Vector2 roundedPos;
 	public GameObject player1, player2;
-	public int cardPlayLimit = 2;
+	public int cardPlayLimit = 999;
 	public int cardsPlayed = 0;
 
 	private Card card;
@@ -49,7 +49,6 @@ public class PlayField : MonoBehaviour {
 		//If the selected card is a spell card, cast it, ELSE treat the card as a hero card
 		if (Card.selectedCard.GetComponent<Card>().type == "Spell") {
 			Card.selectedCard.GetComponent<Card>().CastSpell();
-			//Remove the card that I just played from my hand
 			return;
 		} 
 
@@ -68,10 +67,6 @@ public class PlayField : MonoBehaviour {
 			//Child the newly spawned hero to the appropriate player
 			x.transform.SetParent(player1.transform, false);
 			x.gameObject.tag = "player1";
-
-			//Put the card that was just played into the appropriate player's discard pile
-			card.RemoveCardFromHandAndAddToDiscard();
-
 		} else if (!player1Turn) {
 			//Flip the hero so it faces to the left
 			Vector3 scale = x.GetComponentInChildren<SpriteRenderer>().transform.localScale;
@@ -86,15 +81,10 @@ public class PlayField : MonoBehaviour {
 			//Child the newly spawned hero to the appropriate player
 			x.transform.SetParent(player2.transform, false);
 			x.gameObject.tag = "player2";
-
-			//Put the card that was just played into the appropriate player's discard pile
-			card.RemoveCardFromHandAndAddToDiscard();
 		}
-	
-		//Remove the card that I just played from my hand
-		Destroy(Card.selectedCard);
-		ClearSelectedHeroAndSelectedCard ();
 
+		//Put the card that was just played into the appropriate player's discard pile
+		card.RemoveCardFromHandAndAddToDiscard();
 		Debug.Log("TOTAL CARDS PLAYED = " + cardsPlayed);
 	}
 	
@@ -128,7 +118,6 @@ public class PlayField : MonoBehaviour {
 		ClearSelectedHeroAndSelectedCard ();
 		FindObjectOfType<HandHider>().HideHand();
 		cardsPlayed = 0;
-		Debug.LogWarning("SELECTED CARD ON ENDTURN IS " + Card.selectedCard);
 	}
 
 	void BuildSortedHeroList () {

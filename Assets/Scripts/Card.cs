@@ -34,7 +34,6 @@ public class Card : MonoBehaviour {
 
 	void OnMouseDown () {
 		selectedCard = gameObject;
-		Debug.Log("SELECTED CARD IS: " + selectedCard.name);
 		if (type == "Hero") {
 			selectedHero = heroPrefab;
 		}
@@ -47,7 +46,7 @@ public class Card : MonoBehaviour {
 					//If there is an enemy in the square I clicked on then do spell damage to them
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
 						hero.GetComponent<Hero>().TakeDamage(spellDamage);
-						RemoveCardFromHandAndAddToDiscard ();
+						RemoveCardFromHandAndAddToDiscard();
 						return;
 					} 
 				}
@@ -56,7 +55,7 @@ public class Card : MonoBehaviour {
 					//If there is an enemy in the square I clicked on then do spell damage to them
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
 						hero.GetComponent<Hero>().TakeDamage(spellDamage);
-						RemoveCardFromHandAndAddToDiscard ();
+						RemoveCardFromHandAndAddToDiscard();
 						return;
 					}
 				}
@@ -68,8 +67,7 @@ public class Card : MonoBehaviour {
 					//If there is an enemy in the square I clicked on then do spell damage to them
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x) {
 						hero.GetComponent<Hero>().TakeDamage(spellDamage);
-						RemoveCardFromHandAndAddToDiscard ();
-						return;
+						RemoveCardFromHandAndAddToDiscard();
 					} 
 				}
 			} else if (!playField.player1Turn) {
@@ -77,8 +75,7 @@ public class Card : MonoBehaviour {
 					//If there is an enemy in the square I clicked on then do spell damage to them
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x) {
 						hero.GetComponent<Hero>().TakeDamage(spellDamage);
-						RemoveCardFromHandAndAddToDiscard ();
-						return;
+						RemoveCardFromHandAndAddToDiscard();
 					}
 				}
 			}
@@ -89,7 +86,7 @@ public class Card : MonoBehaviour {
 					//If one of my heroes is in the square I clicked on AND they are below max health then heal them to full
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
 						hero.GetComponent<Hero>().HealFull();
-						RemoveCardFromHandAndAddToDiscard ();
+						RemoveCardFromHandAndAddToDiscard();
 						return;
 					} 
 				}
@@ -98,7 +95,7 @@ public class Card : MonoBehaviour {
 					//If one of my heroes is in the square I clicked on AND they are below max health then heal them to full
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
 						hero.GetComponent<Hero>().HealFull();
-						RemoveCardFromHandAndAddToDiscard ();
+						RemoveCardFromHandAndAddToDiscard();
 						return;
 					}
 				}
@@ -111,7 +108,7 @@ public class Card : MonoBehaviour {
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player1MoveHasteCheck(hero);
-						RemoveCardFromHandAndAddToDiscard ();
+						RemoveCardFromHandAndAddToDiscard();
 						return;
 					} 
 				}
@@ -121,7 +118,7 @@ public class Card : MonoBehaviour {
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player2MoveHasteCheck(hero);
-						RemoveCardFromHandAndAddToDiscard ();
+						RemoveCardFromHandAndAddToDiscard();
 						return;
 					} 
 				}
@@ -143,6 +140,8 @@ public class Card : MonoBehaviour {
 		}
 		//Get rid of the  card from my hand that I just used so I can't use it again
 		Destroy (Card.selectedCard);
+		//Set the 'selected hero' and 'selected card' variables to default so the game doesn't think I still have anything selected
+		playField.ClearSelectedHeroAndSelectedCard();
 		//Increment the integer varaible 'cardsPlayed' to keep track of how many cards the player has succesfully played this turn
 		playField.IncrementCardsPlayedCounter();
 	}

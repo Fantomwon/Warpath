@@ -29,33 +29,33 @@ public class Deck : MonoBehaviour {
 	void BuildDeck () {
 
 		//TEMP: Just manually adding cards to the deck for now. Eventually will need to hook up deck loadouts.
-		for (int i=0; i < card1.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card1);
-		}
-		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card2);
-		}
+//		for (int i=0; i < card1.GetComponent<Card>().quantity; i++) {
+//			player1Deck.Add (card1);
+//		}
+//		for (int i=0; i < card2.GetComponent<Card>().quantity; i++) {
+//			player1Deck.Add (card2);
+//		}
 		for (int i=0; i < card3.GetComponent<Card>().quantity; i++) {
 			player1Deck.Add (card3);
 		}
-		for (int i=0; i < card4.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card4);
-		}
-		for (int i=0; i < card5.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card5);
-		}
-		for (int i=0; i < card6.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card6);
-		}
-		for (int i=0; i < card7.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card7);
-		}
-		for (int i=0; i < card8.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card8);
-		}
-		for (int i=0; i < card9.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card9);
-		}
+//		for (int i=0; i < card4.GetComponent<Card>().quantity; i++) {
+//			player1Deck.Add (card4);
+//		}
+//		for (int i=0; i < card5.GetComponent<Card>().quantity; i++) {
+//			player1Deck.Add (card5);
+//		}
+//		for (int i=0; i < card6.GetComponent<Card>().quantity; i++) {
+//			player1Deck.Add (card6);
+//		}
+//		for (int i=0; i < card7.GetComponent<Card>().quantity; i++) {
+//			player1Deck.Add (card7);
+//		}
+//		for (int i=0; i < card8.GetComponent<Card>().quantity; i++) {
+//			player1Deck.Add (card8);
+//		}
+//		for (int i=0; i < card9.GetComponent<Card>().quantity; i++) {
+//			player1Deck.Add (card9);
+//		}
 		for (int i=0; i < card10.GetComponent<Card>().quantity; i++) {
 			player1Deck.Add (card10);
 		}
@@ -94,6 +94,7 @@ public class Deck : MonoBehaviour {
 	}
 
 	public void RedealHand () {
+		int temp = playField.cardsPlayed;
 		if (playField.player1Turn) {
 			//Cycle through each card in my hand and remove it and add it to my discard pile
 			foreach (Transform currentCard in GameObject.Find("Player1 Hand").transform) {
@@ -118,6 +119,7 @@ public class Deck : MonoBehaviour {
 			Player2DealCards ();
 		}
 
+		playField.cardsPlayed = temp;
 
 	}
 
