@@ -34,6 +34,7 @@ public class Card : MonoBehaviour {
 
 	void OnMouseDown () {
 		selectedCard = gameObject;
+		Debug.Log("SELECTED CARD IS: " + selectedCard.name);
 		if (type == "Hero") {
 			selectedHero = heroPrefab;
 		}
@@ -142,5 +143,7 @@ public class Card : MonoBehaviour {
 		}
 		//Get rid of the  card from my hand that I just used so I can't use it again
 		Destroy (Card.selectedCard);
+		//Increment the integer varaible 'cardsPlayed' to keep track of how many cards the player has succesfully played this turn
+		playField.IncrementCardsPlayedCounter();
 	}
 }

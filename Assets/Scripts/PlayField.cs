@@ -18,6 +18,8 @@ public class PlayField : MonoBehaviour {
 	public List<Transform> fullHeroTransformList;
 	public Vector2 roundedPos;
 	public GameObject player1, player2;
+	public int cardPlayLimit = 2;
+	public int cardsPlayed = 0;
 
 	private Card card;
 
@@ -34,6 +36,10 @@ public class PlayField : MonoBehaviour {
 	void OnMouseDown(){
 		//print (Input.mousePosition);
 		//print (SnapToGrid(CalculateWorldPointOfMouseClick()));
+		if (cardsPlayed >= cardPlayLimit) {
+			Debug.LogWarning("CANNOT PLAY ANY MORE CARDS THIS TURN");
+			return;
+		}
 			
 		//Use CalculateWorldPointOfMouseClick method to get the 'raw position' (position in pixels) of where the player clicked in the world
 		Vector2 rawPos = CalculateWorldPointOfMouseClick();
@@ -87,11 +93,9 @@ public class PlayField : MonoBehaviour {
 	
 		//Remove the card that I just played from my hand
 		Destroy(Card.selectedCard);
-		//Reset the 'selectedHero' variable so players can't place another hero before selecting another card
-		Card.selectedHero = default(GameObject);
-		//Reset the 'selectedCard' variable so players can't add multiple of them to their discard pile
-		Card.selectedCard = default(GameObject);
-		//placedHero = true;
+		ClearSelectedHeroAndSelectedCard ();
+
+		Debug.Log("TOTAL CARDS PLAYED = " + cardsPlayed);
 	}
 	
 	Vector2 SnapToGrid(Vector2 rawWorldPosition){
@@ -121,7 +125,10 @@ public class PlayField : MonoBehaviour {
 	public void EndTurn () {
 		BuildSortedHeroList ();
 		MoveHeroes ();
-		FindObjectOfType<HandHider>().GetComponent<CanvasGroup>().alpha = 1f;
+		ClearSelectedHeroAndSelectedCard ();
+		FindObjectOfType<HandHider>().HideHand();
+		cardsPlayed = 0;
+		Debug.LogWarning("SELECTED CARD ON ENDTURN IS " + Card.selectedCard);
 	}
 
 	void BuildSortedHeroList () {
@@ -198,6 +205,14 @@ public class PlayField : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	public void ClearSelectedHeroAndSelectedCard ()
+	{
+		//Reset the 'selectedHero' variable so players can't place another hero before selecting another card
+		Card.selectedHero = default(GameObject);
+		//Reset the 'selectedCard' variable so players can't add multiple of them to their discard pile
+		Card.selectedCard = default(GameObject);
 	}
 
 	void Player1MoveCheck (Transform currentHero) {
@@ -605,7 +620,9 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
-
+	public void IncrementCardsPlayedCounter () {
+		cardsPlayed += 1;
+	}
 
 	public void TestTest () {
 		Debug.LogWarning("TEST TEST");
