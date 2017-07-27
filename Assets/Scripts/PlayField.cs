@@ -18,7 +18,7 @@ public class PlayField : MonoBehaviour {
 	public List<Transform> fullHeroTransformList;
 	public Vector2 roundedPos;
 	public GameObject player1, player2;
-	public int cardPlayLimit = 999;
+	public int cardPlayLimit = 2;
 	public int cardsPlayed = 0;
 
 	private Card card;
