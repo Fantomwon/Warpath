@@ -20,8 +20,10 @@ public class PlayField : MonoBehaviour {
 	public GameObject player1, player2;
 	public int cardPlayLimit = 2;
 	public int cardsPlayed = 0;
+	public bool heroAttackedATarget = false;
 
 	private Card card;
+
 
 	// Use this for initialization
 	void Start () {
@@ -160,6 +162,7 @@ public class PlayField : MonoBehaviour {
 
 		// If there are no more heroes left to move then end my turn
 		if (sortedHeroCoords.ToArray().Length <= 0) {
+			Debug.Log("CHANGING PLAYER TURNS");
 			EndOfTurnEffects ();
 			player1Turn = !player1Turn;
 			if (player1Turn) {
@@ -338,6 +341,7 @@ public class PlayField : MonoBehaviour {
 					if (heroTypeToSearchFor == "enemy") {
 						if (currentHero.tag != otherHero.tag) {
 							validHeroes.Add(otherHero);
+							heroAttackedATarget = true;
 						}
 					} else if (heroTypeToSearchFor == "ally") {
 						if (currentHero.tag == otherHero.tag) {
@@ -367,6 +371,7 @@ public class PlayField : MonoBehaviour {
 					if (heroTypeToSearchFor == "enemy") {
 						if (currentHero.tag != otherHero.tag) {
 							validHeroes.Add(otherHero);
+							heroAttackedATarget = true;
 						}
 					} else if (heroTypeToSearchFor == "ally") {
 						if (currentHero.tag == otherHero.tag) {
@@ -395,6 +400,7 @@ public class PlayField : MonoBehaviour {
 					if (heroTypeToSearchFor == "enemy") {
 						if (currentHero.tag != otherHero.tag) {
 							validHeroes.Add(otherHero);
+							heroAttackedATarget = true;
 						}
 					} else if (heroTypeToSearchFor == "ally") {
 						if (currentHero.tag == otherHero.tag) {
@@ -413,6 +419,7 @@ public class PlayField : MonoBehaviour {
 					if (heroTypeToSearchFor == "enemy") {
 						if (currentHero.tag != otherHero.tag) {
 							validHeroes.Add(otherHero);
+							heroAttackedATarget = true;
 						}
 					} else if (heroTypeToSearchFor == "ally") {
 						if (currentHero.tag == otherHero.tag) {
@@ -445,6 +452,7 @@ public class PlayField : MonoBehaviour {
 							validHeroes.Clear();
 							validHeroes.Add(otherHero);
 							closestHeroX = Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHeroX);
+							heroAttackedATarget = true;
 						}
 					} else if (heroTypeToSearchFor == "ally") {
 						if (currentHero.tag == otherHero.tag && Mathf.RoundToInt(otherHero.transform.position.x) - Mathf.RoundToInt(currentHeroX) < closestHeroX) {
@@ -467,6 +475,7 @@ public class PlayField : MonoBehaviour {
 							validHeroes.Clear();
 							validHeroes.Add(otherHero);
 							closestHeroX = Mathf.RoundToInt(currentHeroX) - Mathf.RoundToInt(otherHero.transform.position.x);
+							heroAttackedATarget = true;
 						}
 					} else if (heroTypeToSearchFor == "ally") {
 						if (currentHero.tag == otherHero.tag && Mathf.RoundToInt(currentHeroX) - Mathf.RoundToInt(otherHero.transform.position.x) < closestHeroX) {

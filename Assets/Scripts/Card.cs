@@ -14,9 +14,11 @@ public class Card : MonoBehaviour {
 	public string type;
 	public int quantity;
 	public int spellDamage;
+	public GameObject spellParticle;
 
 	private PlayField playField;
 	private Deck deck;
+	private GameObject player1,player2;
 
 	// Use this for initialization
 	void Start () {
@@ -24,6 +26,8 @@ public class Card : MonoBehaviour {
 		TypeText.text = type.ToString();
 		playField = FindObjectOfType<PlayField>();
 		deck = FindObjectOfType<Deck>();
+		player1 = GameObject.Find("player1");
+		player2 = GameObject.Find("player2");
 		if (type == "Hero") {
 			PowerText.text = heroPrefab.GetComponent<Hero>().power.ToString();
 			HealthText.text = heroPrefab.GetComponent<Hero>().maxHealth.ToString();
@@ -39,13 +43,19 @@ public class Card : MonoBehaviour {
 		}
 	}
 
+	public void DoSpellDamage (Transform hero,int spellDamage) {
+		hero.GetComponent<Hero>().TakeDamage(spellDamage);
+	}
+
 	public void CastSpell () {
 		if (cardName == "Fireball") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If there is an enemy in the square I clicked on then do spell damage to them
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
-						hero.GetComponent<Hero>().TakeDamage(spellDamage);
+						spellParticle.GetComponentInChildren<Spell>().hero = hero;
+						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
+//						hero.GetComponent<Hero>().TakeDamage(spellDamage);
 						RemoveCardFromHandAndAddToDiscard();
 						return;
 					} 
@@ -54,7 +64,9 @@ public class Card : MonoBehaviour {
 				foreach (Transform hero in playField.player1.transform) {
 					//If there is an enemy in the square I clicked on then do spell damage to them
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
-						hero.GetComponent<Hero>().TakeDamage(spellDamage);
+						spellParticle.GetComponentInChildren<Spell>().hero = hero;
+						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
+//						hero.GetComponent<Hero>().TakeDamage(spellDamage);
 						RemoveCardFromHandAndAddToDiscard();
 						return;
 					}
@@ -66,16 +78,28 @@ public class Card : MonoBehaviour {
 				foreach (Transform hero in playField.player2.transform) {
 					//If there is an enemy in the square I clicked on then do spell damage to them
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x) {
-						hero.GetComponent<Hero>().TakeDamage(spellDamage);
-						RemoveCardFromHandAndAddToDiscard();
+						Debug.Log("FOUND A HERO");
+						spellParticle.GetComponentInChildren<Spell>().hero = hero;
+						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
+//						hero.GetComponent<Hero>().TakeDamage(spellDamage);
+						//Need to check if I've already removed the card from my hand so I don't attempt to remove it again b/c that throws an exception and stops the loop
+						if (Card.selectedCard) {
+							RemoveCardFromHandAndAddToDiscard();
+						}
 					} 
 				}
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If there is an enemy in the square I clicked on then do spell damage to them
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x) {
-						hero.GetComponent<Hero>().TakeDamage(spellDamage);
-						RemoveCardFromHandAndAddToDiscard();
+						Debug.Log("FOUND A HERO");
+						spellParticle.GetComponentInChildren<Spell>().hero = hero;
+						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
+//						hero.GetComponent<Hero>().TakeDamage(spellDamage);
+						//Need to check if I've already removed the card from my hand so I don't attempt to remove it again b/c that throws an exception and stops the loop
+						if (Card.selectedCard) {
+							RemoveCardFromHandAndAddToDiscard();
+						}
 					}
 				}
 			}
