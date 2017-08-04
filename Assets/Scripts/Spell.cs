@@ -16,6 +16,7 @@ public class Spell : MonoBehaviour {
 
 	public void EndOfSpellEffects () {
 		if (gameObject.name == "Fireball") {
+			//TODO Think about referencing the 'TakeDamage' method in hero.cs directly here instead of going through card.cs
 			card.DoSpellDamage(hero,spellDamage);
 		} else if (gameObject.name == "FlameStrike") {
 			card.DoSpellDamage(hero,spellDamage);

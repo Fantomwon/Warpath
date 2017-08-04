@@ -168,5 +168,6 @@ public class Card : MonoBehaviour {
 		playField.ClearSelectedHeroAndSelectedCard();
 		//Increment the integer varaible 'cardsPlayed' to keep track of how many cards the player has succesfully played this turn
 		playField.IncrementCardsPlayedCounter();
+		Debug.Log("TOTAL CARDS PLAYED = " + playField.cardsPlayed);
 	}
 }

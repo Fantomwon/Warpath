@@ -87,7 +87,6 @@ public class PlayField : MonoBehaviour {
 
 		//Put the card that was just played into the appropriate player's discard pile
 		card.RemoveCardFromHandAndAddToDiscard();
-		Debug.Log("TOTAL CARDS PLAYED = " + cardsPlayed);
 	}
 	
 	Vector2 SnapToGrid(Vector2 rawWorldPosition){
