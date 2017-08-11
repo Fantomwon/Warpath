@@ -109,6 +109,7 @@ public class Card : MonoBehaviour {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on AND they are below max health then heal them to full
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
+						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealFull();
 						RemoveCardFromHandAndAddToDiscard();
 						return;
@@ -118,6 +119,7 @@ public class Card : MonoBehaviour {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on AND they are below max health then heal them to full
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
+						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealFull();
 						RemoveCardFromHandAndAddToDiscard();
 						return;
@@ -130,6 +132,7 @@ public class Card : MonoBehaviour {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on set 'movingRight' variable in Hero.cs to true
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player1MoveHasteCheck(hero);
 						RemoveCardFromHandAndAddToDiscard();
@@ -140,11 +143,12 @@ public class Card : MonoBehaviour {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on set 'movingLeft' variable in Hero.cs to true
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player2MoveHasteCheck(hero);
 						RemoveCardFromHandAndAddToDiscard();
 						return;
-					} 
+					}
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");

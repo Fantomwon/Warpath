@@ -21,6 +21,8 @@ public class PlayField : MonoBehaviour {
 	public int cardPlayLimit = 2;
 	public int cardsPlayed = 0;
 	public bool heroAttackedATarget = false;
+	public int player1HomeColumn = 1;
+	public int player2HomeColumn = 7;
 
 	private Card card;
 
@@ -52,7 +54,19 @@ public class PlayField : MonoBehaviour {
 		if (Card.selectedCard.GetComponent<Card>().type == "Spell") {
 			Card.selectedCard.GetComponent<Card>().CastSpell();
 			return;
-		} 
+		}
+
+		//Check to make sure the player is placing the 
+		if (Card.selectedCard.GetComponent<Card>().cardName == "Tower" && (roundedPos.x == player1HomeColumn || roundedPos.x == player2HomeColumn)) {
+			Debug.LogWarning("THIS HERO CANNOT BE PLACED IN EITHER PLAYER'S HOME ROW");
+			return;
+		} else if (player1Turn && roundedPos.x != player1HomeColumn && Card.selectedCard.GetComponent<Card>().cardName != "Tower") {
+			Debug.LogWarning("YOU MUST PLACE THIS HERO IN THE PLAYER 1 HOME ROW");
+			return;
+		} else if (!player1Turn && roundedPos.x != player2HomeColumn && Card.selectedCard.GetComponent<Card>().cardName != "Tower") {
+			Debug.LogWarning("YOU MUST PLACE THIS HERO IN THE PLAYER 2 HOME ROW");
+			return;
+		}
 
 		//Build full hero list then check to make sure that there aren't any other heroes already at that location on the board. If there are, return.
 		BuildFullHeroList();
