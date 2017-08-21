@@ -99,8 +99,10 @@ public class PlayField : MonoBehaviour {
 			x.gameObject.tag = "player2";
 		}
 
-		//Put the card that was just played into the appropriate player's discard pile
-		card.RemoveCardFromHandAndAddToDiscard();
+		//Put the card that was just played into the appropriate player's discard pile. If the card is a Tower card DO NOT remove it as the Tower card is now used more like a spell
+		if (Card.selectedCard.GetComponent<Card>().cardName != "Tower") {
+			card.RemoveCardFromHandAndAddToDiscard();
+		}
 	}
 	
 	Vector2 SnapToGrid(Vector2 rawWorldPosition){
@@ -561,21 +563,8 @@ public class PlayField : MonoBehaviour {
 
 	void Player1TurnStart () {
 		turnIndicator.text = "<color=blue>Player 1's Turn</color>";
-		//Enable collision on player 1 cards
-		BoxCollider2D[] player1Cards = GameObject.Find("Player1 Hand").GetComponentsInChildren<BoxCollider2D>();
-		foreach (BoxCollider2D col in player1Cards) {
-			col.enabled = true;
-		}
-		//Disable collision on player 2 cards
-		BoxCollider2D[] player2Cards = GameObject.Find("Player2 Hand").GetComponentsInChildren<BoxCollider2D>();
-		foreach (BoxCollider2D col in player2Cards) {
-			col.enabled = false;
-		}
-		//Visually show player 1 cards and hide player 2 cards
-		GameObject.Find("Player1 Hand").GetComponentInChildren<CanvasGroup>().alpha = 1;
-		GameObject.Find("Player1 Hand").GetComponentInChildren<CanvasGroup>().blocksRaycasts = true;
-		GameObject.Find("Player2 Hand").GetComponentInChildren<CanvasGroup>().alpha = 0;
-		GameObject.Find("Player2 Hand").GetComponentInChildren<CanvasGroup>().blocksRaycasts = false;
+		EnablePlayer1HandAndHidePlayer2Hand ();
+		EnablePlayer1SpellsAndHidePlayer2Spells ();
 
 		//Checks your current hand size and deals you back up to max
 		FindObjectOfType<Deck>().Player1DealCards();
@@ -583,24 +572,83 @@ public class PlayField : MonoBehaviour {
 
 	void Player2TurnStart () {
 		turnIndicator.text = "<color=red>Player 2's Turn</color>";
+		EnablePlayer2HandAndHidePlayer1Hand ();
+		EnablePlayer2SpellsAndHidePlayer1Spells ();
+
+		//Checks your current hand size and deals you back up to max
+		FindObjectOfType<Deck>().Player2DealCards();
+	}
+
+	void EnablePlayer1HandAndHidePlayer2Hand () {
+		//Enable collision on player 1 cards
+		BoxCollider2D[] player1Cards = GameObject.Find ("Player1 Hand").GetComponentsInChildren<BoxCollider2D> ();
+		foreach (BoxCollider2D col in player1Cards) {
+			col.enabled = true;
+		}
+		//Disable collision on player 2 cards
+		BoxCollider2D[] player2Cards = GameObject.Find ("Player2 Hand").GetComponentsInChildren<BoxCollider2D> ();
+		foreach (BoxCollider2D col in player2Cards) {
+			col.enabled = false;
+		}
+		//Visually show player 1 cards and hide player 2 cards
+		GameObject.Find ("Player1 Hand").GetComponentInChildren<CanvasGroup> ().alpha = 1;
+		GameObject.Find ("Player1 Hand").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = true;
+		GameObject.Find ("Player2 Hand").GetComponentInChildren<CanvasGroup> ().alpha = 0;
+		GameObject.Find ("Player2 Hand").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = false;
+	}
+
+	void EnablePlayer2HandAndHidePlayer1Hand () {
 		//Disable collision on player 1 cards
-		BoxCollider2D[] player1Cards = GameObject.Find("Player1 Hand").GetComponentsInChildren<BoxCollider2D>();
+		BoxCollider2D[] player1Cards = GameObject.Find ("Player1 Hand").GetComponentsInChildren<BoxCollider2D> ();
 		foreach (BoxCollider2D col in player1Cards) {
 			col.enabled = false;
 		}
 		//Enable collision on player 2 cards
-		BoxCollider2D[] player2Cards = GameObject.Find("Player2 Hand").GetComponentsInChildren<BoxCollider2D>();
+		BoxCollider2D[] player2Cards = GameObject.Find ("Player2 Hand").GetComponentsInChildren<BoxCollider2D> ();
 		foreach (BoxCollider2D col in player2Cards) {
 			col.enabled = true;
 		}
 		//Visually show player 2 cards and hide player 1 cards
-		GameObject.Find("Player1 Hand").GetComponentInChildren<CanvasGroup>().alpha = 0;
-		GameObject.Find("Player1 Hand").GetComponentInChildren<CanvasGroup>().blocksRaycasts = false;
-		GameObject.Find("Player2 Hand").GetComponentInChildren<CanvasGroup>().alpha = 1;
-		GameObject.Find("Player2 Hand").GetComponentInChildren<CanvasGroup>().blocksRaycasts = true;
+		GameObject.Find ("Player1 Hand").GetComponentInChildren<CanvasGroup> ().alpha = 0;
+		GameObject.Find ("Player1 Hand").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = false;
+		GameObject.Find ("Player2 Hand").GetComponentInChildren<CanvasGroup> ().alpha = 1;
+		GameObject.Find ("Player2 Hand").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = true;
+	}
 
-		//Checks your current hand size and deals you back up to max
-		FindObjectOfType<Deck>().Player2DealCards();
+	void EnablePlayer1SpellsAndHidePlayer2Spells () {
+		//Enable collision on player 1 cards
+		BoxCollider2D[] player1Spells = GameObject.Find ("Player1 Spells").GetComponentsInChildren<BoxCollider2D> ();
+		foreach (BoxCollider2D col in player1Spells) {
+			col.enabled = true;
+		}
+		//Disable collision on player 2 cards
+		BoxCollider2D[] player2Spells = GameObject.Find ("Player2 Spells").GetComponentsInChildren<BoxCollider2D> ();
+		foreach (BoxCollider2D col in player2Spells) {
+			col.enabled = false;
+		}
+		//Visually show player 1 cards and hide player 2 cards
+		GameObject.Find ("Player1 Spells").GetComponentInChildren<CanvasGroup> ().alpha = 1;
+		GameObject.Find ("Player1 Spells").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = true;
+		GameObject.Find ("Player2 Spells").GetComponentInChildren<CanvasGroup> ().alpha = 0;
+		GameObject.Find ("Player2 Spells").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = false;
+	}
+
+	void EnablePlayer2SpellsAndHidePlayer1Spells () {
+		//Disable collision on player 1 cards
+		BoxCollider2D[] player1Spells = GameObject.Find ("Player1 Spells").GetComponentsInChildren<BoxCollider2D> ();
+		foreach (BoxCollider2D col in player1Spells) {
+			col.enabled = false;
+		}
+		//Enable collision on player 2 cards
+		BoxCollider2D[] player2Spells = GameObject.Find ("Player2 Spells").GetComponentsInChildren<BoxCollider2D> ();
+		foreach (BoxCollider2D col in player2Spells) {
+			col.enabled = true;
+		}
+		//Visually show player 2 cards and hide player 1 cards
+		GameObject.Find ("Player1 Spells").GetComponentInChildren<CanvasGroup> ().alpha = 0;
+		GameObject.Find ("Player1 Spells").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = false;
+		GameObject.Find ("Player2 Spells").GetComponentInChildren<CanvasGroup> ().alpha = 1;
+		GameObject.Find ("Player2 Spells").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = true;
 	}
 
 	public void LosePlayerHealth (int dmg) {

@@ -10,9 +10,11 @@ public class Deck : MonoBehaviour {
 	public List<GameObject> player2Deck;
 	public List<GameObject> player1Discard;
 	public List<GameObject> player2Discard;
-	public GameObject card1, card2, card3, card4, card5, card6, card7, card8, card9, card10;
+	public GameObject card1, card2, card3, card4, card5;
+	public GameObject spell1, spell2, spell3, spell4, spell5;
 	public Text cardsRemaining;
 
+	private string player1Class, player2Class;
 	private int maxHandSize = 5;
 	private PlayField playField;
 	private Card card;
@@ -24,6 +26,9 @@ public class Deck : MonoBehaviour {
 		ShuffleDeck (player2Deck);
 		playField = GameObject.FindObjectOfType<PlayField>();
 		card = FindObjectOfType<Card>();
+		player1Class = "Wizard";
+		player2Class = "Blacksmith";
+		SetPlayerSpells();
 	}
 
 	void BuildDeck () {
@@ -44,21 +49,6 @@ public class Deck : MonoBehaviour {
 		for (int i=0; i < card5.GetComponent<Card>().quantity; i++) {
 			player1Deck.Add (card5);
 		}
-		for (int i=0; i < card6.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card6);
-		}
-		for (int i=0; i < card7.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card7);
-		}
-		for (int i=0; i < card8.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card8);
-		}
-		for (int i=0; i < card9.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card9);
-		}
-		for (int i=0; i < card10.GetComponent<Card>().quantity; i++) {
-			player1Deck.Add (card10);
-		}
 
 		//TEMP: Just manually adding cards to the deck for now. Eventually will need to hook up deck loadouts.
 		for (int i=0; i < card1.GetComponent<Card>().quantity; i++) {
@@ -75,21 +65,6 @@ public class Deck : MonoBehaviour {
 		}
 		for (int i=0; i < card5.GetComponent<Card>().quantity; i++) {
 			player2Deck.Add (card5);
-		}
-		for (int i=0; i < card6.GetComponent<Card>().quantity; i++) {
-			player2Deck.Add (card6);
-		}
-		for (int i=0; i < card7.GetComponent<Card>().quantity; i++) {
-			player2Deck.Add (card7);
-		}
-		for (int i=0; i < card8.GetComponent<Card>().quantity; i++) {
-			player2Deck.Add (card8);
-		}
-		for (int i=0; i < card9.GetComponent<Card>().quantity; i++) {
-			player2Deck.Add (card9);
-		}
-		for (int i=0; i < card9.GetComponent<Card>().quantity; i++) {
-			player2Deck.Add (card10);
 		}
 	}
 
@@ -197,5 +172,36 @@ public class Deck : MonoBehaviour {
 //		for (int i=0; i<player2Discard.Count(); i++) {
 //			Debug.Log(player2Discard[i].name);
 //		}
+	}
+
+
+	void SetPlayerSpells () {
+		if (player1Class == "Wizard") {
+			GameObject newCard = Instantiate (spell1) as GameObject;
+			newCard.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
+		} else if (player1Class == "Rogue") {
+			GameObject newCard = Instantiate (spell3) as GameObject;
+			newCard.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
+		} else if (player1Class == "Druid") {
+			GameObject newCard = Instantiate (spell4) as GameObject;
+			newCard.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
+		} else if (player1Class == "Blacksmith") {
+			GameObject newCard = Instantiate (spell5) as GameObject;
+			newCard.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
+		}
+
+		if (player2Class == "Wizard") {
+			GameObject newCard = Instantiate (spell1) as GameObject;
+			newCard.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
+		} else if (player2Class == "Rogue") {
+			GameObject newCard = Instantiate (spell3) as GameObject;
+			newCard.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
+		} else if (player2Class == "Druid") {
+			GameObject newCard = Instantiate (spell4) as GameObject;
+			newCard.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
+		} else if (player2Class == "Blacksmith") {
+			GameObject newCard = Instantiate (spell5) as GameObject;
+			newCard.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
+		}
 	}
 }

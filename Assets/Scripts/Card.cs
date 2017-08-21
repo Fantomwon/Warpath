@@ -56,7 +56,7 @@ public class Card : MonoBehaviour {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
 //						hero.GetComponent<Hero>().TakeDamage(spellDamage);
-						RemoveCardFromHandAndAddToDiscard();
+//						RemoveCardFromHandAndAddToDiscard();
 						return;
 					} 
 				}
@@ -67,7 +67,7 @@ public class Card : MonoBehaviour {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
 //						hero.GetComponent<Hero>().TakeDamage(spellDamage);
-						RemoveCardFromHandAndAddToDiscard();
+//						RemoveCardFromHandAndAddToDiscard();
 						return;
 					}
 				}
@@ -83,9 +83,9 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
 //						hero.GetComponent<Hero>().TakeDamage(spellDamage);
 						//Need to check if I've already removed the card from my hand so I don't attempt to remove it again b/c that throws an exception and stops the loop
-						if (Card.selectedCard) {
-							RemoveCardFromHandAndAddToDiscard();
-						}
+//						if (Card.selectedCard) {
+//							RemoveCardFromHandAndAddToDiscard();
+//						}
 					} 
 				}
 			} else if (!playField.player1Turn) {
@@ -97,9 +97,9 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
 //						hero.GetComponent<Hero>().TakeDamage(spellDamage);
 						//Need to check if I've already removed the card from my hand so I don't attempt to remove it again b/c that throws an exception and stops the loop
-						if (Card.selectedCard) {
-							RemoveCardFromHandAndAddToDiscard();
-						}
+//						if (Card.selectedCard) {
+//							RemoveCardFromHandAndAddToDiscard();
+//						}
 					}
 				}
 			}
@@ -111,7 +111,7 @@ public class Card : MonoBehaviour {
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealFull();
-						RemoveCardFromHandAndAddToDiscard();
+//						RemoveCardFromHandAndAddToDiscard();
 						return;
 					} 
 				}
@@ -121,7 +121,7 @@ public class Card : MonoBehaviour {
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealFull();
-						RemoveCardFromHandAndAddToDiscard();
+//						RemoveCardFromHandAndAddToDiscard();
 						return;
 					}
 				}
@@ -135,7 +135,7 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player1MoveHasteCheck(hero);
-						RemoveCardFromHandAndAddToDiscard();
+//						RemoveCardFromHandAndAddToDiscard();
 						return;
 					} 
 				}
@@ -146,7 +146,7 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player2MoveHasteCheck(hero);
-						RemoveCardFromHandAndAddToDiscard();
+//						RemoveCardFromHandAndAddToDiscard();
 						return;
 					}
 				}
