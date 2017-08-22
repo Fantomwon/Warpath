@@ -9,9 +9,10 @@ public class Card : MonoBehaviour {
 	public GameObject heroPrefab;
 	public GameObject cardReferenceObject;
 	public static GameObject selectedCard;
-	public Text NameText, TypeText, PowerText, HealthText, SpeedText, RangeText;
+	public Text ManaCost, NameText, TypeText, PowerText, HealthText, SpeedText, RangeText;
 	public string cardName;
 	public string type;
+	public int manaCost;
 	public int quantity;
 	public int spellDamage;
 	public GameObject spellParticle;
@@ -22,13 +23,14 @@ public class Card : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		ManaCost.text = manaCost.ToString();
 		NameText.text = cardName.ToString();
 		TypeText.text = type.ToString();
 		playField = FindObjectOfType<PlayField>();
 		deck = FindObjectOfType<Deck>();
 		player1 = GameObject.Find("player1");
 		player2 = GameObject.Find("player2");
-		if (type == "Hero") {
+		if (type == "Hero" || cardName =="Tower") {
 			PowerText.text = heroPrefab.GetComponent<Hero>().power.ToString();
 			HealthText.text = heroPrefab.GetComponent<Hero>().maxHealth.ToString();
 			SpeedText.text = heroPrefab.GetComponent<Hero>().speed.ToString();
@@ -38,7 +40,7 @@ public class Card : MonoBehaviour {
 
 	void OnMouseDown () {
 		selectedCard = gameObject;
-		if (type == "Hero") {
+		if (type == "Hero" || cardName =="Tower") {
 			selectedHero = heroPrefab;
 		}
 	}
@@ -55,6 +57,7 @@ public class Card : MonoBehaviour {
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
+						playField.SubtractMana();
 //						hero.GetComponent<Hero>().TakeDamage(spellDamage);
 //						RemoveCardFromHandAndAddToDiscard();
 						return;
@@ -66,6 +69,7 @@ public class Card : MonoBehaviour {
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
+						playField.SubtractMana();
 //						hero.GetComponent<Hero>().TakeDamage(spellDamage);
 //						RemoveCardFromHandAndAddToDiscard();
 						return;
@@ -81,6 +85,7 @@ public class Card : MonoBehaviour {
 						Debug.Log("FOUND A HERO");
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
+						playField.SubtractMana();
 //						hero.GetComponent<Hero>().TakeDamage(spellDamage);
 						//Need to check if I've already removed the card from my hand so I don't attempt to remove it again b/c that throws an exception and stops the loop
 //						if (Card.selectedCard) {
@@ -95,6 +100,7 @@ public class Card : MonoBehaviour {
 						Debug.Log("FOUND A HERO");
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
+						playField.SubtractMana();
 //						hero.GetComponent<Hero>().TakeDamage(spellDamage);
 						//Need to check if I've already removed the card from my hand so I don't attempt to remove it again b/c that throws an exception and stops the loop
 //						if (Card.selectedCard) {
@@ -111,6 +117,7 @@ public class Card : MonoBehaviour {
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealFull();
+						playField.SubtractMana();
 //						RemoveCardFromHandAndAddToDiscard();
 						return;
 					} 
@@ -121,6 +128,7 @@ public class Card : MonoBehaviour {
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealFull();
+						playField.SubtractMana();
 //						RemoveCardFromHandAndAddToDiscard();
 						return;
 					}
@@ -135,6 +143,7 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player1MoveHasteCheck(hero);
+						playField.SubtractMana();
 //						RemoveCardFromHandAndAddToDiscard();
 						return;
 					} 
@@ -146,6 +155,7 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player2MoveHasteCheck(hero);
+						playField.SubtractMana();
 //						RemoveCardFromHandAndAddToDiscard();
 						return;
 					}
@@ -171,7 +181,5 @@ public class Card : MonoBehaviour {
 		//Set the 'selected hero' and 'selected card' variables to default so the game doesn't think I still have anything selected
 		playField.ClearSelectedHeroAndSelectedCard();
 		//Increment the integer varaible 'cardsPlayed' to keep track of how many cards the player has succesfully played this turn
-		playField.IncrementCardsPlayedCounter();
-		Debug.Log("TOTAL CARDS PLAYED = " + playField.cardsPlayed);
 	}
 }

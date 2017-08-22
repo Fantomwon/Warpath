@@ -11,20 +11,21 @@ public class PlayField : MonoBehaviour {
 	public bool player1Turn = true;
 	public Text turnIndicator;
 	public Text player1HealthText, player2HealthText;
-	public int player1Health = 5, player2Health = 5;
+	public Text manaCount;
+	public int player1Health = 3, player2Health = 3;
 	public List<Vector2> myHeroCoords;
 	public List<Vector2> sortedHeroCoords;
 	public List<Vector2> fullHeroCoords;
 	public List<Transform> fullHeroTransformList;
 	public Vector2 roundedPos;
 	public GameObject player1, player2;
-	public int cardPlayLimit = 2;
-	public int cardsPlayed = 0;
 	public bool heroAttackedATarget = false;
 	public int player1HomeColumn = 1;
 	public int player2HomeColumn = 7;
 
 	private Card card;
+	private int player1Mana = 0, player2Mana = 0;
+	private int player1ManaMax = 10, player2ManaMax = 10;
 
 
 	// Use this for initialization
@@ -40,9 +41,18 @@ public class PlayField : MonoBehaviour {
 	void OnMouseDown(){
 		//print (Input.mousePosition);
 		//print (SnapToGrid(CalculateWorldPointOfMouseClick()));
-		if (cardsPlayed >= cardPlayLimit) {
-			Debug.LogWarning("CANNOT PLAY ANY MORE CARDS THIS TURN");
-			return;
+
+		//Check that the player has enough mana to play the selected card. If they do not, return.
+		if (player1Turn) {
+			if (Card.selectedCard.GetComponent<Card>().manaCost > player1Mana) {
+				Debug.LogWarning("NOT ENOUGH MANA TO PLAY THIS CARD");
+				return;
+			}
+		} else if (!player1Turn) {
+			if (Card.selectedCard.GetComponent<Card>().manaCost > player2Mana) {
+				Debug.LogWarning("NOT ENOUGH MANA TO PLAY THIS CARD");
+				return;
+			}
 		}
 			
 		//Use CalculateWorldPointOfMouseClick method to get the 'raw position' (position in pixels) of where the player clicked in the world
@@ -51,12 +61,12 @@ public class PlayField : MonoBehaviour {
 		roundedPos = SnapToGrid(rawPos);
 
 		//If the selected card is a spell card, cast it, ELSE treat the card as a hero card
-		if (Card.selectedCard.GetComponent<Card>().type == "Spell") {
+		if (Card.selectedCard.GetComponent<Card>().type == "Spell" && Card.selectedCard.GetComponent<Card>().cardName != "Tower") {
 			Card.selectedCard.GetComponent<Card>().CastSpell();
 			return;
 		}
 
-		//Check to make sure the player is placing the 
+		//Check to make sure the player is placing their hero in an appropriate location (e.g. Towers cannot be placed in home rows, all other heroes MUST be placed in home rows, etc...)
 		if (Card.selectedCard.GetComponent<Card>().cardName == "Tower" && (roundedPos.x == player1HomeColumn || roundedPos.x == player2HomeColumn)) {
 			Debug.LogWarning("THIS HERO CANNOT BE PLACED IN EITHER PLAYER'S HOME ROW");
 			return;
@@ -83,6 +93,8 @@ public class PlayField : MonoBehaviour {
 			//Child the newly spawned hero to the appropriate player
 			x.transform.SetParent(player1.transform, false);
 			x.gameObject.tag = "player1";
+
+			SubtractMana();
 		} else if (!player1Turn) {
 			//Flip the hero so it faces to the left
 			Vector3 scale = x.GetComponentInChildren<SpriteRenderer>().transform.localScale;
@@ -97,11 +109,18 @@ public class PlayField : MonoBehaviour {
 			//Child the newly spawned hero to the appropriate player
 			x.transform.SetParent(player2.transform, false);
 			x.gameObject.tag = "player2";
+
+			SubtractMana();
 		}
 
 		//Put the card that was just played into the appropriate player's discard pile. If the card is a Tower card DO NOT remove it as the Tower card is now used more like a spell
 		if (Card.selectedCard.GetComponent<Card>().cardName != "Tower") {
 			card.RemoveCardFromHandAndAddToDiscard();
+		} else {
+			//Make sure that the currently selected hero/card is cleared. This is basically for the instance of a spell that summons a hero (e.g. the "Tower"). B/c we do not remove
+			//the Tower card from the player's hand, the 'clearselectedheroandselectedcard' method doesn't get called until the player hits 'endturn', which can pose problems, so
+			//we call it here also, right after the Tower has been placed.
+			ClearSelectedHeroAndSelectedCard();
 		}
 	}
 	
@@ -134,7 +153,6 @@ public class PlayField : MonoBehaviour {
 		MoveHeroes ();
 		ClearSelectedHeroAndSelectedCard ();
 		FindObjectOfType<HandHider>().HideHand();
-		cardsPlayed = 0;
 	}
 
 	void BuildSortedHeroList () {
@@ -566,6 +584,15 @@ public class PlayField : MonoBehaviour {
 		EnablePlayer1HandAndHidePlayer2Hand ();
 		EnablePlayer1SpellsAndHidePlayer2Spells ();
 
+		//Add one mana to this player's mana pool
+		if (player1Mana < player1ManaMax) {
+			player1Mana+= 3;
+			if (player1Mana > player1ManaMax) {
+				player1Mana = player1ManaMax;
+			}
+		}
+		manaCount.text = player1Mana.ToString();
+
 		//Checks your current hand size and deals you back up to max
 		FindObjectOfType<Deck>().Player1DealCards();
 	}
@@ -574,6 +601,15 @@ public class PlayField : MonoBehaviour {
 		turnIndicator.text = "<color=red>Player 2's Turn</color>";
 		EnablePlayer2HandAndHidePlayer1Hand ();
 		EnablePlayer2SpellsAndHidePlayer1Spells ();
+
+		//Add one mana to this player's mana pool
+		if (player2Mana < player2ManaMax) {
+			player2Mana+= 3;
+			if (player2Mana > player2ManaMax) {
+				player2Mana = player2ManaMax;
+			}
+		}
+		manaCount.text = player2Mana.ToString();
 
 		//Checks your current hand size and deals you back up to max
 		FindObjectOfType<Deck>().Player2DealCards();
@@ -679,8 +715,14 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
-	public void IncrementCardsPlayedCounter () {
-		cardsPlayed += 1;
+	public void SubtractMana () {
+		if (player1Turn) {
+			player1Mana = player1Mana - Card.selectedCard.GetComponent<Card>().manaCost;
+			manaCount.text = player1Mana.ToString();
+		} else if (!player1Turn) {
+			player2Mana = player2Mana - Card.selectedCard.GetComponent<Card>().manaCost;
+			manaCount.text = player2Mana.ToString();
+		}
 	}
 
 	public void TestTest () {

@@ -17,7 +17,6 @@ public class Deck : MonoBehaviour {
 	private string player1Class, player2Class;
 	private int maxHandSize = 5;
 	private PlayField playField;
-	private Card card;
 
 	// Use this for initialization
 	void Start () {
@@ -25,7 +24,6 @@ public class Deck : MonoBehaviour {
 		ShuffleDeck (player1Deck);
 		ShuffleDeck (player2Deck);
 		playField = GameObject.FindObjectOfType<PlayField>();
-		card = FindObjectOfType<Card>();
 		player1Class = "Wizard";
 		player2Class = "Blacksmith";
 		SetPlayerSpells();
@@ -69,7 +67,6 @@ public class Deck : MonoBehaviour {
 	}
 
 	public void RedealHand () {
-		int temp = playField.cardsPlayed;
 		if (playField.player1Turn) {
 			//Cycle through each card in my hand and remove it and add it to my discard pile
 			foreach (Transform currentCard in GameObject.Find("Player1 Hand").transform) {
@@ -93,9 +90,6 @@ public class Deck : MonoBehaviour {
 
 			Player2DealCards ();
 		}
-
-		playField.cardsPlayed = temp;
-
 	}
 
 	void ShuffleDeck (List<GameObject> myDeck) {
