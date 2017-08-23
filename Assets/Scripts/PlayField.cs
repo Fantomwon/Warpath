@@ -11,7 +11,7 @@ public class PlayField : MonoBehaviour {
 	public bool player1Turn = true;
 	public Text turnIndicator;
 	public Text player1HealthText, player2HealthText;
-	public Text manaCount;
+	public Text player1ManaText, player2ManaText;
 	public int player1Health = 3, player2Health = 3;
 	public List<Vector2> myHeroCoords;
 	public List<Vector2> sortedHeroCoords;
@@ -26,6 +26,7 @@ public class PlayField : MonoBehaviour {
 	private Card card;
 	private int player1Mana = 0, player2Mana = 0;
 	private int player1ManaMax = 10, player2ManaMax = 10;
+	private int manaPerTurn = 3;
 
 
 	// Use this for initialization
@@ -36,6 +37,7 @@ public class PlayField : MonoBehaviour {
 		player1HealthText.text = player1Health.ToString();
 		player2HealthText.text = player2Health.ToString();
 		card = FindObjectOfType<Card>();
+		player2ManaText.text = player2Mana.ToString();
 	}
 
 	void OnMouseDown(){
@@ -586,12 +588,12 @@ public class PlayField : MonoBehaviour {
 
 		//Add one mana to this player's mana pool
 		if (player1Mana < player1ManaMax) {
-			player1Mana+= 3;
+			player1Mana+= manaPerTurn;
 			if (player1Mana > player1ManaMax) {
 				player1Mana = player1ManaMax;
 			}
 		}
-		manaCount.text = player1Mana.ToString();
+		player1ManaText.text = player1Mana.ToString();
 
 		//Checks your current hand size and deals you back up to max
 		FindObjectOfType<Deck>().Player1DealCards();
@@ -604,12 +606,12 @@ public class PlayField : MonoBehaviour {
 
 		//Add one mana to this player's mana pool
 		if (player2Mana < player2ManaMax) {
-			player2Mana+= 3;
+			player2Mana+= manaPerTurn;
 			if (player2Mana > player2ManaMax) {
 				player2Mana = player2ManaMax;
 			}
 		}
-		manaCount.text = player2Mana.ToString();
+		player2ManaText.text = player2Mana.ToString();
 
 		//Checks your current hand size and deals you back up to max
 		FindObjectOfType<Deck>().Player2DealCards();
@@ -718,10 +720,10 @@ public class PlayField : MonoBehaviour {
 	public void SubtractMana () {
 		if (player1Turn) {
 			player1Mana = player1Mana - Card.selectedCard.GetComponent<Card>().manaCost;
-			manaCount.text = player1Mana.ToString();
+			player1ManaText.text = player1Mana.ToString();
 		} else if (!player1Turn) {
 			player2Mana = player2Mana - Card.selectedCard.GetComponent<Card>().manaCost;
-			manaCount.text = player2Mana.ToString();
+			player2ManaText.text = player2Mana.ToString();
 		}
 	}
 
