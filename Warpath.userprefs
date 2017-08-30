@@ -1,19 +1,19 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj" RefactoringSettings.EnableRefactorings="True">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Card.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayField.cs">
     <Files>
-      <File FileName="Assets\Scripts\Hero.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Deck.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Hero.cs" Line="75" Column="27" />
+      <File FileName="Assets\Scripts\Deck.cs" Line="92" Column="4" />
       <File FileName="..\Glitch Garden\Assets\Scripts\DefenderSpawner.cs" Line="1" Column="1" />
       <File FileName="..\Glitch Garden\Assets\Scripts\Attacker.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayField.cs" Line="55" Column="52" />
+      <File FileName="Assets\Scripts\PlayField.cs" Line="62" Column="73" />
       <File FileName="..\Zombie Runner\Assets\Scripts\Inventory.cs" Line="1" Column="1" />
       <File FileName="..\Glitch Garden\Assets\Scripts\Button.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GameController.cs" Line="1" Column="1" />
       <File FileName="..\Bowlmaster\Assets\Scripts\ScoreDisplay.cs" Line="1" Column="1" />
       <File FileName="..\Laser Defender\Assets\Scripts\ScoreDisplay.cs" Line="1" Column="1" />
       <File FileName="..\Glitch Garden\Assets\Scripts\Health.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Card.cs" Line="59" Column="43" />
+      <File FileName="Assets\Scripts\Card.cs" Line="183" Column="125" />
       <File FileName="Assets\Scripts\CardReference.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\HandHider.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\TestObject.cs" Line="1" Column="1" />

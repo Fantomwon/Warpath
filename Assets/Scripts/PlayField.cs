@@ -22,6 +22,7 @@ public class PlayField : MonoBehaviour {
 	public bool heroAttackedATarget = false;
 	public int player1HomeColumn = 1;
 	public int player2HomeColumn = 7;
+	public ParticleSystem manaParticle;
 
 	private Card card;
 	private int player1Mana = 0, player2Mana = 0;
@@ -191,20 +192,25 @@ public class PlayField : MonoBehaviour {
 
 	}
 
+	IEnumerator SwitchPlayerTurns () {
+		yield return new WaitForSeconds(0.5f);
+		player1Turn = !player1Turn;
+		if (player1Turn) {
+			Player1TurnStart ();
+		} else if (!player1Turn) {
+			Player2TurnStart ();
+		}
+	}
+
 	public void MoveHeroes ()
 	{
 //		Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
 
 		// If there are no more heroes left to move then end my turn
 		if (sortedHeroCoords.ToArray().Length <= 0) {
-			Debug.Log("CHANGING PLAYER TURNS");
+//			Debug.Log("CHANGING PLAYER TURNS");
 			EndOfTurnEffects ();
-			player1Turn = !player1Turn;
-			if (player1Turn) {
-				Player1TurnStart ();
-			} else if (!player1Turn) {
-				Player2TurnStart ();
-			}
+			StartCoroutine("SwitchPlayerTurns");
 			return;
 		}
 		//Debug.LogWarning("RUNNING MOVEHEROES");
@@ -341,6 +347,23 @@ public class PlayField : MonoBehaviour {
 	//Takes a 'currentHero' and a list of enemy heroes, then the currentHero attacks all of the enemy heroes in the list using the 'TakeDamage()' method
 	private void AttackEnemiesInList (Transform currentHero, List<Transform> enemies) {
 		foreach (Transform enemy in enemies) {
+			//SPECIAL CASES for doing more damage
+			if (currentHero.GetComponent<Hero>().id == "assassin") {
+				if (enemy.GetComponent<Hero>().currentHealth < 5) {
+					enemy.GetComponent<Hero>().TakeDamage(enemy.GetComponent<Hero>().currentHealth);
+				}
+			}
+
+			if (enemy.GetComponent<Hero>().id == "monk") {
+				if (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) != 1 && 
+				Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) != -1) {
+					enemy.GetComponent<Hero>().DodgeDamage();
+					Debug.Log("DISTANCE BETWEEN HEROES IS: " + (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x)));
+					return;
+				}
+			}
+
+			//Do your damage vs. the current target
 			enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
 		}
 	}
@@ -586,14 +609,8 @@ public class PlayField : MonoBehaviour {
 		EnablePlayer1HandAndHidePlayer2Hand ();
 		EnablePlayer1SpellsAndHidePlayer2Spells ();
 
-		//Add one mana to this player's mana pool
-		if (player1Mana < player1ManaMax) {
-			player1Mana+= manaPerTurn;
-			if (player1Mana > player1ManaMax) {
-				player1Mana = player1ManaMax;
-			}
-		}
-		player1ManaText.text = player1Mana.ToString();
+		Player1AddMana (manaPerTurn);
+		StartOfTurnEffects ();
 
 		//Checks your current hand size and deals you back up to max
 		FindObjectOfType<Deck>().Player1DealCards();
@@ -604,14 +621,8 @@ public class PlayField : MonoBehaviour {
 		EnablePlayer2HandAndHidePlayer1Hand ();
 		EnablePlayer2SpellsAndHidePlayer1Spells ();
 
-		//Add one mana to this player's mana pool
-		if (player2Mana < player2ManaMax) {
-			player2Mana+= manaPerTurn;
-			if (player2Mana > player2ManaMax) {
-				player2Mana = player2ManaMax;
-			}
-		}
-		player2ManaText.text = player2Mana.ToString();
+		Player2AddMana (manaPerTurn);
+		StartOfTurnEffects ();
 
 		//Checks your current hand size and deals you back up to max
 		FindObjectOfType<Deck>().Player2DealCards();
@@ -689,6 +700,30 @@ public class PlayField : MonoBehaviour {
 		GameObject.Find ("Player2 Spells").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = true;
 	}
 
+	void Player1AddMana (int amt)
+	{
+		//Add one mana to this player's mana pool
+		if (amt < player1ManaMax) {
+			player1Mana += amt;
+			if (player1Mana > player1ManaMax) {
+				player1Mana = player1ManaMax;
+			}
+		}
+		player1ManaText.text = player1Mana.ToString ();
+	}
+
+	void Player2AddMana (int amt)
+	{
+		//Add one mana to this player's mana pool
+		if (player2Mana < player2ManaMax) {
+			player2Mana += amt;
+			if (player2Mana > player2ManaMax) {
+				player2Mana = player2ManaMax;
+			}
+		}
+		player2ManaText.text = player2Mana.ToString ();
+	}
+
 	public void LosePlayerHealth (int dmg) {
 		if (player1Turn) {
 			player2Health -= dmg;
@@ -699,9 +734,38 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
+	void StartOfTurnEffects () {
+		BuildFullHeroTransformList ();
+		List<Transform> divinerList = new List<Transform>();
+
+		foreach (Transform hero in fullHeroTransformList) {
+			if (hero.GetComponent<Hero>().id == "diviner") {
+				divinerList.Add(hero);
+			}
+		}
+		foreach (Transform diviner in divinerList) {
+			if (player1Turn && diviner.tag == "player1") {
+				if (player1Mana < player1ManaMax) {
+					Instantiate (manaParticle, diviner.transform.position, Quaternion.identity);
+				}
+
+				Player1AddMana(1);
+			} else if (!player1Turn && diviner.tag == "player2") {
+				if (player2Mana < player2ManaMax) {
+					Instantiate (manaParticle, diviner.transform.position, Quaternion.identity);
+				}
+
+				Player2AddMana(1);
+			}
+		}
+	}
+
 	void EndOfTurnEffects () {
 		BuildFullHeroTransformList ();
 
+		//We have to build a separate list of just the druids b/c otherwise if we were iterate through the fullHeroTransformList and try to make
+		//each druid in that full list run TargetCheckAllDirections() we would be modifying the fullHeroTransform list again before we were
+		//done with it. This throws an error and will screw things up so don't do it yah knucklehead.
 		List<Transform> druidList = new List<Transform>();
 		foreach (Transform hero in fullHeroTransformList) {
 			if (hero.GetComponent<Hero>().id == "druid") {
