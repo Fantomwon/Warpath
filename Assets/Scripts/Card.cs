@@ -32,7 +32,7 @@ public class Card : MonoBehaviour {
 		buffManager = FindObjectOfType<BuffManager>();
 		player1 = GameObject.Find("player1");
 		player2 = GameObject.Find("player2");
-		if (type == "Hero" || cardName =="Tower") {
+		if (type == "Hero" || cardName == "Tower" || cardName == "Wall") {
 			PowerText.text = heroPrefab.GetComponent<Hero>().power.ToString();
 			HealthText.text = heroPrefab.GetComponent<Hero>().maxHealth.ToString();
 			SpeedText.text = heroPrefab.GetComponent<Hero>().speed.ToString();
@@ -42,7 +42,7 @@ public class Card : MonoBehaviour {
 
 	void OnMouseDown () {
 		selectedCard = gameObject;
-		if (type == "Hero" || cardName =="Tower") {
+		if (type == "Hero" || cardName =="Tower" || cardName == "Wall") {
 			selectedHero = heroPrefab;
 		}
 	}

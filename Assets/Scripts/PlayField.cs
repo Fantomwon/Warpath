@@ -66,19 +66,19 @@ public class PlayField : MonoBehaviour {
 		roundedPos = SnapToGrid(rawPos);
 
 		//If the selected card is a spell card, cast it, ELSE treat the card as a hero card
-		if (Card.selectedCard.GetComponent<Card>().type == "Spell" && Card.selectedCard.GetComponent<Card>().cardName != "Tower") {
+		if (Card.selectedCard.GetComponent<Card>().type == "Spell" && Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
 			Card.selectedCard.GetComponent<Card>().CastSpell();
 			return;
 		}
 
-		//Check to make sure the player is placing their hero in an appropriate location (e.g. Towers cannot be placed in home rows, all other heroes MUST be placed in home rows, etc...)
-		if (Card.selectedCard.GetComponent<Card>().cardName == "Tower" && (roundedPos.x == player1HomeColumn || roundedPos.x == player2HomeColumn)) {
+		//Check to make sure the player is placing their hero in an appropriate location (e.g. Towers/Walls cannot be placed in home rows, all other heroes MUST be placed in home rows, etc...)
+		if ((Card.selectedCard.GetComponent<Card>().cardName == "Tower" || Card.selectedCard.GetComponent<Card>().cardName == "Wall") && (roundedPos.x == player1HomeColumn || roundedPos.x == player2HomeColumn)) {
 			Debug.LogWarning("THIS HERO CANNOT BE PLACED IN EITHER PLAYER'S HOME ROW");
 			return;
-		} else if (player1Turn && roundedPos.x != player1HomeColumn && Card.selectedCard.GetComponent<Card>().cardName != "Tower") {
+		} else if (player1Turn && roundedPos.x != player1HomeColumn && Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
 			Debug.LogWarning("YOU MUST PLACE THIS HERO IN THE PLAYER 1 HOME ROW");
 			return;
-		} else if (!player1Turn && roundedPos.x != player2HomeColumn && Card.selectedCard.GetComponent<Card>().cardName != "Tower") {
+		} else if (!player1Turn && roundedPos.x != player2HomeColumn && Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
 			Debug.LogWarning("YOU MUST PLACE THIS HERO IN THE PLAYER 2 HOME ROW");
 			return;
 		}
@@ -131,8 +131,8 @@ public class PlayField : MonoBehaviour {
 			SubtractMana();
 		}
 
-		//Put the card that was just played into the appropriate player's discard pile. If the card is a Tower card DO NOT remove it as the Tower card is now used more like a spell
-		if (Card.selectedCard.GetComponent<Card>().cardName != "Tower") {
+		//Put the card that was just played into the appropriate player's discard pile. If the card is a Tower or Wall card DO NOT remove it as the Tower and Wall cards are used more like  spells
+		if (Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
 			card.RemoveCardFromHandAndAddToDiscard();
 		} else {
 			//Make sure that the currently selected hero/card is cleared. This is basically for the instance of a spell that summons a hero (e.g. the "Tower"). B/c we do not remove
