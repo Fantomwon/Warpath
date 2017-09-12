@@ -346,7 +346,7 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
-	//Gets called from hero.cs after the hero has finished moving
+	//Gets called from AnimationEvents.cs via an animation event on the hero's attack animation
 	public void HeroTargetCheck (Transform currentHero) {
 		if (currentHero.GetComponent<Hero>().id == "rogue") {
 			AttackEnemiesInList(currentHero, TargetCheckCardinalDirections(currentHero, "enemy"));
@@ -360,7 +360,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	//Takes a 'currentHero' and a list of enemy heroes, then the currentHero attacks all of the enemy heroes in the list using the 'TakeDamage()' method
-	private void AttackEnemiesInList (Transform currentHero, List<Transform> enemies) {
+	public void AttackEnemiesInList (Transform currentHero, List<Transform> enemies) {
 		foreach (Transform enemy in enemies) {
 
 			//SPECIAL CASES for modifying damage
@@ -402,7 +402,7 @@ public class PlayField : MonoBehaviour {
 
 	//Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a list of the given herotypes that are currently located in ANY direction around the currenthero, including diagonals
 	//IMPORTANT: This target check currently only supports checking all directions at a range of 1. That is to say that a hero's range WILL NOT AFFECT HOW FAR THIS METHOD CHECKS TO RETURN TARGETS
-	private List<Transform> TargetCheckAllDirections (Transform currentHero, string heroTypeToSearchFor) {
+	public List<Transform> TargetCheckAllDirections (Transform currentHero, string heroTypeToSearchFor) {
 		List<Transform> validHeroes = new List<Transform>();
 		BuildFullHeroTransformList();
 		float currentHeroX = currentHero.transform.position.x;
@@ -437,7 +437,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	//Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a list of the given herotypes that are currently located in any CARDINAL direction around the currenthero, NOT including diagonals
-	private List<Transform> TargetCheckCardinalDirections (Transform currentHero, string heroTypeToSearchFor) {
+	public List<Transform> TargetCheckCardinalDirections (Transform currentHero, string heroTypeToSearchFor) {
 		List<Transform> validHeroes = new List<Transform>();
 		BuildFullHeroTransformList();
 		float currentHeroX = currentHero.transform.position.x;
@@ -466,7 +466,7 @@ public class PlayField : MonoBehaviour {
 		return validHeroes;
 	}
 
-	private List<Transform> TargetCheckAllHeroesInRange (Transform currentHero, string heroTypeToSearchFor) {
+	public List<Transform> TargetCheckAllHeroesInRange (Transform currentHero, string heroTypeToSearchFor) {
 		List<Transform> validHeroes = new List<Transform>();
 		BuildFullHeroTransformList();
 		float currentHeroX = currentHero.transform.position.x;
@@ -515,7 +515,7 @@ public class PlayField : MonoBehaviour {
 		return validHeroes;
 	}
 
-	private List<Transform> TargetCheckClosestHeroInRange (Transform currentHero, string heroTypeToSearchFor) {
+	public List<Transform> TargetCheckClosestHeroInRange (Transform currentHero, string heroTypeToSearchFor) {
 		List<Transform> validHeroes = new List<Transform>();
 		float closestHeroX = 999f;
 		BuildFullHeroTransformList();
