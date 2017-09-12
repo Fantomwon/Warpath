@@ -45,6 +45,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Buff.cs" />
+     <Compile Include="Assets\Scripts\BuffManager.cs" />
      <Compile Include="Assets\Scripts\Card.cs" />
      <Compile Include="Assets\Scripts\CardReference.cs" />
      <Compile Include="Assets\Scripts\Deck.cs" />

@@ -23,6 +23,7 @@ public class PlayField : MonoBehaviour {
 	public int player1HomeColumn = 1;
 	public int player2HomeColumn = 7;
 	public ParticleSystem manaParticle;
+	public BuffManager buffManager;
 
 	private Card card;
 	private int player1Mana = 0, player2Mana = 0;
@@ -39,6 +40,7 @@ public class PlayField : MonoBehaviour {
 		player2HealthText.text = player2Health.ToString();
 		card = FindObjectOfType<Card>();
 		player2ManaText.text = player2Mana.ToString();
+		buffManager = FindObjectOfType<BuffManager>();
 	}
 
 	void OnMouseDown(){
@@ -104,10 +106,23 @@ public class PlayField : MonoBehaviour {
 			scale.x = (scale.x *= -1);
 			x.GetComponentInChildren<SpriteRenderer>().transform.localScale = scale;
 
-			//Move the text so that it sits on the left side of the hero
-			Vector3 newTextPosition = x.GetComponentInChildren<Text>().rectTransform.localPosition;
-			newTextPosition.x *= -1;
-			x.GetComponentInChildren<Text>().rectTransform.localPosition = newTextPosition;
+
+			//DEPRECATED FOR NOW: The buff/debuff icons now show up on the correct side of the player2 heroes by default. I'm not sure why, so I'm keeping this code just in case I need it again in the future!
+//			float newOffsetMaxX = x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMax.y;
+//			float newOffsetMaxY = x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMax.x;
+
+			//Flip the 'Buff' bar on the hero so it is on the left side of them
+			//Change the RectTransform's 'Right' value with the 'x' position and 'Top' value with the 'y' position
+//			x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMax = new Vector2(newOffsetMaxX,x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMax.y);
+			//Change the RectTransform's 'Left' value with the 'x' position and 'Bottom' value with the 'y' position
+//			x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMin = new Vector2(newOffsetMaxY*-1,x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMax.y*-1);
+
+			//Move the Armor and Health text so that it sits on the left side of the hero
+			foreach (Transform text in x.transform) {
+				Vector3 newTextPosition = text.transform.localPosition;
+				newTextPosition.x *= -1;
+				text.transform.localPosition = newTextPosition;
+			}
 
 			//Child the newly spawned hero to the appropriate player
 			x.transform.SetParent(player2.transform, false);
@@ -347,18 +362,28 @@ public class PlayField : MonoBehaviour {
 	//Takes a 'currentHero' and a list of enemy heroes, then the currentHero attacks all of the enemy heroes in the list using the 'TakeDamage()' method
 	private void AttackEnemiesInList (Transform currentHero, List<Transform> enemies) {
 		foreach (Transform enemy in enemies) {
-			//SPECIAL CASES for doing more damage
+
+			//SPECIAL CASES for modifying damage
+			//If my dodge chance succeeds, dodge the incoming attack
+			if (enemy.GetComponent<Hero>().dodgeChance > Random.Range(0.0f, 0.99f)) {
+				enemy.GetComponent<Hero>().DodgeDamage();
+				Debug.Log("DODGED AN ATTACK B/C OF MY DODGE CHANCE");
+				return;
+			}
+
+			//If the attacker is an assassin and the target is below a specific health threshold, kill the target
 			if (currentHero.GetComponent<Hero>().id == "assassin") {
 				if (enemy.GetComponent<Hero>().currentHealth < 5) {
 					enemy.GetComponent<Hero>().TakeDamage(enemy.GetComponent<Hero>().currentHealth);
 				}
 			}
 
+			//If the defender is a monk and the attacker is further away than melee ranger, the monk will dodge the incoming attack
 			if (enemy.GetComponent<Hero>().id == "monk") {
 				if (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) != 1 && 
 				Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) != -1) {
 					enemy.GetComponent<Hero>().DodgeDamage();
-					Debug.Log("DISTANCE BETWEEN HEROES IS: " + (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x)));
+					Debug.Log("DODGED AN ATTACK B/C I'M A MONK");
 					return;
 				}
 			}
@@ -735,6 +760,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void StartOfTurnEffects () {
+		//Add mana for each Diviner that the player has on the field
 		BuildFullHeroTransformList ();
 		List<Transform> divinerList = new List<Transform>();
 
@@ -758,6 +784,18 @@ public class PlayField : MonoBehaviour {
 				Player2AddMana(1);
 			}
 		}
+
+		//Decrement the buffs on each hero that the player has on the field
+		if (player1Turn) {
+			foreach (Transform hero in player1.transform) {
+				buffManager.DecrementBuffDurations(hero);
+			}
+		} else if (!player1Turn) {
+			foreach (Transform hero in player2.transform) {
+				buffManager.DecrementBuffDurations(hero);
+			}
+		}
+
 	}
 
 	void EndOfTurnEffects () {
