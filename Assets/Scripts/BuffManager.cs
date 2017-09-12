@@ -3,6 +3,7 @@ using System.Collections;
 
 public class BuffManager : MonoBehaviour {
 
+	public GameObject buffMight;
 	public GameObject buffShroud;
 	public GameObject debuffRoot;
 
@@ -12,6 +13,10 @@ public class BuffManager : MonoBehaviour {
 	}
 
 	public void ApplyBuff (string buffId, Transform hero) {
+		if (buffId == "might") {
+			GameObject buff = Instantiate (buffMight, hero.transform.FindChild("Buffs").transform.localPosition, Quaternion.identity, hero.transform.FindChild("Buffs").transform) as GameObject;
+			buff.GetComponent<Buff>().myHero = hero;
+		}
 		if (buffId == "shroud") {
 			GameObject buff = Instantiate (buffShroud, hero.transform.FindChild("Buffs").transform.localPosition, Quaternion.identity, hero.transform.FindChild("Buffs").transform) as GameObject;
 			buff.GetComponent<Buff>().myHero = hero;
