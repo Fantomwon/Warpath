@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\AnimationEvents.cs" />
+     <Compile Include="Assets\Scripts\AttackTellBoxes.cs" />
      <Compile Include="Assets\Scripts\Buff.cs" />
      <Compile Include="Assets\Scripts\BuffManager.cs" />
      <Compile Include="Assets\Scripts\Card.cs" />

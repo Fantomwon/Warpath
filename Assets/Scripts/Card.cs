@@ -150,7 +150,7 @@ public class Card : MonoBehaviour {
 		} else if (cardName == "Might") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
-					//If one of my heroes is in the square I clicked on then give them the 'Shroud' buff for the appropriate duration
+					//If one of my heroes is in the square I clicked on then give them the 'Might' buff for the appropriate duration
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("might", hero);
@@ -161,7 +161,7 @@ public class Card : MonoBehaviour {
 				}
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
-					//If one of my heroes is in the square I clicked on then give them the 'Shroud' buff for the appropriate duration
+					//If one of my heroes is in the square I clicked on then give them the 'Might' buff for the appropriate duration
 					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("might", hero);
