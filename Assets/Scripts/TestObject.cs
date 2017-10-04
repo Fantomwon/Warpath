@@ -26,4 +26,14 @@ public class TestObject : MonoBehaviour {
 			}
 		}
 	}
+
+	public void BuildDeck () {
+		Debug.Log("RUNNING BUILDDECK()");
+		foreach (GameObject card in GlobalObject.instance.player1DeckSelect) {
+			for (int i=0; i<card.GetComponent<Card>().quantity; i++) {
+				Debug.Log("FOUND A CARD IN PLAYER1DECKSELECTLIST");
+				FindObjectOfType<Deck>().player1Deck.Add(card);
+			}
+		}
+	}
 }

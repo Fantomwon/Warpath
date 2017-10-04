@@ -6,10 +6,10 @@ using System.Collections;
 public class Card : MonoBehaviour {
 
 	public static GameObject selectedHero;
+	public static GameObject selectedCard;
 	public GameObject heroPrefab;
 	public GameObject cardReferenceObject;
-	public static GameObject selectedCard;
-	public Text ManaCost, NameText, TypeText, PowerText, HealthText, SpeedText, RangeText;
+	public Text ManaCost, NameText, PowerText, HealthText, SpeedText, RangeText;
 	public string cardName;
 	public string type;
 	public int manaCost;
@@ -24,14 +24,13 @@ public class Card : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		ManaCost.text = manaCost.ToString();
-		NameText.text = cardName.ToString();
-		TypeText.text = type.ToString();
 		playField = FindObjectOfType<PlayField>();
 		deck = FindObjectOfType<Deck>();
 		buffManager = FindObjectOfType<BuffManager>();
 		player1 = GameObject.Find("player1");
 		player2 = GameObject.Find("player2");
+		ManaCost.text = manaCost.ToString();
+		NameText.text = cardName.ToString();
 		if (type == "Hero" || cardName == "Tower" || cardName == "Wall") {
 			PowerText.text = heroPrefab.GetComponent<Hero>().power.ToString();
 			HealthText.text = heroPrefab.GetComponent<Hero>().maxHealth.ToString();
@@ -42,6 +41,7 @@ public class Card : MonoBehaviour {
 
 	void OnMouseDown () {
 		selectedCard = gameObject;
+//		Debug.Log("SELECTED CARD IS " + selectedCard.name);
 		if (type == "Hero" || cardName =="Tower" || cardName == "Wall") {
 			selectedHero = heroPrefab;
 		}
@@ -56,7 +56,7 @@ public class Card : MonoBehaviour {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method)
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
 						playField.SubtractMana();
@@ -66,7 +66,7 @@ public class Card : MonoBehaviour {
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method)
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
 						playField.SubtractMana();
@@ -78,7 +78,7 @@ public class Card : MonoBehaviour {
 		} else if (cardName == "Flame Strike") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
-					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method)
+					//If there are any enemies in the COLUMN that I clicked on then do spell damage to all of them (spell damage is applied through 'EndOfSpellEffects' method)
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x) {
 						Debug.Log("FOUND A HERO");
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
@@ -88,7 +88,7 @@ public class Card : MonoBehaviour {
 				}
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
-					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method)
+					//If there are any enemies in the COLUMN that I clicked on then do spell damage to all of them (spell damage is applied through 'EndOfSpellEffects' method)
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x) {
 						Debug.Log("FOUND A HERO");
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
@@ -102,18 +102,17 @@ public class Card : MonoBehaviour {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on AND they are below max health then heal them to full
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealFull();
 						playField.SubtractMana();
-//						RemoveCardFromHandAndAddToDiscard();
 						return;
 					} 
 				}
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on AND they are below max health then heal them to full
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealFull();
 						playField.SubtractMana();
@@ -126,7 +125,7 @@ public class Card : MonoBehaviour {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on set 'movingRight' variable in Hero.cs to true
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player1MoveHasteCheck(hero);
@@ -137,7 +136,7 @@ public class Card : MonoBehaviour {
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on set 'movingLeft' variable in Hero.cs to true
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player2MoveHasteCheck(hero);
@@ -151,7 +150,7 @@ public class Card : MonoBehaviour {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on then give them the 'Might' buff for the appropriate duration
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("might", hero);
 						playField.SubtractMana();
@@ -162,7 +161,7 @@ public class Card : MonoBehaviour {
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on then give them the 'Might' buff for the appropriate duration
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("might", hero);
 						playField.SubtractMana();
@@ -176,7 +175,7 @@ public class Card : MonoBehaviour {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on then give them the 'Shroud' buff for the appropriate duration
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("shroud", hero);
 						playField.SubtractMana();
@@ -187,7 +186,7 @@ public class Card : MonoBehaviour {
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on then give them the 'Shroud' buff for the appropriate duration
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("shroud", hero);
 						playField.SubtractMana();
@@ -201,7 +200,7 @@ public class Card : MonoBehaviour {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on then add to their armor value by the appropriate amount
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().AddArmor(3);
 						playField.SubtractMana();
@@ -212,7 +211,7 @@ public class Card : MonoBehaviour {
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on then add to their armor value by the appropriate amount
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().AddArmor(3);
 						playField.SubtractMana();
@@ -226,7 +225,7 @@ public class Card : MonoBehaviour {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on then add to their armor value by the appropriate amount
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().HealFull();
 						hero.GetComponent<Hero>().AddArmor(3);
@@ -238,7 +237,7 @@ public class Card : MonoBehaviour {
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on then add to their armor value by the appropriate amount
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().HealFull();
 						hero.GetComponent<Hero>().AddArmor(3);
@@ -253,7 +252,7 @@ public class Card : MonoBehaviour {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If there is an enemy in the square I clicked on then cast the 'Root' debuff on them
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("root", hero);
 						playField.SubtractMana();
@@ -264,11 +263,68 @@ public class Card : MonoBehaviour {
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If there is an enemy in the square I clicked on then cast the 'Root' debuff on them
-					if (hero.transform.position.x == playField.roundedPos.x && hero.transform.position.y == playField.roundedPos.y) {
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("root", hero);
 						playField.SubtractMana();
 
+						return;
+					}
+				}
+			}
+			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
+		} else if (cardName == "Wind Gust") {
+			float maxDistToMove = 3f;
+			float currentDistToMove;
+			if (playField.player1Turn) {
+				foreach (Transform hero in playField.player2.transform) {
+					//If there is an enemy in the square I clicked on then do attempt to cast this spell on them
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
+						if (playField.FindClosestHeroToTheRight(hero) == 1 || hero.transform.position.x == playField.player2HomeColumn) {
+							Debug.LogWarning("Cannot move hero b/c there is no space behind them");
+							return;
+						}
+
+						//If there are NOT any heroes in the way of my maxDistToMove then move that max distance, else move as far as I can
+						if (playField.FindClosestHeroToTheRight(hero) > maxDistToMove) {
+							currentDistToMove = maxDistToMove + 1;
+							//If the currentDistToMove would place me beyond the player2HomeColumn then adjust the value so it only takes me as far as the player2HomeColumn
+							if (currentDistToMove + hero.transform.position.x > playField.player2HomeColumn) {
+								currentDistToMove = playField.player2HomeColumn - hero.transform.position.x + 1;
+							}
+						} else {
+							currentDistToMove = playField.FindClosestHeroToTheRight(hero);
+						}
+
+						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
+						hero.GetComponent<Hero>().MoveSingleHeroRight(currentDistToMove - 1);
+						playField.SubtractMana();
+						return;
+					} 
+				}
+			} else if (!playField.player1Turn) {
+				foreach (Transform hero in playField.player1.transform) {
+					//If there is an enemy in the square I clicked on then do attempt to cast this spell on them
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
+						if (playField.FindClosestHeroToTheLeft(hero) == 1 || hero.transform.position.x == playField.player1HomeColumn) {
+							Debug.LogWarning("Cannot move hero b/c there is no space behind them");
+							return;
+						}
+
+						//If there are NOT any heroes in the way of my maxDistToMove then move that max distance, else move as far as I can
+						if (playField.FindClosestHeroToTheLeft(hero) > maxDistToMove) {
+							currentDistToMove = maxDistToMove + 1;
+							//If the currentDistToMove would place me beyond the player2HomeColumn then adjust the value so it only takes me as far as the player2HomeColumn
+							if (hero.transform.position.x - currentDistToMove < playField.player1HomeColumn) {
+								currentDistToMove = hero.transform.position.x - playField.player1HomeColumn + 1;
+							}
+						} else {
+							currentDistToMove = playField.FindClosestHeroToTheLeft(hero);
+						}
+
+						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
+						hero.GetComponent<Hero>().MoveSingleHeroLeft(currentDistToMove - 1);
+						playField.SubtractMana();
 						return;
 					}
 				}

@@ -47,6 +47,11 @@ public class PlayField : MonoBehaviour {
 		//print (Input.mousePosition);
 		//print (SnapToGrid(CalculateWorldPointOfMouseClick()));
 
+		if (!Card.selectedCard) {
+			Debug.LogWarning("NO CARD SELECTED");
+			return;
+		}
+
 		//Check that the player has enough mana to play the selected card. If they do not, return.
 		if (player1Turn) {
 			if (Card.selectedCard.GetComponent<Card>().manaCost > player1Mana) {
@@ -98,14 +103,16 @@ public class PlayField : MonoBehaviour {
 			//Child the newly spawned hero to the appropriate player
 			x.transform.SetParent(player1.transform, false);
 			x.gameObject.tag = "player1";
+			Color xAlpha = x.transform.FindChild("Player1Indicator").GetComponent<SpriteRenderer>().color ;
+			xAlpha.a = 0.5f;
+			x.transform.FindChild("Player1Indicator").GetComponent<SpriteRenderer>().color = xAlpha;
 
 			SubtractMana();
 		} else if (!player1Turn) {
 			//Flip the hero so it faces to the left
-			Vector3 scale = x.GetComponentInChildren<SpriteRenderer>().transform.localScale;
+			Vector3 scale = x.transform.FindChild("Image").GetComponent<SpriteRenderer>().transform.localScale;
 			scale.x = (scale.x *= -1);
-			x.GetComponentInChildren<SpriteRenderer>().transform.localScale = scale;
-
+			x.transform.FindChild("Image").GetComponent<SpriteRenderer>().transform.localScale = scale;
 
 			//DEPRECATED FOR NOW: The buff/debuff icons now show up on the correct side of the player2 heroes by default. I'm not sure why, so I'm keeping this code just in case I need it again in the future!
 //			float newOffsetMaxX = x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMax.y;
@@ -127,6 +134,9 @@ public class PlayField : MonoBehaviour {
 			//Child the newly spawned hero to the appropriate player
 			x.transform.SetParent(player2.transform, false);
 			x.gameObject.tag = "player2";
+			Color xAlpha = x.transform.FindChild("Player2Indicator").GetComponent<SpriteRenderer>().color ;
+			xAlpha.a = 0.5f;
+			x.transform.FindChild("Player2Indicator").GetComponent<SpriteRenderer>().color = xAlpha;
 
 			SubtractMana();
 		}
@@ -142,13 +152,13 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 	
-	Vector2 SnapToGrid(Vector2 rawWorldPosition){
+	public Vector2 SnapToGrid(Vector2 rawWorldPosition){
 		float newX = Mathf.RoundToInt(rawWorldPosition.x);
 		float newY = Mathf.RoundToInt(rawWorldPosition.y);
 		return new Vector2(newX, newY);
 	}
 	
-	Vector2 CalculateWorldPointOfMouseClick(){
+	public Vector2 CalculateWorldPointOfMouseClick(){
 		
 		//Get the pixel coordinate for mouse input x and y, and also set the distance of the game camera, which doesn't really matter for this game b/c we're...
 		//... using an orthographic camera
@@ -318,6 +328,32 @@ public class PlayField : MonoBehaviour {
 		} else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
 			currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(Mathf.RoundToInt(closestHero)-1);
 		}
+	}
+
+	public float FindClosestHeroToTheRight (Transform currentHero) {
+		BuildFullHeroList ();
+		float closestHero = 999f;
+		foreach (Vector2 hero in fullHeroCoords) {
+			//Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
+			if (hero.y == currentHero.transform.position.y && ((hero.x - currentHero.transform.position.x) < closestHero) && ((hero.x - currentHero.transform.position.x) > 0)) {
+				closestHero = hero.x - currentHero.transform.position.x;
+			}
+		}
+
+		return closestHero;
+	}
+
+	public float FindClosestHeroToTheLeft (Transform currentHero) {
+		BuildFullHeroList ();
+		float closestHero = 999f;
+		foreach (Vector2 hero in fullHeroCoords) {
+			//Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
+			if (hero.y == currentHero.transform.position.y && ((currentHero.transform.position.x - hero.x) < closestHero) && ((currentHero.transform.position.x - hero.x) > 0)) {
+				closestHero = currentHero.transform.position.x - hero.x;
+			}
+		}
+
+		return closestHero;
 	}
 
 	void BuildFullHeroList () {
