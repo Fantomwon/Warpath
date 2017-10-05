@@ -58,7 +58,8 @@ public class Card : MonoBehaviour {
 		if (cardName == "Fireball") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
-					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method)
+					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method which is part of Spell.cs and is attached to
+					//the 'Fireball' object nested under the 'FireballParticle' object)
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
@@ -70,7 +71,8 @@ public class Card : MonoBehaviour {
 				}
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
-					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method)
+					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method which is part of Spell.cs and is attached to
+					//the 'Fireball' object nested under the 'FireballParticle' object)
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
@@ -90,11 +92,11 @@ public class Card : MonoBehaviour {
 						Debug.Log("FOUND A HERO");
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
 					} 
 				}
+				playField.SubtractMana();
+				SetSpellCooldown();
+				playField.ClearSelectedHeroAndSelectedCard();
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If there are any enemies in the COLUMN that I clicked on then do spell damage to all of them (spell damage is applied through 'EndOfSpellEffects' method)
@@ -102,11 +104,12 @@ public class Card : MonoBehaviour {
 						Debug.Log("FOUND A HERO");
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+
 					}
 				}
+				playField.SubtractMana();
+				SetSpellCooldown();
+				playField.ClearSelectedHeroAndSelectedCard();
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		} else if (cardName == "Heal") {
@@ -366,7 +369,7 @@ public class Card : MonoBehaviour {
 		}
 	}
 
-	private void SetSpellCooldown () {
+	public void SetSpellCooldown () {
 		spellCooldownCurrent = spellCooldownStart + 1;
 		this.GetComponent<Button>().interactable = false;
 		this.gameObject.transform.FindChild("CooldownText").GetComponent<CanvasGroup>().alpha = 1;

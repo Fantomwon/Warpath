@@ -29,7 +29,7 @@ public class PlayField : MonoBehaviour {
 	private Card card;
 	private int player1Mana = 0, player2Mana = 0;
 	private int player1ManaMax = 10, player2ManaMax = 10;
-	private int manaPerTurn = 3;
+	private int manaPerTurn = 4;
 	private int turnsPlayed = 0;
 
 
@@ -141,6 +141,10 @@ public class PlayField : MonoBehaviour {
 			x.transform.FindChild("Player2Indicator").GetComponent<SpriteRenderer>().color = xAlpha;
 
 			SubtractMana();
+		}
+
+		if (Card.selectedCard.GetComponent<Card>().type == "Spell") {
+			Card.selectedCard.GetComponent<Card>().SetSpellCooldown();
 		}
 
 		//Put the card that was just played into the appropriate player's discard pile. If the card is a Tower or Wall card DO NOT remove it as the Tower and Wall cards are used more like spells

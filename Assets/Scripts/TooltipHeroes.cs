@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class TooltipHeroes : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler 
 {
 
-	private float holdTime = 1f;
+	private float holdTime = 0.5f;
 	private PlayField playField;
 	private Vector2 roundedPos;
 	private GameObject currentHero;

@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class TooltipSpells : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler 
 {
 
-	private float holdTime = 1f;
+	private float holdTime = 0.5f;
 	private bool spellSelected;
 
 	public UnityEvent onLongPress = new UnityEvent();
