@@ -12,6 +12,7 @@ public class PlayField : MonoBehaviour {
 	public Text turnIndicator;
 	public Text player1HealthText, player2HealthText;
 	public Text player1ManaText, player2ManaText;
+	public Text turnsPlayedText;
 	public int player1Health = 3, player2Health = 3;
 	public List<Vector2> myHeroCoords;
 	public List<Vector2> sortedHeroCoords;
@@ -29,6 +30,7 @@ public class PlayField : MonoBehaviour {
 	private int player1Mana = 0, player2Mana = 0;
 	private int player1ManaMax = 10, player2ManaMax = 10;
 	private int manaPerTurn = 3;
+	private int turnsPlayed = 0;
 
 
 	// Use this for initialization
@@ -666,6 +668,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void Player1TurnStart () {
+		IncrementTurnsPlayedTracker ();
 		turnIndicator.text = "<color=blue>Player 1's Turn</color>";
 		EnablePlayer1HandAndHidePlayer2Hand ();
 		EnablePlayer1SpellsAndHidePlayer2Spells ();
@@ -679,6 +682,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void Player2TurnStart () {
+		IncrementTurnsPlayedTracker ();
 		turnIndicator.text = "<color=red>Player 2's Turn</color>";
 		EnablePlayer2HandAndHidePlayer1Hand ();
 		EnablePlayer2SpellsAndHidePlayer1Spells ();
@@ -877,6 +881,12 @@ public class PlayField : MonoBehaviour {
 				spell.GetComponent<Card>().ReduceSpellCooldown();
 			}
 		}
+	}
+
+	void IncrementTurnsPlayedTracker ()
+	{
+		turnsPlayed += 1;
+		turnsPlayedText.text = turnsPlayed.ToString ();
 	}
 
 	public void TestTest () {
