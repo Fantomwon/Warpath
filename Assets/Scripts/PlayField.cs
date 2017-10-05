@@ -141,13 +141,13 @@ public class PlayField : MonoBehaviour {
 			SubtractMana();
 		}
 
-		//Put the card that was just played into the appropriate player's discard pile. If the card is a Tower or Wall card DO NOT remove it as the Tower and Wall cards are used more like  spells
+		//Put the card that was just played into the appropriate player's discard pile. If the card is a Tower or Wall card DO NOT remove it as the Tower and Wall cards are used more like spells
 		if (Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
 			card.RemoveCardFromHandAndAddToDiscard();
 		} else {
 			//Make sure that the currently selected hero/card is cleared. This is basically for the instance of a spell that summons a hero (e.g. the "Tower"). B/c we do not remove
 			//the Tower card from the player's hand, the 'clearselectedheroandselectedcard' method doesn't get called until the player hits 'endturn', which can pose problems, so
-			//we call it here also, right after the Tower has been placed.
+			//we call it here also, right after the Tower or Wall has been placed.
 			ClearSelectedHeroAndSelectedCard();
 		}
 	}
@@ -672,6 +672,7 @@ public class PlayField : MonoBehaviour {
 
 		Player1AddMana (manaPerTurn);
 		StartOfTurnEffects ();
+		ReduceSpellCooldowns ();
 
 		//Checks your current hand size and deals you back up to max
 		FindObjectOfType<Deck>().Player1DealCards();
@@ -684,6 +685,7 @@ public class PlayField : MonoBehaviour {
 
 		Player2AddMana (manaPerTurn);
 		StartOfTurnEffects ();
+		ReduceSpellCooldowns ();
 
 		//Checks your current hand size and deals you back up to max
 		FindObjectOfType<Deck>().Player2DealCards();
@@ -862,6 +864,18 @@ public class PlayField : MonoBehaviour {
 		} else if (!player1Turn) {
 			player2Mana = player2Mana - Card.selectedCard.GetComponent<Card>().manaCost;
 			player2ManaText.text = player2Mana.ToString();
+		}
+	}
+
+	void ReduceSpellCooldowns () {
+		if (player1Turn) {
+			foreach (Transform spell in GameObject.Find("Player1 Spells").transform) {
+				spell.GetComponent<Card>().ReduceSpellCooldown();
+			}
+		} else if (!player1Turn) {
+			foreach (Transform spell in GameObject.Find("Player2 Spells").transform) {
+				spell.GetComponent<Card>().ReduceSpellCooldown();
+			}
 		}
 	}
 

@@ -18,17 +18,19 @@ public class TooltipSpells : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	}
 
 	public void OnPointerUp(PointerEventData eventData) {
+		if (spellSelected) {
+			EventSystem.current.currentSelectedGameObject.transform.FindChild("Tooltip").GetComponent<CanvasGroup>().alpha = 0;
+		}
 		CancelInvoke("OnLongPress");
-		EventSystem.current.currentSelectedGameObject.transform.FindChild("Tooltip").GetComponent<CanvasGroup>().alpha = 0;
 		spellSelected = false;
 	}
 
 	public void OnPointerExit(PointerEventData eventData) {
 		if (spellSelected) {
-			CancelInvoke("OnLongPress");
 			EventSystem.current.currentSelectedGameObject.transform.FindChild("Tooltip").GetComponent<CanvasGroup>().alpha = 0;
-			spellSelected = false;
 		}
+		CancelInvoke("OnLongPress");
+		spellSelected = false;
 	}
 
 	private void OnLongPress () {

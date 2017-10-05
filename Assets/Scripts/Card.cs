@@ -15,6 +15,7 @@ public class Card : MonoBehaviour {
 	public int manaCost;
 	public int quantity;
 	public int spellDamage;
+	public int spellCooldownStart, spellCooldownCurrent;
 	public GameObject spellParticle;
 
 	private PlayField playField;
@@ -40,10 +41,12 @@ public class Card : MonoBehaviour {
 	}
 
 	void OnMouseDown () {
-		selectedCard = gameObject;
-//		Debug.Log("SELECTED CARD IS " + selectedCard.name);
-		if (type == "Hero" || cardName =="Tower" || cardName == "Wall") {
-			selectedHero = heroPrefab;
+		if (spellCooldownCurrent <= 0) {
+			selectedCard = gameObject;
+//			Debug.Log("SELECTED CARD IS " + selectedCard.name);
+			if (type == "Hero" || cardName =="Tower" || cardName == "Wall") {
+				selectedHero = heroPrefab;
+			}
 		}
 	}
 
@@ -60,6 +63,8 @@ public class Card : MonoBehaviour {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
 						playField.SubtractMana();
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					} 
 				}
@@ -70,6 +75,8 @@ public class Card : MonoBehaviour {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
 						playField.SubtractMana();
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					}
 				}
@@ -84,6 +91,8 @@ public class Card : MonoBehaviour {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
 						playField.SubtractMana();
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 					} 
 				}
 			} else if (!playField.player1Turn) {
@@ -94,6 +103,8 @@ public class Card : MonoBehaviour {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
 						playField.SubtractMana();
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 					}
 				}
 			}
@@ -106,6 +117,8 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealFull();
 						playField.SubtractMana();
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					} 
 				}
@@ -116,6 +129,8 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealFull();
 						playField.SubtractMana();
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					}
 				}
@@ -130,6 +145,8 @@ public class Card : MonoBehaviour {
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player1MoveHasteCheck(hero);
 						playField.SubtractMana();
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					} 
 				}
@@ -141,6 +158,8 @@ public class Card : MonoBehaviour {
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player2MoveHasteCheck(hero);
 						playField.SubtractMana();
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					}
 				}
@@ -154,7 +173,8 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("might", hero);
 						playField.SubtractMana();
-
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					} 
 				}
@@ -165,7 +185,8 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("might", hero);
 						playField.SubtractMana();
-
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					}
 				}
@@ -179,7 +200,8 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("shroud", hero);
 						playField.SubtractMana();
-
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					} 
 				}
@@ -190,7 +212,8 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("shroud", hero);
 						playField.SubtractMana();
-
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					}
 				}
@@ -204,7 +227,8 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().AddArmor(3);
 						playField.SubtractMana();
-
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					} 
 				}
@@ -215,7 +239,8 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().AddArmor(3);
 						playField.SubtractMana();
-
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					}
 				}
@@ -230,7 +255,8 @@ public class Card : MonoBehaviour {
 						hero.GetComponent<Hero>().HealFull();
 						hero.GetComponent<Hero>().AddArmor(3);
 						playField.SubtractMana();
-
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					} 
 				}
@@ -242,7 +268,8 @@ public class Card : MonoBehaviour {
 						hero.GetComponent<Hero>().HealFull();
 						hero.GetComponent<Hero>().AddArmor(3);
 						playField.SubtractMana();
-
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					}
 				}
@@ -256,7 +283,8 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("root", hero);
 						playField.SubtractMana();
-
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					} 
 				}
@@ -267,7 +295,8 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("root", hero);
 						playField.SubtractMana();
-
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					}
 				}
@@ -299,6 +328,8 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().MoveSingleHeroRight(currentDistToMove - 1);
 						playField.SubtractMana();
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					} 
 				}
@@ -325,11 +356,33 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().MoveSingleHeroLeft(currentDistToMove - 1);
 						playField.SubtractMana();
+						SetSpellCooldown();
+						playField.ClearSelectedHeroAndSelectedCard();
 						return;
 					}
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
+		}
+	}
+
+	private void SetSpellCooldown () {
+		spellCooldownCurrent = spellCooldownStart + 1;
+		this.GetComponent<Button>().interactable = false;
+		this.gameObject.transform.FindChild("CooldownText").GetComponent<CanvasGroup>().alpha = 1;
+		this.gameObject.transform.FindChild("CooldownText").GetComponent<Text>().text = spellCooldownCurrent.ToString();
+	}
+
+	public void ReduceSpellCooldown () {
+		if (spellCooldownCurrent > 0) {
+			spellCooldownCurrent -= 1;
+		}
+
+		this.gameObject.transform.FindChild("CooldownText").GetComponent<Text>().text = spellCooldownCurrent.ToString();
+
+		if (spellCooldownCurrent <= 0) {
+			this.GetComponent<Button>().interactable = true;
+			this.gameObject.transform.FindChild("CooldownText").GetComponent<CanvasGroup>().alpha = 0;
 		}
 	}
 
