@@ -43,55 +43,91 @@ public class SelectCardForDeck : MonoBehaviour {
 	}
 
 	void AddCardToDeckSelectList () {
-		if (SceneManager.GetActiveScene().name == "CardSelectP1") {
+		if (SceneManager.GetActiveScene().name == "CardSelectP1" || SceneManager.GetActiveScene().name == "CardSelectSinglePlayer") {
 			if (associatedCard.name == "ArcherCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.archerCard);
 			} else if (associatedCard.name == "AssassinCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.assassinCard);
+			} else if (associatedCard.name == "BlacksmithCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.blacksmithCard);
 			} else if (associatedCard.name == "BloodmageCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.bloodMageCard);
 			} else if (associatedCard.name == "CavalryCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.cavalryCard);
+			} else if (associatedCard.name == "ChampionCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.championCard);
+			} else if (associatedCard.name == "ChaosMageCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.chaosMageCard);
 			} else if (associatedCard.name == "DivinerCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.divinerCard);
 			} else if (associatedCard.name == "DruidCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.druidCard);
+			} else if (associatedCard.name == "DwarfCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.dwarfCard);
 			} else if (associatedCard.name == "FootSoldierCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.footSoldierCard);
+			} else if (associatedCard.name == "GhostCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.ghostCard);
 			} else if (associatedCard.name == "KnightCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.knightCard);
 			} else if (associatedCard.name == "MonkCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.monkCard);
+			} else if (associatedCard.name == "PaladinCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.paladinCard);
 			} else if (associatedCard.name == "RogueCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.rogueCard);	
+			} else if (associatedCard.name == "SapperCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.sapperCard);
+			} else if (associatedCard.name == "SorcererCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.sorcererCard);	
+			} else if (associatedCard.name == "WolfCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.wolfCard);	
 			}
 		} else if (SceneManager.GetActiveScene().name == "CardSelectP2") {
 			if (associatedCard.name == "ArcherCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.archerCard);
 			} else if (associatedCard.name == "AssassinCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.assassinCard);
+			} else if (associatedCard.name == "BlacksmithCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.blacksmithCard);
 			} else if (associatedCard.name == "BloodmageCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.bloodMageCard);
 			} else if (associatedCard.name == "CavalryCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.cavalryCard);
+			} else if (associatedCard.name == "ChampionCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.championCard);
+			} else if (associatedCard.name == "ChaosMageCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.chaosMageCard);
 			} else if (associatedCard.name == "DivinerCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.divinerCard);
 			} else if (associatedCard.name == "DruidCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.druidCard);
+			} else if (associatedCard.name == "DwarfCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.dwarfCard);
 			} else if (associatedCard.name == "FootSoldierCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.footSoldierCard);
-			} else if (associatedCard.name == "KnightCard") {
+			} else if (associatedCard.name == "GhostCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.ghostCard);
+			}  else if (associatedCard.name == "KnightCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.knightCard);
 			} else if (associatedCard.name == "MonkCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.monkCard);
+			} else if (associatedCard.name == "PaladinCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.paladinCard);
 			} else if (associatedCard.name == "RogueCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rogueCard);	
+			} else if (associatedCard.name == "SapperCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.sapperCard);
+			}  else if (associatedCard.name == "SorcererCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.sorcererCard);	
+			} else if (associatedCard.name == "WolfCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.wolfCard);	
 			}
 		}
 	}
 
 	void RemoveCardFromDeckSelectList () {
-		if (SceneManager.GetActiveScene().name == "CardSelectP1") {
+		if (SceneManager.GetActiveScene().name == "CardSelectP1" || SceneManager.GetActiveScene().name == "CardSelectSinglePlayer") {
 			foreach (GameObject card in GlobalObject.instance.player1DeckSelect) {
 				if (card.name == associatedCard.name) {
 					GlobalObject.instance.player1DeckSelect.Remove(card);

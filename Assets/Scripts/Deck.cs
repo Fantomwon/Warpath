@@ -24,7 +24,9 @@ public class Deck : MonoBehaviour {
 //		Debug.Log("RUNNING START FUNCTION OF DECK.CS");
 		BuildDeck ();
 		ShuffleDeck (player1Deck);
-		ShuffleDeck (player2Deck);
+		if (!GlobalObject.storyEnabled) {
+			ShuffleDeck (player2Deck);
+		}
 		playField = GameObject.FindObjectOfType<PlayField>();
 		player1Class = GlobalObject.instance.player1Class;
 		player2Class = GlobalObject.instance.player2Class;

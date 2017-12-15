@@ -10,14 +10,14 @@ public class Buff : MonoBehaviour {
 
 	private GameObject spawnedParticle;
 	private int originalSpeed;
-	private int originalPower;
+	//private int originalPower;
 
 	// Use this for initialization
 	void Start () {
 		//We store a hero's original speed in a variable in case a particular buff/debuff needs to reset a hero back to their original speed after changing it (e.g. the 'Root' spell)
 		originalSpeed = myHero.GetComponent<Hero>().speed;
 		//We store a hero's original power in a variable in case a particular buff/debuff needs to reset a hero back to their original power after changing it (e.g. the 'Might' spell)
-		originalPower = myHero.GetComponent<Hero>().power;
+		//originalPower = myHero.GetComponent<Hero>().power;
 
 		//This id is set in the editor
 		if (id == "might") {

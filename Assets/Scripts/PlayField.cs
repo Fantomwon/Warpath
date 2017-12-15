@@ -25,13 +25,12 @@ public class PlayField : MonoBehaviour {
 	public int player2HomeColumn = 7;
 	public ParticleSystem manaParticle;
 	public BuffManager buffManager;
+	public int player1Mana = 0, player2Mana = 0;
 
 	private Card card;
-	private int player1Mana = 0, player2Mana = 0;
 	private int player1ManaMax = 10, player2ManaMax = 10;
 	private int manaPerTurn = 4;
 	private int turnsPlayed = 0;
-
 
 	// Use this for initialization
 	void Start () {
@@ -98,63 +97,57 @@ public class PlayField : MonoBehaviour {
 				return;
 			}
 		}
-			
-		//Spawn the selectedHero at the appropriate location on the game grid
-		GameObject x = Instantiate(Card.selectedHero, roundedPos, Quaternion.identity) as GameObject;
+
+		//Spawn the selectedHero at the appropriate location on the game grid	
 		if (player1Turn) {
-			//Child the newly spawned hero to the appropriate player
-			x.transform.SetParent(player1.transform, false);
-			x.gameObject.tag = "player1";
-			Color xAlpha = x.transform.FindChild("Player1Indicator").GetComponent<SpriteRenderer>().color ;
-			xAlpha.a = 0.5f;
-			x.transform.FindChild("Player1Indicator").GetComponent<SpriteRenderer>().color = xAlpha;
-
-			SubtractMana();
+			SpawnHeroForPlayer1 (roundedPos);
 		} else if (!player1Turn) {
-			//Flip the hero so it faces to the left
-			Vector3 scale = x.transform.FindChild("Image").GetComponent<SpriteRenderer>().transform.localScale;
-			scale.x = (scale.x *= -1);
-			x.transform.FindChild("Image").GetComponent<SpriteRenderer>().transform.localScale = scale;
-
-			//DEPRECATED FOR NOW: The buff/debuff icons now show up on the correct side of the player2 heroes by default. I'm not sure why, so I'm keeping this code just in case I need it again in the future!
-//			float newOffsetMaxX = x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMax.y;
-//			float newOffsetMaxY = x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMax.x;
-
-			//Flip the 'Buff' bar on the hero so it is on the left side of them
-			//Change the RectTransform's 'Right' value with the 'x' position and 'Top' value with the 'y' position
-//			x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMax = new Vector2(newOffsetMaxX,x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMax.y);
-			//Change the RectTransform's 'Left' value with the 'x' position and 'Bottom' value with the 'y' position
-//			x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMin = new Vector2(newOffsetMaxY*-1,x.transform.FindChild("Buffs").GetComponent<RectTransform>().offsetMax.y*-1);
-
-			//Move the Armor and Health text so that it sits on the left side of the hero
-			foreach (Transform text in x.transform) {
-				Vector3 newTextPosition = text.transform.localPosition;
-				newTextPosition.x *= -1;
-				text.transform.localPosition = newTextPosition;
-			}
-
-			//Child the newly spawned hero to the appropriate player
-			x.transform.SetParent(player2.transform, false);
-			x.gameObject.tag = "player2";
-			Color xAlpha = x.transform.FindChild("Player2Indicator").GetComponent<SpriteRenderer>().color ;
-			xAlpha.a = 0.5f;
-			x.transform.FindChild("Player2Indicator").GetComponent<SpriteRenderer>().color = xAlpha;
-
-			SubtractMana();
+			SpawnHeroForPlayer2 (roundedPos);
 		}
 
+		//If a spell was played then set its cooldown
 		if (Card.selectedCard.GetComponent<Card>().type == "Spell") {
 			Card.selectedCard.GetComponent<Card>().SetSpellCooldown();
 		}
 
-		//Put the card that was just played into the appropriate player's discard pile. If the card is a Tower or Wall card DO NOT remove it as the Tower and Wall cards are used more like spells
-		if (Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
-			card.RemoveCardFromHandAndAddToDiscard();
-		} else {
-			//Make sure that the currently selected hero/card is cleared. This is basically for the instance of a spell that summons a hero (e.g. the "Tower"). B/c we do not remove
-			//the Tower card from the player's hand, the 'clearselectedheroandselectedcard' method doesn't get called until the player hits 'endturn', which can pose problems, so
-			//we call it here also, right after the Tower or Wall has been placed.
-			ClearSelectedHeroAndSelectedCard();
+		//Put the card that was just played into the appropriate player's discard pile.
+		card.RemoveCardFromHandAndAddToDiscard ();
+
+		//Set the 'selected hero' and 'selected card' variables to default so the game doesn't think I still have anything selected
+		ClearSelectedHeroAndSelectedCard ();
+	}
+
+	public void SpawnHeroForPlayer1 (Vector2 roundedPos) {
+		GameObject x = Instantiate (Card.selectedHero, roundedPos, Quaternion.identity) as GameObject;
+		//Child the newly spawned hero to the appropriate player
+		x.transform.SetParent (player1.transform, false);
+		x.gameObject.tag = "player1";
+		Color xAlpha = x.transform.FindChild ("Player1Indicator").GetComponent<SpriteRenderer> ().color;
+		xAlpha.a = 0.5f;
+		x.transform.FindChild ("Player1Indicator").GetComponent<SpriteRenderer> ().color = xAlpha;
+		SubtractMana ();
+	}
+
+	public void SpawnHeroForPlayer2 (Vector2 roundedPos) {
+		GameObject x = Instantiate (Card.selectedHero, roundedPos, Quaternion.identity) as GameObject;
+		//Flip the hero so it faces to the left
+		Vector3 scale = x.transform.FindChild ("Image").GetComponent<SpriteRenderer> ().transform.localScale;
+		scale.x = (scale.x *= -1);
+		x.transform.FindChild ("Image").GetComponent<SpriteRenderer> ().transform.localScale = scale;
+		//Move the Armor and Health text so that it sits on the left side of the hero
+		foreach (Transform text in x.transform) {
+			Vector3 newTextPosition = text.transform.localPosition;
+			newTextPosition.x *= -1;
+			text.transform.localPosition = newTextPosition;
+		}
+		//Child the newly spawned hero to the appropriate player
+		x.transform.SetParent (player2.transform, false);
+		x.gameObject.tag = "player2";
+		Color xAlpha = x.transform.FindChild ("Player2Indicator").GetComponent<SpriteRenderer> ().color;
+		xAlpha.a = 0.5f;
+		x.transform.FindChild ("Player2Indicator").GetComponent<SpriteRenderer> ().color = xAlpha;
+		if (!GlobalObject.storyEnabled) {
+			SubtractMana ();
 		}
 	}
 	
@@ -197,18 +190,18 @@ public class PlayField : MonoBehaviour {
 
 		//Find each hero the player has placed and add the hero coordinates into a list
 		if (player1Turn) {
-				foreach (Transform child in player1.transform) {
-					float x = child.transform.position.x;
-					float y = child.transform.position.y;
-					Vector2 coord = new Vector2(x, y);
-					myHeroCoords.Add(coord);
+			foreach (Transform child in player1.transform) {
+				float x = child.transform.position.x;
+				float y = child.transform.position.y;
+				Vector2 coord = new Vector2(x, y);
+				myHeroCoords.Add(coord);
 			}
 		} else if (!player1Turn) {
-				foreach (Transform child in player2.transform) {
-					float x = child.transform.position.x;
-					float y = child.transform.position.y;
-					Vector2 coord = new Vector2(x, y);
-					myHeroCoords.Add(coord);
+			foreach (Transform child in player2.transform) {
+				float x = child.transform.position.x;
+				float y = child.transform.position.y;
+				Vector2 coord = new Vector2(x, y);
+				myHeroCoords.Add(coord);
 			}
 		}
 
@@ -235,11 +228,11 @@ public class PlayField : MonoBehaviour {
 
 	public void MoveHeroes ()
 	{
-//		Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
+		//Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
 
 		// If there are no more heroes left to move then end my turn
 		if (sortedHeroCoords.ToArray().Length <= 0) {
-//			Debug.Log("CHANGING PLAYER TURNS");
+			Debug.Log("CHANGING PLAYER TURNS");
 			EndOfTurnEffects ();
 			StartCoroutine("SwitchPlayerTurns");
 			return;
@@ -254,6 +247,7 @@ public class PlayField : MonoBehaviour {
 					if (child.transform.position.x == sortedHeroCoords [i].x && child.transform.position.y == sortedHeroCoords [i].y) {
 						Player1MoveCheck (child);
 						sortedHeroCoords.RemoveAt(i);
+						Debug.Log("sortedHeroCoords has this many enemies: " + sortedHeroCoords.ToArray().Length);
 						break;
 					}
 				}
@@ -362,7 +356,7 @@ public class PlayField : MonoBehaviour {
 		return closestHero;
 	}
 
-	void BuildFullHeroList () {
+	public void BuildFullHeroList () {
 		fullHeroCoords.Clear();
 		foreach (Transform hero in player1.transform) {
 			float x = hero.transform.position.x;
@@ -396,6 +390,8 @@ public class PlayField : MonoBehaviour {
 			AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy"));
 		} else if (currentHero.GetComponent<Hero>().id == "archer") {
 			AttackEnemiesInList(currentHero, TargetCheckAllHeroesInRange(currentHero, "enemy"));
+		} else if (currentHero.GetComponent<Hero>().id == "sapper") {
+			AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy"));
 		} else {
 			AttackEnemiesInList(currentHero, TargetCheckClosestHeroInRange(currentHero, "enemy"));
 		}
@@ -413,14 +409,25 @@ public class PlayField : MonoBehaviour {
 				return;
 			}
 
+			//If the attacker is a Dwarf check if the enemy has any armor. If they do, destroy all of that armor and then do damage to the enemy. Otherwise, just do damage to the enemy.
+			if (currentHero.GetComponent<Hero>().id == "dwarf") {
+				if (enemy.GetComponent<Hero>().currentArmor > 0) {
+					enemy.GetComponent<Hero>().currentArmor = 0;
+				}
+
+				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+				return;
+			}
+
 			//If the attacker is an assassin and the target is below a specific health threshold, kill the target
 			if (currentHero.GetComponent<Hero>().id == "assassin") {
 				if (enemy.GetComponent<Hero>().currentHealth < 5) {
 					enemy.GetComponent<Hero>().TakeDamage(enemy.GetComponent<Hero>().currentHealth);
+					return;
 				}
 			}
 
-			//If the defender is a monk and the attacker is further away than melee ranger, the monk will dodge the incoming attack
+			//If the defender is a monk and the attacker is further away than melee range, the monk will dodge the incoming attack
 			if (enemy.GetComponent<Hero>().id == "monk") {
 				if (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) != 1 && 
 				Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) != -1) {
@@ -430,8 +437,23 @@ public class PlayField : MonoBehaviour {
 				}
 			}
 
+			//If the attacker is a sorcerer add extra damage for each enemy in the sorcerer's row
+			if (currentHero.GetComponent<Hero>().id == "sorcerer") {
+				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power + (1 * CountEnemiesInMyRow(currentHero)));
+				return;
+			}
+
+			if (currentHero.GetComponent<Hero>().id == "sapper") {
+				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+				currentHero.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().currentHealth + currentHero.GetComponent<Hero>().currentArmor);
+				MoveHeroes();
+				return;
+			}
+
 			//Do your damage vs. the current target
 			enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+			//Do any special attack effects associated with the currentHero that is attacking
+			currentHero.GetComponent<Hero>().HeroAttackEffects();
 		}
 	}
 
@@ -439,6 +461,13 @@ public class PlayField : MonoBehaviour {
 	private void HealHeroesInList (Transform currentHero, List<Transform> heroes) {
 		foreach (Transform hero in heroes) {
 			hero.GetComponent<Hero>().HealPartial(currentHero.GetComponent<Hero>().healValue);
+		}
+	}
+
+	//Takes a 'currentHero' and a list of other heroes, then the currentHero adds armor all of the heroes in the list using the 'AddArmor()' method
+	private void ArmorHeroesInList (Transform currentHero, List<Transform> heroes) {
+		foreach (Transform hero in heroes) {
+			hero.GetComponent<Hero>().AddArmor(1);
 		}
 	}
 
@@ -615,6 +644,76 @@ public class PlayField : MonoBehaviour {
 		return validHeroes;
 	}
 
+	//Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a single hero that is located in ANY direction around the currenthero, including diagonals
+	//IMPORTANT: This target check currently only supports checking all directions at a range of 1. That is to say that a hero's range WILL NOT AFFECT HOW FAR THIS METHOD CHECKS TO RETURN TARGETS
+	public List<Transform> TargetCheckAllDirectionsOneRandomHero (Transform currentHero, string heroTypeToSearchFor) {
+		Debug.Log("currentHero name is: " + currentHero.name);
+		List<Transform> validHeroes = new List<Transform>();
+		List<Transform> validHero = new List<Transform>();
+		BuildFullHeroTransformList();
+		float currentHeroX = currentHero.transform.position.x;
+		float currentHeroY = currentHero.transform.position.y;
+		//IMPORTANT: This is where I manually set this method to ONLY CHECK ALL DIRECTIONS AT A RANGE OF 1. I.E. A HERO'S RANGE WILL NOT AFFECT HOW FAR THIS METHOD CHECKS TO RETURN TARGETS
+		int currentHeroRange = 1;
+
+		foreach (Transform otherHero in fullHeroTransformList) {
+			if ( //Check all of the squares around "currentHero" (including diagonal squares) to see if "otherHero" is in range... then based on which type I'm checking for ("enemy" or "ally") add them to the list if appropriate
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) - currentHeroRange) || 
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) - currentHeroRange) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) - currentHeroRange) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
+				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange)
+				) {
+					if (heroTypeToSearchFor == "enemy") {
+						if (currentHero.tag != otherHero.tag) {
+							validHeroes.Add(otherHero);
+							heroAttackedATarget = true;
+						}
+					} else if (heroTypeToSearchFor == "ally") {
+						if (currentHero.tag == otherHero.tag) {
+							if (currentHero.GetComponent<Hero>().id == "paladin") {
+								Debug.Log("FOUND A PALADIN");
+								if (otherHero.GetComponent<Hero>().currentHealth < otherHero.GetComponent<Hero>().maxHealth) {
+									Debug.Log("ADDING A HERO TO VALIDHEROES LIST FOR PALADIN");
+									validHeroes.Add(otherHero);
+								}
+							} else {
+								validHeroes.Add(otherHero);
+							}
+						}
+					}	
+				}
+			}
+
+		if (validHeroes.Count > 0) {
+			//Pick a random hero from the list of validHeroes and add that to the 'validHero' list
+			validHero.Add(validHeroes[Random.Range(0,validHeroes.Count())]);
+		}
+
+		return validHero;
+	}
+
+	private int CountEnemiesInMyRow (Transform currentHero) {
+		int enemyCount = 0;
+		if (player1Turn) {
+			foreach (Transform hero in player2.transform) {
+				if (currentHero.transform.position.y == hero.transform.position.y) {
+					enemyCount++;
+				}
+			}
+		} else if (!player1Turn) {
+			foreach (Transform hero in player1.transform) {
+				if (currentHero.transform.position.y == hero.transform.position.y) {
+					enemyCount++;
+				}
+			}
+		}
+		return enemyCount;
+	}
+
 	public void Player1MoveHasteCheck (Transform currentHero) {
 		BuildFullHeroList ();
 		float closestHero = 999f;
@@ -696,7 +795,18 @@ public class PlayField : MonoBehaviour {
 		ReduceSpellCooldowns ();
 
 		//Checks your current hand size and deals you back up to max
-		FindObjectOfType<Deck>().Player2DealCards();
+		if (!GlobalObject.storyEnabled) {
+			FindObjectOfType<Deck>().Player2DealCards();
+		}
+
+		if (GlobalObject.aiEnabled == true) {
+			//Debug.Log("AI is enabled!!!");
+			FindObjectOfType<AiManager>().GetComponent<AiManager>().AiTakeTurn();
+			//Player2AddMana (1);
+		} else if (GlobalObject.storyEnabled) {
+			FindObjectOfType<AiManager>().GetComponent<AiManager>().AiStoryTakeTurn();
+			Debug.Log("STORY MODE ENABLED");
+		}
 	}
 
 	void EnablePlayer1HandAndHidePlayer2Hand () {
@@ -847,20 +957,51 @@ public class PlayField : MonoBehaviour {
 	void EndOfTurnEffects () {
 		BuildFullHeroTransformList ();
 
-		//We have to build a separate list of just the druids b/c otherwise if we were iterate through the fullHeroTransformList and try to make
+		//We have to build a separate list of just the druids b/c otherwise if we were to iterate through the fullHeroTransformList and try to make
 		//each druid in that full list run TargetCheckAllDirections() we would be modifying the fullHeroTransform list again before we were
 		//done with it. This throws an error and will screw things up so don't do it yah knucklehead.
 		List<Transform> druidList = new List<Transform>();
+		List<Transform> blacksmithList = new List<Transform>();
+		List<Transform> paladinList = new List<Transform>();
+
 		foreach (Transform hero in fullHeroTransformList) {
 			if (hero.GetComponent<Hero>().id == "druid") {
 				druidList.Add(hero);
+			} else if (hero.GetComponent<Hero>().id == "blacksmith") {
+				blacksmithList.Add(hero);
+			} else if (hero.GetComponent<Hero>().id == "paladin") {
+				paladinList.Add(hero);
+			} else if (hero.GetComponent<Hero>().id == "champion") {
+				if (player1Turn && hero.tag == "player1") {
+					hero.GetComponent<Hero>().AddArmor(1);
+				} else if (!player1Turn && hero.tag == "player2") {
+					hero.GetComponent<Hero>().AddArmor(1);
+				}
+
 			}
 		}
+
 		foreach (Transform druid in druidList) {
 			if (player1Turn && druid.tag == "player1") {
 				HealHeroesInList(druid, TargetCheckAllDirections(druid, "ally"));
 			} else if (!player1Turn && druid.tag == "player2") {
 				HealHeroesInList(druid, TargetCheckAllDirections(druid, "ally"));
+			}
+		}
+
+		foreach (Transform blacksmith in blacksmithList) {
+			if (player1Turn && blacksmith.tag == "player1") {
+				ArmorHeroesInList(blacksmith, TargetCheckAllDirectionsOneRandomHero(blacksmith, "ally"));
+			} else if (!player1Turn && blacksmith.tag == "player2") {
+				ArmorHeroesInList(blacksmith, TargetCheckAllDirectionsOneRandomHero(blacksmith, "ally"));
+			}
+		}
+
+		foreach (Transform paladin in paladinList) {
+			if (player1Turn && paladin.tag == "player1") {
+				HealHeroesInList(paladin, TargetCheckAllDirectionsOneRandomHero(paladin, "ally"));
+			} else if (!player1Turn && paladin.tag == "player2") {
+				HealHeroesInList(paladin, TargetCheckAllDirectionsOneRandomHero(paladin, "ally"));
 			}
 		}
 	}

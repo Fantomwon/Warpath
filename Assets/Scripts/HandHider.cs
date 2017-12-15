@@ -15,7 +15,7 @@ public class HandHider : MonoBehaviour {
 	}
 
 	public void HideHand () {
-		gameObject.GetComponent<CanvasGroup>().alpha = 1f;
+		gameObject.GetComponent<CanvasGroup>().alpha = 0f;
 		gameObject.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 }

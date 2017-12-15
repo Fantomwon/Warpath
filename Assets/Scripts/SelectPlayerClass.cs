@@ -90,7 +90,7 @@ public class SelectPlayerClass : MonoBehaviour {
 	}
 
 	private void SetPlayerClass () {
-		if (SceneManager.GetActiveScene().name == "CardSelectP1") {
+		if (SceneManager.GetActiveScene().name == "CardSelectP1" || SceneManager.GetActiveScene().name == "CardSelectSinglePlayer") {
 			if (mageButton.isOn) {
 				GlobalObject.instance.player1Class = "Mage";
 			} else if (rogueButton.isOn) {

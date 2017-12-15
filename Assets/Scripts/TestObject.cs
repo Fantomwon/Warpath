@@ -36,4 +36,18 @@ public class TestObject : MonoBehaviour {
 			}
 		}
 	}
+
+	public void ReturnRandomNumber () {
+		//Choose a random index
+		int randomIndex = Random.Range(0, 2);
+
+		Debug.Log(Mathf.RoundToInt(randomIndex));
+	}
+
+	public void FindEachCardInPlayer2Hand () {
+		foreach (Transform card in GameObject.Find("Player2 Hand").transform) {
+				Debug.LogError("FOUND A CARD IN PLAYER 2's HAND");
+		}
+	}
 }
+

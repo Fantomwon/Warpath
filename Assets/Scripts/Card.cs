@@ -285,6 +285,7 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("root", hero);
+						DoSpellDamage(hero,spellDamage);
 						playField.SubtractMana();
 						SetSpellCooldown();
 						playField.ClearSelectedHeroAndSelectedCard();
@@ -297,6 +298,7 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("root", hero);
+						DoSpellDamage(hero,spellDamage);
 						playField.SubtractMana();
 						SetSpellCooldown();
 						playField.ClearSelectedHeroAndSelectedCard();
@@ -394,16 +396,16 @@ public class Card : MonoBehaviour {
 	//which is a really simple gameobject that just has a gameobject variable that points to the appropriate card gameobject (i.e. instead of referencing
 	//the actual card gameobject that was just played, we point to the card gameobject in general)
 	public void RemoveCardFromHandAndAddToDiscard () {
-		if (playField.player1Turn) {
-			deck.Player1AddCardToDiscard (Card.selectedCard.GetComponent<Card> ().cardReferenceObject.GetComponent<CardReference>().cardReference);
+		//If the card is a Tower or Wall card DO NOT remove it as the Tower and Wall cards are used more like spells
+		if (Card.selectedCard.GetComponent<Card> ().cardName != "Tower" && Card.selectedCard.GetComponent<Card> ().cardName != "Wall") {
+			if (playField.player1Turn) {
+				deck.Player1AddCardToDiscard (Card.selectedCard.GetComponent<Card>().cardReferenceObject.GetComponent<CardReference>().cardReference);
+			} else if (!playField.player1Turn) {
+				deck.Player2AddCardToDiscard (Card.selectedCard.GetComponent<Card>().cardReferenceObject.GetComponent<CardReference>().cardReference);
+				//Debug.Log("Adding card to player2 discard pile: " + Card.selectedCard.GetComponent<Card>().cardName);
+			}
+			//Get rid of the  card from my hand that I just used so I can't use it again
+			DestroyImmediate (Card.selectedCard.gameObject);
 		}
-		else if (!playField.player1Turn) {
-			deck.Player2AddCardToDiscard (Card.selectedCard.GetComponent<Card> ().cardReferenceObject.GetComponent<CardReference>().cardReference);
-		}
-		//Get rid of the  card from my hand that I just used so I can't use it again
-		Destroy (Card.selectedCard);
-		//Set the 'selected hero' and 'selected card' variables to default so the game doesn't think I still have anything selected
-		playField.ClearSelectedHeroAndSelectedCard();
-		//Increment the integer varaible 'cardsPlayed' to keep track of how many cards the player has succesfully played this turn
 	}
 }
