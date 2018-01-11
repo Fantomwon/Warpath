@@ -18,6 +18,7 @@ public class PlayField : MonoBehaviour {
 	public List<Vector2> sortedHeroCoords;
 	public List<Vector2> fullHeroCoords;
 	public List<Transform> fullHeroTransformList;
+	public List<Transform> tempTransformList;
 	public Vector2 roundedPos;
 	public GameObject player1, player2;
 	public bool heroAttackedATarget = false;
@@ -71,8 +72,14 @@ public class PlayField : MonoBehaviour {
 		//Use SnapToGrid method to turn rawPos into rounded integer units in world space coordinates
 		roundedPos = SnapToGrid(rawPos);
 
-		//If the selected card is a spell card, cast it, ELSE treat the card as a hero card
+		//If the selected card is a 'Class Spell', cast it
 		if (Card.selectedCard.GetComponent<Card>().type == "Spell" && Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
+			Card.selectedCard.GetComponent<Card>().CastSpell();
+			return;
+		}
+
+		//If the selected card is a 'Spell Card', cast it
+		if (Card.selectedCard.GetComponent<Card>().type == "SpellCard") {
 			Card.selectedCard.GetComponent<Card>().CastSpell();
 			return;
 		}
@@ -99,13 +106,15 @@ public class PlayField : MonoBehaviour {
 		}
 
 		//Spawn the selectedHero at the appropriate location on the game grid	
-		if (player1Turn) {
-			SpawnHeroForPlayer1 (roundedPos);
-		} else if (!player1Turn) {
-			SpawnHeroForPlayer2 (roundedPos);
+		if (Card.selectedCard.GetComponent<Card>().type != "SpellCard") {
+				if (player1Turn) {
+				SpawnHeroForPlayer1 (roundedPos);
+			} else if (!player1Turn) {
+				SpawnHeroForPlayer2 (roundedPos);
+			}
 		}
 
-		//If a spell was played then set its cooldown
+		//This is here to catch any special-cased 'Class Spell' cards that did not get cast above (e.g. the 'Wall' and 'Tower' cards)
 		if (Card.selectedCard.GetComponent<Card>().type == "Spell") {
 			Card.selectedCard.GetComponent<Card>().SetSpellCooldown();
 		}
@@ -247,7 +256,7 @@ public class PlayField : MonoBehaviour {
 					if (child.transform.position.x == sortedHeroCoords [i].x && child.transform.position.y == sortedHeroCoords [i].y) {
 						Player1MoveCheck (child);
 						sortedHeroCoords.RemoveAt(i);
-						Debug.Log("sortedHeroCoords has this many enemies: " + sortedHeroCoords.ToArray().Length);
+						Debug.Log("sortedHeroCoords has this many heroes: " + sortedHeroCoords.ToArray().Length);
 						break;
 					}
 				}
@@ -267,10 +276,13 @@ public class PlayField : MonoBehaviour {
 
 	public void ClearSelectedHeroAndSelectedCard ()
 	{
+		Debug.Log("RUNNING playField.ClearSelectedHeroAndSelectedCard()");
 		//Reset the 'selectedHero' variable so players can't place another hero before selecting another card
 		Card.selectedHero = default(GameObject);
+		Debug.Log("selectedHero is " + Card.selectedHero);
 		//Reset the 'selectedCard' variable so players can't add multiple of them to their discard pile
 		Card.selectedCard = default(GameObject);
+		Debug.Log("selectedCard is " + Card.selectedCard);
 	}
 
 	void Player1MoveCheck (Transform currentHero) {
@@ -290,6 +302,14 @@ public class PlayField : MonoBehaviour {
 				&& enemy.transform.position.y == currentHero.transform.position.y) {
 					currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(0);
 					return;
+			}
+		}
+
+		//Special case for the Cavalry unit, which will move all the way to the next enemy in his row. If there is no enemy then he will move by his full move speed.
+		if (currentHero.GetComponent<Hero>().id == "cavalry") {
+			if (closestHero < 999f) {
+				currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(Mathf.RoundToInt(closestHero)-1);
+				return;
 			}
 		}
 
@@ -318,6 +338,14 @@ public class PlayField : MonoBehaviour {
 			&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) > 0)
 			&& enemy.transform.position.y == currentHero.transform.position.y) {
 				currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(0);
+				return;
+			}
+		}
+
+		//Special case for the Cavalry unit, which will move all the way to the next enemy in his row. If there is no enemy then he will move by his full move speed.
+		if (currentHero.GetComponent<Hero>().id == "cavalry") {
+			if (closestHero < 999f) {
+				currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(Mathf.RoundToInt(closestHero)-1);
 				return;
 			}
 		}
@@ -387,11 +415,13 @@ public class PlayField : MonoBehaviour {
 		if (currentHero.GetComponent<Hero>().id == "rogue") {
 			AttackEnemiesInList(currentHero, TargetCheckCardinalDirections(currentHero, "enemy"));
 		} else if (currentHero.GetComponent<Hero>().id == "tower") {
-			AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy"));
-		} else if (currentHero.GetComponent<Hero>().id == "archer") {
+			AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy", null));
+		} else if (currentHero.GetComponent<Hero>().id == "archer" || currentHero.GetComponent<Hero>().id == "slinger") {
 			AttackEnemiesInList(currentHero, TargetCheckAllHeroesInRange(currentHero, "enemy"));
 		} else if (currentHero.GetComponent<Hero>().id == "sapper") {
-			AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy"));
+			AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy", null));
+		} else if (currentHero.GetComponent<Hero>().id == "chaosmage") {
+			AttackEnemiesInList(currentHero, tempTransformList);
 		} else {
 			AttackEnemiesInList(currentHero, TargetCheckClosestHeroInRange(currentHero, "enemy"));
 		}
@@ -443,17 +473,22 @@ public class PlayField : MonoBehaviour {
 				return;
 			}
 
-			if (currentHero.GetComponent<Hero>().id == "sapper") {
-				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
-				currentHero.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().currentHealth + currentHero.GetComponent<Hero>().currentArmor);
-				MoveHeroes();
-				return;
-			}
+//			if (currentHero.GetComponent<Hero>().id == "sapper") {
+//				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+////				currentHero.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().currentHealth + currentHero.GetComponent<Hero>().currentArmor);
+////				MoveHeroes();
+////				return;
+//			}
 
 			//Do your damage vs. the current target
 			enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
 			//Do any special attack effects associated with the currentHero that is attacking
 			currentHero.GetComponent<Hero>().HeroAttackEffects();
+		}
+
+		if (currentHero.GetComponent<Hero>().id == "sapper") {
+			currentHero.GetComponent<Hero>().AfterAttackOperations();
+			currentHero.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().currentHealth + currentHero.GetComponent<Hero>().currentArmor);
 		}
 	}
 
@@ -471,9 +506,48 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
+
+	//Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a list of the given herotypes that are currently located in any CARDINAL direction around the currenthero, NOT including diagonals
+	public List<Transform> TargetCheckEntireBoardTwoRandomHeroes (Transform currentHero, string heroTypeToSearchFor) {
+		List<Transform> validHeroes = new List<Transform>();
+		BuildFullHeroTransformList();
+		float currentHeroX = currentHero.transform.position.x;
+		float currentHeroY = currentHero.transform.position.y;
+		int currentHeroRange = currentHero.GetComponent<Hero>().range;
+
+		//Check ALL of the heroes on the game board, then based on which type I'm checking for ("enemy" or "ally") add them to the appropriate list
+		foreach (Transform otherHero in fullHeroTransformList) {
+			if (heroTypeToSearchFor == "enemy") {
+				if (currentHero.tag != otherHero.tag) {
+					validHeroes.Add(otherHero);
+					heroAttackedATarget = true;
+				}
+			} else if (heroTypeToSearchFor == "ally") {
+				if (currentHero.tag == otherHero.tag) {
+					validHeroes.Add(otherHero);
+				}
+			}
+		}
+
+		int tempListCount = validHeroes.Count;
+		for (int i = 0; i < tempListCount; i++) {
+			if (validHeroes.Count > 2) {
+				int temp = Random.Range(0, validHeroes.Count - 1);
+				validHeroes.RemoveAt(temp);
+			}
+		}
+
+		//We store the enemies that we'll be attacking in a tempTransformList so that we can spawn the red 'attack tell boxes' beneath them, which is called from hero.cs. We have to do this b/c we are picking heroes at random, so running 
+		//the check again in a different part of the code would return possibly two different enemies than the ones that we are actually attacking.
+		tempTransformList.Clear();
+		tempTransformList = validHeroes;
+
+		return validHeroes;
+	}
+
 	//Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a list of the given herotypes that are currently located in ANY direction around the currenthero, including diagonals
 	//IMPORTANT: This target check currently only supports checking all directions at a range of 1. That is to say that a hero's range WILL NOT AFFECT HOW FAR THIS METHOD CHECKS TO RETURN TARGETS
-	public List<Transform> TargetCheckAllDirections (Transform currentHero, string heroTypeToSearchFor) {
+	public List<Transform> TargetCheckAllDirections (Transform currentHero, string heroTypeToSearchFor, string heroIdToExclude) {
 		List<Transform> validHeroes = new List<Transform>();
 		BuildFullHeroTransformList();
 		float currentHeroX = currentHero.transform.position.x;
@@ -492,6 +566,13 @@ public class PlayField : MonoBehaviour {
 				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
 				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange)
 				) {
+
+					if (heroIdToExclude != null) {
+						if (otherHero.GetComponent<Hero>().id == heroIdToExclude) {
+							break;	
+						}
+					}
+
 					if (heroTypeToSearchFor == "enemy") {
 						if (currentHero.tag != otherHero.tag) {
 							validHeroes.Add(otherHero);
@@ -516,7 +597,7 @@ public class PlayField : MonoBehaviour {
 		int currentHeroRange = currentHero.GetComponent<Hero>().range;
 
 		foreach (Transform otherHero in fullHeroTransformList) {
-			if ( //Check all of the squares around my hero (cardinal directions only) to see if "otherHero" is in range... then based on which type I'm checking for ("enemy" or "ally") add them to the list if appropriate
+			if ( //Check all of the squares around my hero (cardinal directions only) to see if "otherHero" is in range... then based on which type I'm checking for ("enemy" or "ally") add them to the appropriate list
 				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
 				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
 				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange) ||
@@ -646,7 +727,7 @@ public class PlayField : MonoBehaviour {
 
 	//Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a single hero that is located in ANY direction around the currenthero, including diagonals
 	//IMPORTANT: This target check currently only supports checking all directions at a range of 1. That is to say that a hero's range WILL NOT AFFECT HOW FAR THIS METHOD CHECKS TO RETURN TARGETS
-	public List<Transform> TargetCheckAllDirectionsOneRandomHero (Transform currentHero, string heroTypeToSearchFor) {
+	public List<Transform> TargetCheckAllDirectionsOneRandomHero (Transform currentHero, string heroTypeToSearchFor, string heroIdToExclude) {
 		Debug.Log("currentHero name is: " + currentHero.name);
 		List<Transform> validHeroes = new List<Transform>();
 		List<Transform> validHero = new List<Transform>();
@@ -667,6 +748,13 @@ public class PlayField : MonoBehaviour {
 				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
 				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange)
 				) {
+
+					if (heroIdToExclude != null) {
+						if (otherHero.GetComponent<Hero>().id == heroIdToExclude) {
+							break;	
+						}
+					}
+
 					if (heroTypeToSearchFor == "enemy") {
 						if (currentHero.tag != otherHero.tag) {
 							validHeroes.Add(otherHero);
@@ -965,6 +1053,7 @@ public class PlayField : MonoBehaviour {
 		List<Transform> paladinList = new List<Transform>();
 
 		foreach (Transform hero in fullHeroTransformList) {
+
 			if (hero.GetComponent<Hero>().id == "druid") {
 				druidList.Add(hero);
 			} else if (hero.GetComponent<Hero>().id == "blacksmith") {
@@ -983,25 +1072,25 @@ public class PlayField : MonoBehaviour {
 
 		foreach (Transform druid in druidList) {
 			if (player1Turn && druid.tag == "player1") {
-				HealHeroesInList(druid, TargetCheckAllDirections(druid, "ally"));
+				HealHeroesInList(druid, TargetCheckAllDirections(druid, "ally", "ghost"));
 			} else if (!player1Turn && druid.tag == "player2") {
-				HealHeroesInList(druid, TargetCheckAllDirections(druid, "ally"));
+				HealHeroesInList(druid, TargetCheckAllDirections(druid, "ally", "ghost"));
 			}
 		}
 
 		foreach (Transform blacksmith in blacksmithList) {
 			if (player1Turn && blacksmith.tag == "player1") {
-				ArmorHeroesInList(blacksmith, TargetCheckAllDirectionsOneRandomHero(blacksmith, "ally"));
+				ArmorHeroesInList(blacksmith, TargetCheckAllDirectionsOneRandomHero(blacksmith, "ally", "ghost"));
 			} else if (!player1Turn && blacksmith.tag == "player2") {
-				ArmorHeroesInList(blacksmith, TargetCheckAllDirectionsOneRandomHero(blacksmith, "ally"));
+				ArmorHeroesInList(blacksmith, TargetCheckAllDirectionsOneRandomHero(blacksmith, "ally", "ghost"));
 			}
 		}
 
 		foreach (Transform paladin in paladinList) {
 			if (player1Turn && paladin.tag == "player1") {
-				HealHeroesInList(paladin, TargetCheckAllDirectionsOneRandomHero(paladin, "ally"));
+				HealHeroesInList(paladin, TargetCheckAllDirectionsOneRandomHero(paladin, "ally", "ghost"));
 			} else if (!player1Turn && paladin.tag == "player2") {
-				HealHeroesInList(paladin, TargetCheckAllDirectionsOneRandomHero(paladin, "ally"));
+				HealHeroesInList(paladin, TargetCheckAllDirectionsOneRandomHero(paladin, "ally", "ghost"));
 			}
 		}
 	}

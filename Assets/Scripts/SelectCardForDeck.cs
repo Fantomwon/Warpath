@@ -62,6 +62,8 @@ public class SelectCardForDeck : MonoBehaviour {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.divinerCard);
 			} else if (associatedCard.name == "DruidCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.druidCard);
+			} else if (associatedCard.name == "SlingerCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.slingerCard);
 			} else if (associatedCard.name == "DwarfCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.dwarfCard);
 			} else if (associatedCard.name == "FootSoldierCard") {
@@ -82,6 +84,22 @@ public class SelectCardForDeck : MonoBehaviour {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.sorcererCard);	
 			} else if (associatedCard.name == "WolfCard") {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.wolfCard);	
+			} else if (associatedCard.name == "ArmorCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.armorCard);	
+			} else if (associatedCard.name == "BuffMightCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.buffMightCard);	
+			} else if (associatedCard.name == "BuffShroudCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.buffShroudCard);	
+			} else if (associatedCard.name == "DebuffRootCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.debuffRootCard);	
+			} else if (associatedCard.name == "FireballCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.fireballCard);	
+			} else if (associatedCard.name == "HealCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.healCard);	
+			} else if (associatedCard.name == "RockThrowCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.rockThrowCard);	
+			} else if (associatedCard.name == "WindGustCard") {
+				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.windGustCard);	
 			}
 		} else if (SceneManager.GetActiveScene().name == "CardSelectP2") {
 			if (associatedCard.name == "ArcherCard") {
@@ -102,6 +120,8 @@ public class SelectCardForDeck : MonoBehaviour {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.divinerCard);
 			} else if (associatedCard.name == "DruidCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.druidCard);
+			} else if (associatedCard.name == "SlingerCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.slingerCard);
 			} else if (associatedCard.name == "DwarfCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.dwarfCard);
 			} else if (associatedCard.name == "FootSoldierCard") {
@@ -122,6 +142,22 @@ public class SelectCardForDeck : MonoBehaviour {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.sorcererCard);	
 			} else if (associatedCard.name == "WolfCard") {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.wolfCard);	
+			} else if (associatedCard.name == "ArmorCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.armorCard);	
+			} else if (associatedCard.name == "BuffMightCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.buffMightCard);	
+			} else if (associatedCard.name == "BuffShroudCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.buffShroudCard);	
+			} else if (associatedCard.name == "DebuffRootCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.debuffRootCard);	
+			} else if (associatedCard.name == "FireballCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.fireballCard);	
+			} else if (associatedCard.name == "HealCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.healCard);	
+			} else if (associatedCard.name == "RockThrowCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rockThrowCard);	
+			} else if (associatedCard.name == "WindGustCard") {
+				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.windGustCard);	
 			}
 		}
 	}

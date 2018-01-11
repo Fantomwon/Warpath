@@ -10,6 +10,7 @@ public class Card : MonoBehaviour {
 	public GameObject heroPrefab;
 	public GameObject cardReferenceObject;
 	public Text ManaCost, NameText, PowerText, HealthText, SpeedText, RangeText;
+	public string cardId;
 	public string cardName;
 	public string type;
 	public int manaCost;
@@ -43,7 +44,7 @@ public class Card : MonoBehaviour {
 	void OnMouseDown () {
 		if (spellCooldownCurrent <= 0) {
 			selectedCard = gameObject;
-//			Debug.Log("SELECTED CARD IS " + selectedCard.name);
+			Debug.Log("SELECTED CARD IS " + selectedCard.name);
 			if (type == "Hero" || cardName =="Tower" || cardName == "Wall") {
 				selectedHero = heroPrefab;
 			}
@@ -55,7 +56,32 @@ public class Card : MonoBehaviour {
 	}
 
 	public void CastSpell () {
-		if (cardName == "Fireball") {
+		if (cardId == "rockthrow") {
+			if (playField.player1Turn) {
+				foreach (Transform hero in playField.player2.transform) {
+					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method which is part of Spell.cs and is attached to
+					//the 'Rock' object nested under the 'RockThrowParticle' object)
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
+						spellParticle.GetComponentInChildren<Spell>().hero = hero;
+						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
+						SpellCleanup ();
+						return;
+					} 
+				}
+			} else if (!playField.player1Turn) {
+				foreach (Transform hero in playField.player1.transform) {
+					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method which is part of Spell.cs and is attached to
+					//the 'Rock' object nested under the 'RockThrowParticle' object)
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
+						spellParticle.GetComponentInChildren<Spell>().hero = hero;
+						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
+						SpellCleanup ();
+						return;
+					}
+				}
+			}
+			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
+		} else if (cardId == "fireball") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method which is part of Spell.cs and is attached to
@@ -63,9 +89,7 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					} 
 				}
@@ -76,15 +100,13 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					}
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardName == "Flame Strike") {
+		} else if (cardId == "flamestrike") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If there are any enemies in the COLUMN that I clicked on then do spell damage to all of them (spell damage is applied through 'EndOfSpellEffects' method)
@@ -94,9 +116,7 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player1.transform);
 					} 
 				}
-				playField.SubtractMana();
-				SetSpellCooldown();
-				playField.ClearSelectedHeroAndSelectedCard();
+				SpellCleanup ();
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If there are any enemies in the COLUMN that I clicked on then do spell damage to all of them (spell damage is applied through 'EndOfSpellEffects' method)
@@ -107,39 +127,37 @@ public class Card : MonoBehaviour {
 
 					}
 				}
-				playField.SubtractMana();
-				SetSpellCooldown();
-				playField.ClearSelectedHeroAndSelectedCard();
+				SpellCleanup ();
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardName == "Heal") {
+		} else if (cardId == "heal") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
-					//If one of my heroes is in the square I clicked on AND they are below max health then heal them to full
-					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
+					//If one of my heroes is in the square I clicked on AND they are below max health AND they are not a 'Ghost' then heal them to full
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
+					    && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth
+					    && hero.GetComponent<Hero>().id != "ghost") {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealFull();
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					} 
 				}
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
-					//If one of my heroes is in the square I clicked on AND they are below max health then heal them to full
-					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) {
+					//If one of my heroes is in the square I clicked on AND they are below max health AND they are not a 'Ghost' then heal them to full
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
+					    && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth
+						&& hero.GetComponent<Hero>().id != "ghost") {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealFull();
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					}
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardName == "Haste") {
+		} else if (cardId == "haste") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on set 'movingRight' variable in Hero.cs to true
@@ -147,9 +165,7 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player1MoveHasteCheck(hero);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					} 
 				}
@@ -160,24 +176,20 @@ public class Card : MonoBehaviour {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().usingHaste = true;
 						playField.Player2MoveHasteCheck(hero);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					}
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardName == "Might") {
+		} else if (cardId == "might") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on then give them the 'Might' buff for the appropriate duration
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("might", hero);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					} 
 				}
@@ -187,24 +199,20 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("might", hero);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					}
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardName == "Shroud") {
+		} else if (cardId == "shroud") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on then give them the 'Shroud' buff for the appropriate duration
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("shroud", hero);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					} 
 				}
@@ -214,81 +222,73 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("shroud", hero);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					}
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardName == "Armor") {
+		} else if (cardId == "armor") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
-					//If one of my heroes is in the square I clicked on then add to their armor value by the appropriate amount
-					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
+					//If one of my heroes is in the square I clicked on AND they are not a 'Ghost' then add to their armor value by the appropriate amount
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
+						&& hero.GetComponent<Hero>().id != "ghost") {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().AddArmor(3);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					} 
 				}
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
-					//If one of my heroes is in the square I clicked on then add to their armor value by the appropriate amount
-					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
+					//If one of my heroes is in the square I clicked on AND they are not a 'Ghost' then add to their armor value by the appropriate amount
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
+						&& hero.GetComponent<Hero>().id != "ghost") {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().AddArmor(3);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					}
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardName == "Blessing") {
+		} else if (cardId == "blessing") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
-					//If one of my heroes is in the square I clicked on then add to their armor value by the appropriate amount
-					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
+					//If one of my heroes is in the square I clicked on AND they are not a 'Ghost' then add to their armor value by the appropriate amount
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
+						&& hero.GetComponent<Hero>().id != "ghost") {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().HealFull();
 						hero.GetComponent<Hero>().AddArmor(3);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					} 
 				}
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
-					//If one of my heroes is in the square I clicked on then add to their armor value by the appropriate amount
-					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
+					//If one of my heroes is in the square I clicked on AND they are not a 'Ghost' then add to their armor value by the appropriate amount
+					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
+						&& hero.GetComponent<Hero>().id != "ghost") {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().HealFull();
 						hero.GetComponent<Hero>().AddArmor(3);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					}
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardName == "Root") {
+		} else if (cardId == "root") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If there is an enemy in the square I clicked on then cast the 'Root' debuff on them
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("root", hero);
-						DoSpellDamage(hero,spellDamage);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						//DoSpellDamage(hero,spellDamage);
+						SpellCleanup ();
 						return;
 					} 
 				}
@@ -298,16 +298,14 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						buffManager.ApplyBuff("root", hero);
-						DoSpellDamage(hero,spellDamage);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						//DoSpellDamage(hero,spellDamage);
+						SpellCleanup ();
 						return;
 					}
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardName == "Wind Gust") {
+		} else if (cardId == "windgust") {
 			float maxDistToMove = 3f;
 			float currentDistToMove;
 			if (playField.player1Turn) {
@@ -332,9 +330,7 @@ public class Card : MonoBehaviour {
 
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().MoveSingleHeroRight(currentDistToMove - 1);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					} 
 				}
@@ -360,15 +356,28 @@ public class Card : MonoBehaviour {
 
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 						hero.GetComponent<Hero>().MoveSingleHeroLeft(currentDistToMove - 1);
-						playField.SubtractMana();
-						SetSpellCooldown();
-						playField.ClearSelectedHeroAndSelectedCard();
+						SpellCleanup ();
 						return;
 					}
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		}
+	}
+
+	void SpellCleanup ()
+	{
+		playField.SubtractMana ();
+
+		if (Card.selectedCard.GetComponent<Card>().type == "Spell") {
+			SetSpellCooldown ();
+		}
+
+		if (Card.selectedCard.GetComponent<Card>().type == "SpellCard") {
+			RemoveCardFromHandAndAddToDiscard();
+		}
+
+		playField.ClearSelectedHeroAndSelectedCard ();
 	}
 
 	public void SetSpellCooldown () {

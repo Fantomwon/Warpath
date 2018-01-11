@@ -8,7 +8,7 @@ public class CardsSelected : MonoBehaviour {
 	public Text maxNumberText;
 
 	public int selectedNumber;
-	public int maxNumber = 5;
+	public int maxNumber = 6;
 
 	// Use this for initialization
 	void Start () {

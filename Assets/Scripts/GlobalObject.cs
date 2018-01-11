@@ -11,7 +11,8 @@ public class GlobalObject : MonoBehaviour {
 	public static string currentlyActiveStory;
 	public List<GameObject> player1DeckSelect;
 	public List<GameObject> player2DeckSelect;
-	public GameObject archerCard, assassinCard, blacksmithCard, bloodMageCard, cavalryCard, championCard, chaosMageCard, divinerCard, druidCard, dwarfCard, footSoldierCard, ghostCard, knightCard, monkCard, paladinCard, rogueCard, sapperCard, sorcererCard, wolfCard;
+	public GameObject archerCard, assassinCard, blacksmithCard, bloodMageCard, cavalryCard, championCard, chaosMageCard, divinerCard, druidCard, slingerCard, dwarfCard, footSoldierCard, ghostCard, knightCard, monkCard, paladinCard, rogueCard, sapperCard, sorcererCard, wolfCard,
+					  armorCard, buffMightCard, buffShroudCard, debuffRootCard, fireballCard, healCard, rockThrowCard, windGustCard;
 	public string player1Class, player2Class;
 
 	void Awake () {
