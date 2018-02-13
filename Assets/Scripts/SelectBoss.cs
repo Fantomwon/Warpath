@@ -12,6 +12,7 @@ public class SelectBoss : MonoBehaviour {
 
 	public void UpdateButtonStates () {
 		if (boss01Button.isOn) {
+			GlobalObject.currentlyActiveStory = "boss01";
 			GlobalObject.aiEnabled = true;
 			GlobalObject.storyEnabled = false;
 			TurnOffAllStoryButtons();
@@ -26,6 +27,7 @@ public class SelectBoss : MonoBehaviour {
 			boss05Button.transform.FindChild("Text").GetComponent<Text>().enabled = true;
 			boss05Button.transform.FindChild("Image").GetComponent<Image>().enabled = false;
 		} else if (boss02Button.isOn) {
+			GlobalObject.currentlyActiveStory = "boss02";
 			GlobalObject.aiEnabled = true;
 			GlobalObject.storyEnabled = false;
 			TurnOffAllStoryButtons();
@@ -40,6 +42,7 @@ public class SelectBoss : MonoBehaviour {
 			boss05Button.transform.FindChild("Text").GetComponent<Text>().enabled = true;
 			boss05Button.transform.FindChild("Image").GetComponent<Image>().enabled = false;
 		} else if (boss03Button.isOn) {
+			GlobalObject.currentlyActiveStory = "boss03";
 			GlobalObject.aiEnabled = true;
 			GlobalObject.storyEnabled = false;
 			TurnOffAllStoryButtons();
@@ -54,6 +57,7 @@ public class SelectBoss : MonoBehaviour {
 			boss05Button.transform.FindChild("Text").GetComponent<Text>().enabled = true;
 			boss05Button.transform.FindChild("Image").GetComponent<Image>().enabled = false;
 		} else if (boss04Button.isOn) {
+			GlobalObject.currentlyActiveStory = "boss04";
 			GlobalObject.aiEnabled = true;
 			GlobalObject.storyEnabled = false;
 			TurnOffAllStoryButtons();
@@ -68,6 +72,7 @@ public class SelectBoss : MonoBehaviour {
 			boss05Button.transform.FindChild("Text").GetComponent<Text>().enabled = true;
 			boss05Button.transform.FindChild("Image").GetComponent<Image>().enabled = false;
 		} else if (boss05Button.isOn) {
+			GlobalObject.currentlyActiveStory = "boss05";
 			GlobalObject.aiEnabled = true;
 			GlobalObject.storyEnabled = false;
 			TurnOffAllStoryButtons();
@@ -150,28 +155,28 @@ public class SelectBoss : MonoBehaviour {
 		if (boss01Button.isOn) {
 			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.archerCard);
 			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rogueCard);
-			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.paladinCard);
+			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.knightCard);
 		} else if (boss02Button.isOn) {
 			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.archerCard);
-			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.slingerCard);
-			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.paladinCard);
+			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.bloodMageCard);
+			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.knightCard);
 //			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rogueCard);
 //			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.paladinCard);
 		} else if (boss03Button.isOn) {
-			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.footSoldierCard);
-			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.slingerCard);
-			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.paladinCard);
+			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.archerCard);
+			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.bloodMageCard);
+			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rogueCard);
 //			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rogueCard);
 //			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.paladinCard);
 		} else if (boss04Button.isOn) {
-			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.slingerCard);
-			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rogueCard);
+			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.footSoldierCard);
 			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.assassinCard);
+			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rogueCard);
 //			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.blacksmithCard);
 //			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.druidCard);
 		} else if (boss05Button.isOn) {
+			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.footSoldierCard);
 			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.archerCard);
-			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.assassinCard);
 			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.knightCard);
 //			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.bloodMageCard);
 //			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.druidCard);

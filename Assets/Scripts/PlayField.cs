@@ -256,7 +256,7 @@ public class PlayField : MonoBehaviour {
 					if (child.transform.position.x == sortedHeroCoords [i].x && child.transform.position.y == sortedHeroCoords [i].y) {
 						Player1MoveCheck (child);
 						sortedHeroCoords.RemoveAt(i);
-						Debug.Log("sortedHeroCoords has this many heroes: " + sortedHeroCoords.ToArray().Length);
+						//Debug.Log("sortedHeroCoords has this many heroes: " + sortedHeroCoords.ToArray().Length);
 						break;
 					}
 				}
@@ -276,13 +276,13 @@ public class PlayField : MonoBehaviour {
 
 	public void ClearSelectedHeroAndSelectedCard ()
 	{
-		Debug.Log("RUNNING playField.ClearSelectedHeroAndSelectedCard()");
+		//Debug.Log("RUNNING playField.ClearSelectedHeroAndSelectedCard()");
 		//Reset the 'selectedHero' variable so players can't place another hero before selecting another card
 		Card.selectedHero = default(GameObject);
-		Debug.Log("selectedHero is " + Card.selectedHero);
+		//Debug.Log("selectedHero is " + Card.selectedHero);
 		//Reset the 'selectedCard' variable so players can't add multiple of them to their discard pile
 		Card.selectedCard = default(GameObject);
-		Debug.Log("selectedCard is " + Card.selectedCard);
+		//Debug.Log("selectedCard is " + Card.selectedCard);
 	}
 
 	void Player1MoveCheck (Transform currentHero) {
@@ -292,6 +292,7 @@ public class PlayField : MonoBehaviour {
 			//Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
 			if (hero.y == currentHero.transform.position.y && ((hero.x - currentHero.transform.position.x) < closestHero) && ((hero.x - currentHero.transform.position.x) > 0)) {
 				closestHero = hero.x - currentHero.transform.position.x;
+				Debug.Log("FOUND A HERO IN MY WAY. I AM: " + currentHero.GetComponent<Hero>().name + " and there is another hero at: " + hero.x + "," + hero.y);
 			}
 		}
 
@@ -452,7 +453,7 @@ public class PlayField : MonoBehaviour {
 			//If the attacker is an assassin and the target is below a specific health threshold, kill the target
 			if (currentHero.GetComponent<Hero>().id == "assassin") {
 				if (enemy.GetComponent<Hero>().currentHealth < 5) {
-					enemy.GetComponent<Hero>().TakeDamage(enemy.GetComponent<Hero>().currentHealth);
+					enemy.GetComponent<Hero>().TakeDamage(enemy.GetComponent<Hero>().currentHealth + enemy.GetComponent<Hero>().currentArmor);
 					return;
 				}
 			}

@@ -23,140 +23,155 @@ public class SelectCardForDeck : MonoBehaviour {
 
 	void OnMouseDown () {
 		if (selected == false) {
-			if (cardsSelected.selectedNumber >= cardsSelected.maxNumber) {
-				Debug.Log("CANNOT ADD ANYMORE CARDS TO DECK, CURRENTLY AT MAX CARDS ALLOWED");
+			if (associatedCard.GetComponent<Card>().type == "Hero" && cardsSelected.selectedCharacterCardsNumber >= cardsSelected.maxCharacterCards) {
+				Debug.Log("CANNOT ADD ANYMORE CHARACTER CARDS TO DECK, CURRENTLY AT MAX CHARACTER CARDS ALLOWED");
+				return;
+			} else if (associatedCard.GetComponent<Card>().type == "SpellCard" && cardsSelected.selectedSpellCardsNumber >= cardsSelected.maxSpellCards)	 {
+				Debug.Log("CANNOT ADD ANYMORE SPELL CARDS TO DECK, CURRENTLY AT MAX SPELL CARDS ALLOWED");
 				return;
 			} else {
 				AddCardToDeckSelectList ();
 				selected = true;
 				text.GetComponent<Text>().enabled = false;
 				checkmark.GetComponent<Image>().enabled = true;
-				cardsSelected.IncrementSelectedNumer();
+
+				if (associatedCard.GetComponent<Card>().type == "Hero") {
+					cardsSelected.IncrementSelectedNumber("Hero");
+				} else if (associatedCard.GetComponent<Card>().type == "SpellCard") {
+					cardsSelected.IncrementSelectedNumber("SpellCard");
+				}
 			}
 		} else if (selected == true) {
 			selected = false;
 			text.GetComponent<Text>().enabled = true;
 			checkmark.GetComponent<Image>().enabled = false;
 			RemoveCardFromDeckSelectList ();
-			cardsSelected.DecrementSelectedNumer();
+
+			if (associatedCard.GetComponent<Card>().type == "Hero") {
+				cardsSelected.DecrementSelectedNumber("Hero");
+			} else if (associatedCard.GetComponent<Card>().type == "SpellCard") {
+				cardsSelected.DecrementSelectedNumber("SpellCard");
+			}
 		}
 	}
 
 	void AddCardToDeckSelectList () {
+		Debug.Log("RUNNING AddCardToDeckSelectList");
+		Debug.Log("My associatedCard is: " + associatedCard);
 		if (SceneManager.GetActiveScene().name == "CardSelectP1" || SceneManager.GetActiveScene().name == "CardSelectSinglePlayer") {
-			if (associatedCard.name == "ArcherCard") {
+			if (associatedCard.name.Contains("ArcherCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.archerCard);
-			} else if (associatedCard.name == "AssassinCard") {
+			} else if (associatedCard.name.Contains("AssassinCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.assassinCard);
-			} else if (associatedCard.name == "BlacksmithCard") {
+			} else if (associatedCard.name.Contains("BlacksmithCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.blacksmithCard);
-			} else if (associatedCard.name == "BloodmageCard") {
+			} else if (associatedCard.name.Contains("BloodmageCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.bloodMageCard);
-			} else if (associatedCard.name == "CavalryCard") {
+			} else if (associatedCard.name.Contains("CavalryCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.cavalryCard);
-			} else if (associatedCard.name == "ChampionCard") {
+			} else if (associatedCard.name.Contains("ChampionCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.championCard);
-			} else if (associatedCard.name == "ChaosMageCard") {
+			} else if (associatedCard.name.Contains("ChaosMageCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.chaosMageCard);
-			} else if (associatedCard.name == "DivinerCard") {
+			} else if (associatedCard.name.Contains("DivinerCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.divinerCard);
-			} else if (associatedCard.name == "DruidCard") {
+			} else if (associatedCard.name.Contains("DruidCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.druidCard);
-			} else if (associatedCard.name == "SlingerCard") {
+			} else if (associatedCard.name.Contains("SlingerCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.slingerCard);
-			} else if (associatedCard.name == "DwarfCard") {
+			} else if (associatedCard.name.Contains("DwarfCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.dwarfCard);
-			} else if (associatedCard.name == "FootSoldierCard") {
+			} else if (associatedCard.name.Contains("FootSoldierCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.footSoldierCard);
-			} else if (associatedCard.name == "GhostCard") {
+			} else if (associatedCard.name.Contains("GhostCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.ghostCard);
-			} else if (associatedCard.name == "KnightCard") {
+			} else if (associatedCard.name.Contains("KnightCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.knightCard);
-			} else if (associatedCard.name == "MonkCard") {
+			} else if (associatedCard.name.Contains("MonkCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.monkCard);
-			} else if (associatedCard.name == "PaladinCard") {
+			} else if (associatedCard.name.Contains("PaladinCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.paladinCard);
-			} else if (associatedCard.name == "RogueCard") {
+			} else if (associatedCard.name.Contains("RogueCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.rogueCard);	
-			} else if (associatedCard.name == "SapperCard") {
+			} else if (associatedCard.name.Contains("SapperCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.sapperCard);
-			} else if (associatedCard.name == "SorcererCard") {
+			} else if (associatedCard.name.Contains("SorcererCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.sorcererCard);	
-			} else if (associatedCard.name == "WolfCard") {
+			} else if (associatedCard.name.Contains("WolfCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.wolfCard);	
-			} else if (associatedCard.name == "ArmorCard") {
+			} else if (associatedCard.name.Contains("ArmorCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.armorCard);	
-			} else if (associatedCard.name == "BuffMightCard") {
+			} else if (associatedCard.name.Contains("BuffMightCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.buffMightCard);	
-			} else if (associatedCard.name == "BuffShroudCard") {
+			} else if (associatedCard.name.Contains("BuffShroudCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.buffShroudCard);	
-			} else if (associatedCard.name == "DebuffRootCard") {
+			} else if (associatedCard.name.Contains("DebuffRootCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.debuffRootCard);	
-			} else if (associatedCard.name == "FireballCard") {
+			} else if (associatedCard.name.Contains("FireballCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.fireballCard);	
-			} else if (associatedCard.name == "HealCard") {
+			} else if (associatedCard.name.Contains("HealCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.healCard);	
-			} else if (associatedCard.name == "RockThrowCard") {
+			} else if (associatedCard.name.Contains("RockThrowCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.rockThrowCard);	
-			} else if (associatedCard.name == "WindGustCard") {
+			} else if (associatedCard.name.Contains("WindGustCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.windGustCard);	
 			}
 		} else if (SceneManager.GetActiveScene().name == "CardSelectP2") {
-			if (associatedCard.name == "ArcherCard") {
+			if (associatedCard.name.Contains("ArcherCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.archerCard);
-			} else if (associatedCard.name == "AssassinCard") {
+			} else if (associatedCard.name.Contains("AssassinCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.assassinCard);
-			} else if (associatedCard.name == "BlacksmithCard") {
+			} else if (associatedCard.name.Contains("BlacksmithCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.blacksmithCard);
-			} else if (associatedCard.name == "BloodmageCard") {
+			} else if (associatedCard.name.Contains("BloodmageCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.bloodMageCard);
-			} else if (associatedCard.name == "CavalryCard") {
+			} else if (associatedCard.name.Contains("CavalryCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.cavalryCard);
-			} else if (associatedCard.name == "ChampionCard") {
+			} else if (associatedCard.name.Contains("ChampionCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.championCard);
-			} else if (associatedCard.name == "ChaosMageCard") {
+			} else if (associatedCard.name.Contains("ChaosMageCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.chaosMageCard);
-			} else if (associatedCard.name == "DivinerCard") {
+			} else if (associatedCard.name.Contains("DivinerCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.divinerCard);
-			} else if (associatedCard.name == "DruidCard") {
+			} else if (associatedCard.name.Contains("DruidCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.druidCard);
-			} else if (associatedCard.name == "SlingerCard") {
+			} else if (associatedCard.name.Contains("SlingerCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.slingerCard);
-			} else if (associatedCard.name == "DwarfCard") {
+			} else if (associatedCard.name.Contains("DwarfCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.dwarfCard);
-			} else if (associatedCard.name == "FootSoldierCard") {
+			} else if (associatedCard.name.Contains("FootSoldierCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.footSoldierCard);
-			} else if (associatedCard.name == "GhostCard") {
+			} else if (associatedCard.name.Contains("GhostCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.ghostCard);
-			}  else if (associatedCard.name == "KnightCard") {
+			} else if (associatedCard.name.Contains("KnightCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.knightCard);
-			} else if (associatedCard.name == "MonkCard") {
+			} else if (associatedCard.name.Contains("MonkCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.monkCard);
-			} else if (associatedCard.name == "PaladinCard") {
+			} else if (associatedCard.name.Contains("PaladinCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.paladinCard);
-			} else if (associatedCard.name == "RogueCard") {
+			} else if (associatedCard.name.Contains("RogueCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rogueCard);	
-			} else if (associatedCard.name == "SapperCard") {
+			} else if (associatedCard.name.Contains("SapperCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.sapperCard);
-			}  else if (associatedCard.name == "SorcererCard") {
+			} else if (associatedCard.name.Contains("SorcererCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.sorcererCard);	
-			} else if (associatedCard.name == "WolfCard") {
+			} else if (associatedCard.name.Contains("WolfCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.wolfCard);	
-			} else if (associatedCard.name == "ArmorCard") {
+			} else if (associatedCard.name.Contains("ArmorCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.armorCard);	
-			} else if (associatedCard.name == "BuffMightCard") {
+			} else if (associatedCard.name.Contains("BuffMightCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.buffMightCard);	
-			} else if (associatedCard.name == "BuffShroudCard") {
+			} else if (associatedCard.name.Contains("BuffShroudCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.buffShroudCard);	
-			} else if (associatedCard.name == "DebuffRootCard") {
+			} else if (associatedCard.name.Contains("DebuffRootCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.debuffRootCard);	
-			} else if (associatedCard.name == "FireballCard") {
+			} else if (associatedCard.name.Contains("FireballCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.fireballCard);	
-			} else if (associatedCard.name == "HealCard") {
+			} else if (associatedCard.name.Contains("HealCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.healCard);	
-			} else if (associatedCard.name == "RockThrowCard") {
+			} else if (associatedCard.name.Contains("RockThrowCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rockThrowCard);	
-			} else if (associatedCard.name == "WindGustCard") {
+			} else if (associatedCard.name.Contains("WindGustCard")) {
 				GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.windGustCard);	
 			}
 		}
@@ -165,14 +180,14 @@ public class SelectCardForDeck : MonoBehaviour {
 	void RemoveCardFromDeckSelectList () {
 		if (SceneManager.GetActiveScene().name == "CardSelectP1" || SceneManager.GetActiveScene().name == "CardSelectSinglePlayer") {
 			foreach (GameObject card in GlobalObject.instance.player1DeckSelect) {
-				if (card.name == associatedCard.name) {
+				if (associatedCard.name.Contains(card.name)) {
 					GlobalObject.instance.player1DeckSelect.Remove(card);
 					return;
 				}
 			}
 		} else if (SceneManager.GetActiveScene().name == "CardSelectP2") {
 			foreach (GameObject card in GlobalObject.instance.player2DeckSelect) {
-				if (card.name == associatedCard.name) {
+				if (associatedCard.name.Contains(card.name)) {
 					GlobalObject.instance.player2DeckSelect.Remove(card);
 					return;
 				}

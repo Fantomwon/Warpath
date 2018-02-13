@@ -133,24 +133,24 @@ public class Card : MonoBehaviour {
 		} else if (cardId == "heal") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
-					//If one of my heroes is in the square I clicked on AND they are below max health AND they are not a 'Ghost' then heal them to full
+					//If one of my heroes is in the square I clicked on AND they are below max health AND they are not a 'Ghost' then heal them for the proper amount
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
 					    && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth
 					    && hero.GetComponent<Hero>().id != "ghost") {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
-						hero.GetComponent<Hero>().HealFull();
+						hero.GetComponent<Hero>().HealPartial(3);
 						SpellCleanup ();
 						return;
 					} 
 				}
 			} else if (!playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
-					//If one of my heroes is in the square I clicked on AND they are below max health AND they are not a 'Ghost' then heal them to full
+					//If one of my heroes is in the square I clicked on AND they are below max health AND they are not a 'Ghost' then heal them for the proper amount
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
 					    && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth
 						&& hero.GetComponent<Hero>().id != "ghost") {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
-						hero.GetComponent<Hero>().HealFull();
+						hero.GetComponent<Hero>().HealPartial(3);
 						SpellCleanup ();
 						return;
 					}
@@ -235,7 +235,7 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
 						&& hero.GetComponent<Hero>().id != "ghost") {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
-						hero.GetComponent<Hero>().AddArmor(3);
+						hero.GetComponent<Hero>().AddArmor(2);
 						SpellCleanup ();
 						return;
 					} 
@@ -246,7 +246,7 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
 						&& hero.GetComponent<Hero>().id != "ghost") {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
-						hero.GetComponent<Hero>().AddArmor(3);
+						hero.GetComponent<Hero>().AddArmor(2);
 						SpellCleanup ();
 						return;
 					}

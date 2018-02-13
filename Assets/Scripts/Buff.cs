@@ -16,7 +16,7 @@ public class Buff : MonoBehaviour {
 	void Start () {
 		//We store a hero's original speed in a variable in case a particular buff/debuff needs to reset a hero back to their original speed after changing it (e.g. the 'Root' spell)
 		originalSpeed = myHero.GetComponent<Hero>().speed;
-		Debug.Log("originalSpeed set to: " + originalSpeed);
+		//Debug.Log("originalSpeed set to: " + originalSpeed);
 		//We store a hero's original power in a variable in case a particular buff/debuff needs to reset a hero back to their original power after changing it (e.g. the 'Might' spell)
 		//originalPower = myHero.GetComponent<Hero>().power;
 
@@ -28,7 +28,6 @@ public class Buff : MonoBehaviour {
 		} else if (id == "root") {
 			DebuffRoot();
 		}
-	
 	}
 
 	public void BuffMight () {

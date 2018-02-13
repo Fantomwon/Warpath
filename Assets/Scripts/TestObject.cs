@@ -4,10 +4,12 @@ using System.Collections;
 public class TestObject : MonoBehaviour {
 
 	private PlayField playField;
+	private Deck deck;
 
 	// Use this for initialization
 	void Start () {
 		playField = FindObjectOfType<PlayField>();
+		deck = FindObjectOfType<Deck>();
 	}
 	
 	// Update is called once per frame
@@ -48,6 +50,10 @@ public class TestObject : MonoBehaviour {
 		foreach (Transform card in GameObject.Find("Player2 Hand").transform) {
 				Debug.LogError("FOUND A CARD IN PLAYER 2's HAND");
 		}
+	}
+
+	public void TEST () {
+		Debug.Log("Player1 Deck Count is :" + deck.player1Deck.Count);
 	}
 }
 

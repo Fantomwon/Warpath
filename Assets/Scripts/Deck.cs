@@ -128,6 +128,7 @@ public class Deck : MonoBehaviour {
 			for (int i = 0; i < maxHandSize-currentCards; i++) {
 				//If I don't have any cards in my Deck, then shuffle my discard pile and make it my new deck
 				if (player1Deck.Count == 0) {
+					Debug.Log("PLAYER DECK EMPTY");
 					//Shuffle the discard pile
 					ShuffleDeck(player1Discard);
 
@@ -139,9 +140,19 @@ public class Deck : MonoBehaviour {
 					//Clear out the discard pile list (this WILL NOT effect the deck pile b/c we copied the list over here, we didn't just link the two lists together by setting them equal to each other.
 					player1Discard.Clear();
 				}
-				GameObject newCard = Instantiate (player1Deck [0]) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("Player1 Hand").transform, false);
-				player1Deck.RemoveAt (0);
+
+				if (CheckIfAllCardsInHandAreSpellCards() && player1Deck[0].GetComponent<Card>().type == "SpellCard") {
+					Debug.Log("4 SPELL CARDS IN HAND, NOT LETTING THAT HAPPEN!");
+					GameObject nextCardInDeck = player1Deck[0];
+					player1Deck.RemoveAt(0);
+					player1Discard.Add(nextCardInDeck);
+					Player1DealCards();
+					//player1Deck.Insert(Random.Range(1, player1Deck.Count - 1), nextCardInDeck);
+				} else {
+					GameObject newCard = Instantiate (player1Deck[0]) as GameObject;
+					newCard.transform.SetParent (GameObject.Find ("Player1 Hand").transform, false);
+					player1Deck.RemoveAt(0);
+				}
 			}
 		}
 		cardsRemaining.text = player1Deck.Count.ToString ();
@@ -154,6 +165,7 @@ public class Deck : MonoBehaviour {
 			for (int i = 0; i < maxHandSize-currentCards; i++) {
 				//If I don't have any cards in my Deck, then shuffle my discard pile and make it my new deck
 				if (player2Deck.Count == 0) {
+					Debug.Log("PLAYER DECK EMPTY");
 					//Shuffle the discard pile
 					ShuffleDeck(player2Discard);
 
@@ -165,13 +177,49 @@ public class Deck : MonoBehaviour {
 					//Clear out the discard pile list (this WILL NOT effect the deck pile b/c we copied the list over here, we didn't just link the two lists together by setting them equal to each other.
 					player2Discard.Clear();
 				}
-				GameObject newCard = Instantiate (player2Deck [0]) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("Player2 Hand").transform, false);
-				player2Deck.RemoveAt (0);
+
+				if (CheckIfAllCardsInHandAreSpellCards() && player2Deck[0].GetComponent<Card>().type == "SpellCard") {
+					Debug.Log("4 SPELL CARDS IN HAND, NOT LETTING THAT HAPPEN!");
+					GameObject nextCardInDeck = player2Deck[0];
+					player2Deck.RemoveAt(0);
+					player2Discard.Add(nextCardInDeck);
+					Player2DealCards();
+					//player2Deck.Insert(Random.Range(1, player2Deck.Count - 1), nextCardInDeck);
+				} else {
+					GameObject newCard = Instantiate (player2Deck[0]) as GameObject;
+					newCard.transform.SetParent (GameObject.Find ("Player2 Hand").transform, false);
+					player2Deck.RemoveAt(0);
+				}
 			}
 		}
 
 		cardsRemaining.text = player2Deck.Count.ToString ();
+	}
+
+	private bool CheckIfAllCardsInHandAreSpellCards () {
+		int spellCardCount = 0;
+
+		if (playField.player1Turn) {
+			foreach (Transform card in GameObject.Find("Player1 Hand").transform) {
+				if (card.GetComponent<Card>().type == "SpellCard") {
+					spellCardCount++;
+					Debug.Log("Found a spellcard in hand, spellCardCount is: " + spellCardCount);
+				}
+			}
+		} else if (!playField.player1Turn) {
+			foreach (Transform card in GameObject.Find("Player2 Hand").transform) {
+				if (card.GetComponent<Card>().type == "SpellCard") {
+					spellCardCount++;
+					Debug.Log("Found a spellcard in hand, spellCardCount is: " + spellCardCount);
+				}
+			}
+		}
+
+		if (spellCardCount == 4) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public void Player1AddCardToDiscard (GameObject card) {
@@ -187,7 +235,6 @@ public class Deck : MonoBehaviour {
 //			Debug.Log(player2Discard[i].name);
 //		}
 	}
-
 
 	void SetPlayerSpells () {
 		if (player1Class == "Mage") {
