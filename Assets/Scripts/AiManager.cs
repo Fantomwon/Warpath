@@ -13,13 +13,13 @@ public class AiManager : MonoBehaviour {
 
 	private int aiTurnTracker;
 	private PlayField playField;
-	private Deck deck;
+	//private Deck deck;
 	private Card card;
 
 	// Use this for initialization
 	void Start () {
 		playField = GameObject.FindObjectOfType<PlayField>();
-		deck = GameObject.FindObjectOfType<Deck>();
+		//deck = GameObject.FindObjectOfType<Deck>();
 		card = GameObject.FindObjectOfType<Card>();
 		AiStoryInitialBoardSetup ();
 	}
@@ -228,7 +228,7 @@ public class AiManager : MonoBehaviour {
 	}
 
 	private void AiStoryInitialBoardSetup () {
-		Debug.Log("currentlyActiveStory is:" + GlobalObject.currentlyActiveStory);
+		//Debug.Log("currentlyActiveStory is:" + GlobalObject.currentlyActiveStory);
 		if (GlobalObject.currentlyActiveStory == "story01") {
 			//DO NOTHING
 		} else if (GlobalObject.currentlyActiveStory == "story02") {

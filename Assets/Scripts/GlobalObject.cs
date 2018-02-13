@@ -31,7 +31,7 @@ public class GlobalObject : MonoBehaviour {
 		}
 
 		if (SceneManager.GetActiveScene().name == "CardSelectSinglePlayer") {
-			Debug.LogError("FUCK YES I LOADED THE CardSelectSinglePlayer SCENE");
+			//Debug.LogError("YES I LOADED THE CardSelectSinglePlayer SCENE");
 			InstantiatePlayerCards ();
 		}
 	}

@@ -8,7 +8,7 @@ public class LevelManager : MonoBehaviour {
 	private static string currentLevel;
 
 	public void LoadLevel(string name){
-		Debug.Log ("Level load requested for "+ name);
+		//Debug.Log ("Level load requested for "+ name);
 		SceneManager.LoadScene(name);
 		SetCurrentLevel();
 	}

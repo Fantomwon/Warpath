@@ -56,8 +56,7 @@ public class SelectCardForDeck : MonoBehaviour {
 	}
 
 	void AddCardToDeckSelectList () {
-		Debug.Log("RUNNING AddCardToDeckSelectList");
-		Debug.Log("My associatedCard is: " + associatedCard);
+		//Debug.Log("RUNNING AddCardToDeckSelectList");
 		if (SceneManager.GetActiveScene().name == "CardSelectP1" || SceneManager.GetActiveScene().name == "CardSelectSinglePlayer") {
 			if (associatedCard.name.Contains("ArcherCard")) {
 				GlobalObject.instance.player1DeckSelect.Add(GlobalObject.instance.archerCard);

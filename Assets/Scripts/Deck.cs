@@ -203,14 +203,14 @@ public class Deck : MonoBehaviour {
 			foreach (Transform card in GameObject.Find("Player1 Hand").transform) {
 				if (card.GetComponent<Card>().type == "SpellCard") {
 					spellCardCount++;
-					Debug.Log("Found a spellcard in hand, spellCardCount is: " + spellCardCount);
+					//Debug.Log("Found a spellcard in hand, spellCardCount is: " + spellCardCount);
 				}
 			}
 		} else if (!playField.player1Turn) {
 			foreach (Transform card in GameObject.Find("Player2 Hand").transform) {
 				if (card.GetComponent<Card>().type == "SpellCard") {
 					spellCardCount++;
-					Debug.Log("Found a spellcard in hand, spellCardCount is: " + spellCardCount);
+					//Debug.Log("Found a spellcard in hand, spellCardCount is: " + spellCardCount);
 				}
 			}
 		}

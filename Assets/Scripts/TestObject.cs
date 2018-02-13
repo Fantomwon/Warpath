@@ -47,9 +47,9 @@ public class TestObject : MonoBehaviour {
 	}
 
 	public void FindEachCardInPlayer2Hand () {
-		foreach (Transform card in GameObject.Find("Player2 Hand").transform) {
-				Debug.LogError("FOUND A CARD IN PLAYER 2's HAND");
-		}
+//		foreach (Transform card in GameObject.Find("Player2 Hand").transform) {
+//				Debug.LogError("FOUND A CARD IN PLAYER 2's HAND");
+//		}
 	}
 
 	public void TEST () {

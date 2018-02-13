@@ -138,10 +138,11 @@ public class PlayField : MonoBehaviour {
 	}
 
 	public void SpawnHeroForPlayer2 (Vector2 roundedPos) {
+
 		GameObject x = Instantiate (Card.selectedHero, roundedPos, Quaternion.identity) as GameObject;
 		//Flip the hero so it faces to the left
 		Vector3 scale = x.transform.FindChild ("Image").GetComponent<SpriteRenderer> ().transform.localScale;
-		scale.x = (scale.x *= -1);
+		(scale.x) = (scale.x *= -1);
 		x.transform.FindChild ("Image").GetComponent<SpriteRenderer> ().transform.localScale = scale;
 		//Move the Armor and Health text so that it sits on the left side of the hero
 		foreach (Transform text in x.transform) {
@@ -512,9 +513,6 @@ public class PlayField : MonoBehaviour {
 	public List<Transform> TargetCheckEntireBoardTwoRandomHeroes (Transform currentHero, string heroTypeToSearchFor) {
 		List<Transform> validHeroes = new List<Transform>();
 		BuildFullHeroTransformList();
-		float currentHeroX = currentHero.transform.position.x;
-		float currentHeroY = currentHero.transform.position.y;
-		int currentHeroRange = currentHero.GetComponent<Hero>().range;
 
 		//Check ALL of the heroes on the game board, then based on which type I'm checking for ("enemy" or "ally") add them to the appropriate list
 		foreach (Transform otherHero in fullHeroTransformList) {

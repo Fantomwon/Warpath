@@ -32,7 +32,9 @@ public class Card : MonoBehaviour {
 		player1 = GameObject.Find("player1");
 		player2 = GameObject.Find("player2");
 		ManaCost.text = manaCost.ToString();
-		NameText.text = cardName.ToString();
+		if (type != "Spell") {
+			NameText.text = cardName.ToString();
+		}
 		if (type == "Hero" || cardName == "Tower" || cardName == "Wall") {
 			PowerText.text = heroPrefab.GetComponent<Hero>().power.ToString();
 			HealthText.text = heroPrefab.GetComponent<Hero>().maxHealth.ToString();
@@ -55,7 +57,8 @@ public class Card : MonoBehaviour {
 		hero.GetComponent<Hero>().TakeDamage(spellDamage);
 	}
 
-	public void CastSpell () {
+	public void CastSpell () { 
+
 		if (cardId == "rockthrow") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
