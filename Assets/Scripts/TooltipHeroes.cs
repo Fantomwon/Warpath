@@ -24,7 +24,7 @@ public class TooltipHeroes : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	public void OnPointerUp(PointerEventData eventData) {
 		CancelInvoke("OnLongPress");
 		if (currentHero) {
-			currentHero.transform.FindChild("Tooltip").GetComponent<CanvasGroup>().alpha = 0;
+			currentHero.transform.Find("Tooltip").GetComponent<CanvasGroup>().alpha = 0;
 		}
 
 	}
@@ -32,7 +32,7 @@ public class TooltipHeroes : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	public void OnPointerExit(PointerEventData eventData) {
 		CancelInvoke("OnLongPress");
 		if (currentHero) {
-			currentHero.transform.FindChild("Tooltip").GetComponent<CanvasGroup>().alpha = 0;
+			currentHero.transform.Find("Tooltip").GetComponent<CanvasGroup>().alpha = 0;
 		}
 	}
 
@@ -48,14 +48,14 @@ public class TooltipHeroes : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 			if (hero.transform.position.x == roundedPos.x && hero.transform.position.y == roundedPos.y) {
 				currentHero = hero.gameObject;
 //				Debug.Log("There's a hero here named: " + hero.GetComponent<Hero>().name);
-				hero.transform.FindChild("Tooltip").GetComponent<CanvasGroup>().alpha = 1;
+				hero.transform.Find("Tooltip").GetComponent<CanvasGroup>().alpha = 1;
 			}
 		}
 		foreach (Transform hero in playField.player2.transform) {
 			if (hero.transform.position.x == roundedPos.x && hero.transform.position.y == roundedPos.y) {
 				currentHero = hero.gameObject;
 				Debug.Log("There's a hero here named: " + hero.GetComponent<Hero>().name);
-				hero.transform.FindChild("Tooltip").GetComponent<CanvasGroup>().alpha = 1;
+				hero.transform.Find("Tooltip").GetComponent<CanvasGroup>().alpha = 1;
 			}
 		}
 

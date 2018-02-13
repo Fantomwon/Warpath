@@ -1,37 +1,37 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj" RefactoringSettings.EnableRefactorings="True">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GlobalObject.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayField.cs">
     <Files>
-      <File FileName="Assets\Scripts\Hero.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Deck.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Hero.cs" Line="204" Column="127" />
+      <File FileName="Assets\Scripts\Deck.cs" Line="213" Column="8" />
       <File FileName="..\Glitch Garden\Assets\Scripts\DefenderSpawner.cs" Line="1" Column="1" />
       <File FileName="..\Glitch Garden\Assets\Scripts\Attacker.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayField.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayField.cs" Line="245" Column="1" />
       <File FileName="..\Zombie Runner\Assets\Scripts\Inventory.cs" Line="1" Column="1" />
       <File FileName="..\Glitch Garden\Assets\Scripts\Button.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GameController.cs" Line="1" Column="1" />
       <File FileName="..\Bowlmaster\Assets\Scripts\ScoreDisplay.cs" Line="1" Column="1" />
       <File FileName="..\Laser Defender\Assets\Scripts\ScoreDisplay.cs" Line="1" Column="1" />
       <File FileName="..\Glitch Garden\Assets\Scripts\Health.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Card.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Card.cs" Line="61" Column="1" />
       <File FileName="Assets\Scripts\CardReference.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\HandHider.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\TestObject.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\TestObject.cs" Line="52" Column="6" />
       <File FileName="Assets\Scripts\Spell.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\BuffManager.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Buff.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\AnimationEvents.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\AttackTellBoxes.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\SelectCardForDeck.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\LevelManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\GlobalObject.cs" Line="47" Column="32" />
+      <File FileName="Assets\Scripts\SelectCardForDeck.cs" Line="59" Column="50" />
+      <File FileName="Assets\Scripts\LevelManager.cs" Line="11" Column="5" />
+      <File FileName="Assets\Scripts\GlobalObject.cs" Line="36" Column="4" />
       <File FileName="Assets\Scripts\CardsSelected.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\SelectPlayerClass.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\TooltipHeroes.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\TooltipSpells.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\CombatText.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\SelectBoss.cs" Line="158" Column="82" />
-      <File FileName="Assets\Scripts\AiManager.cs" Line="201" Column="24" />
+      <File FileName="Assets\Scripts\SelectBoss.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\AiManager.cs" Line="22" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

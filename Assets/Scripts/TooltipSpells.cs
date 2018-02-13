@@ -19,7 +19,7 @@ public class TooltipSpells : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 	public void OnPointerUp(PointerEventData eventData) {
 		if (spellSelected) {
-			EventSystem.current.currentSelectedGameObject.transform.FindChild("Tooltip").GetComponent<CanvasGroup>().alpha = 0;
+			EventSystem.current.currentSelectedGameObject.transform.Find("Tooltip").GetComponent<CanvasGroup>().alpha = 0;
 		}
 		CancelInvoke("OnLongPress");
 		spellSelected = false;
@@ -27,7 +27,7 @@ public class TooltipSpells : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 	public void OnPointerExit(PointerEventData eventData) {
 		if (spellSelected) {
-			EventSystem.current.currentSelectedGameObject.transform.FindChild("Tooltip").GetComponent<CanvasGroup>().alpha = 0;
+			EventSystem.current.currentSelectedGameObject.transform.Find("Tooltip").GetComponent<CanvasGroup>().alpha = 0;
 		}
 		CancelInvoke("OnLongPress");
 		spellSelected = false;
@@ -35,7 +35,7 @@ public class TooltipSpells : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 	private void OnLongPress () {
 		Debug.Log("LONG PRESS ACHIEVED");
-		EventSystem.current.currentSelectedGameObject.transform.FindChild("Tooltip").GetComponent<CanvasGroup>().alpha = 1;
+		EventSystem.current.currentSelectedGameObject.transform.Find("Tooltip").GetComponent<CanvasGroup>().alpha = 1;
 		spellSelected = true;
 		onLongPress.Invoke();
 	}

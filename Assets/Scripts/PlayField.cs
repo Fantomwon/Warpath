@@ -46,7 +46,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void OnMouseDown(){
-		//print (Input.mousePosition);
+		print (Input.mousePosition);
 		//print (SnapToGrid(CalculateWorldPointOfMouseClick()));
 
 		if (!Card.selectedCard) {
@@ -127,23 +127,32 @@ public class PlayField : MonoBehaviour {
 	}
 
 	public void SpawnHeroForPlayer1 (Vector2 roundedPos) {
-		GameObject x = Instantiate (Card.selectedHero, roundedPos, Quaternion.identity) as GameObject;
+		Debug.Log("roundPos is " + roundedPos);
+		//For some reason using 'roundedPos' in the instatiate script below will not work and the hero will always spawn at '0,0,0'. So we now update the hero's transform.position after we instantiate it
+		GameObject x = Instantiate (Card.selectedHero, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+		//Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
+		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
+
 		//Child the newly spawned hero to the appropriate player
 		x.transform.SetParent (player1.transform, false);
 		x.gameObject.tag = "player1";
-		Color xAlpha = x.transform.FindChild ("Player1Indicator").GetComponent<SpriteRenderer> ().color;
+		Color xAlpha = x.transform.Find ("Player1Indicator").GetComponent<SpriteRenderer> ().color;
 		xAlpha.a = 0.5f;
-		x.transform.FindChild ("Player1Indicator").GetComponent<SpriteRenderer> ().color = xAlpha;
+		x.transform.Find ("Player1Indicator").GetComponent<SpriteRenderer> ().color = xAlpha;
 		SubtractMana ();
 	}
 
 	public void SpawnHeroForPlayer2 (Vector2 roundedPos) {
-
+		Debug.Log("RUNNING SpawnHeroForPlayer2");
+		//For some reason using 'roundedPos' in the instatiate script below will not work and the hero will always spawn at '0,0,0'. So we now update the hero's transform.position after we instantiate it
 		GameObject x = Instantiate (Card.selectedHero, roundedPos, Quaternion.identity) as GameObject;
+		//Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
+		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
+
 		//Flip the hero so it faces to the left
-		Vector3 scale = x.transform.FindChild ("Image").GetComponent<SpriteRenderer> ().transform.localScale;
+		Vector3 scale = x.transform.Find ("Image").GetComponent<SpriteRenderer> ().transform.localScale;
 		(scale.x) = (scale.x *= -1);
-		x.transform.FindChild ("Image").GetComponent<SpriteRenderer> ().transform.localScale = scale;
+		x.transform.Find ("Image").GetComponent<SpriteRenderer> ().transform.localScale = scale;
 		//Move the Armor and Health text so that it sits on the left side of the hero
 		foreach (Transform text in x.transform) {
 			Vector3 newTextPosition = text.transform.localPosition;
@@ -153,9 +162,9 @@ public class PlayField : MonoBehaviour {
 		//Child the newly spawned hero to the appropriate player
 		x.transform.SetParent (player2.transform, false);
 		x.gameObject.tag = "player2";
-		Color xAlpha = x.transform.FindChild ("Player2Indicator").GetComponent<SpriteRenderer> ().color;
+		Color xAlpha = x.transform.Find ("Player2Indicator").GetComponent<SpriteRenderer> ().color;
 		xAlpha.a = 0.5f;
-		x.transform.FindChild ("Player2Indicator").GetComponent<SpriteRenderer> ().color = xAlpha;
+		x.transform.Find ("Player2Indicator").GetComponent<SpriteRenderer> ().color = xAlpha;
 		if (!GlobalObject.storyEnabled) {
 			SubtractMana ();
 		}

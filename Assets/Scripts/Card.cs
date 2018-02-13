@@ -386,8 +386,8 @@ public class Card : MonoBehaviour {
 	public void SetSpellCooldown () {
 		spellCooldownCurrent = spellCooldownStart + 1;
 		this.GetComponent<Button>().interactable = false;
-		this.gameObject.transform.FindChild("CooldownText").GetComponent<CanvasGroup>().alpha = 1;
-		this.gameObject.transform.FindChild("CooldownText").GetComponent<Text>().text = spellCooldownCurrent.ToString();
+		this.gameObject.transform.Find("CooldownText").GetComponent<CanvasGroup>().alpha = 1;
+		this.gameObject.transform.Find("CooldownText").GetComponent<Text>().text = spellCooldownCurrent.ToString();
 	}
 
 	public void ReduceSpellCooldown () {
@@ -395,11 +395,11 @@ public class Card : MonoBehaviour {
 			spellCooldownCurrent -= 1;
 		}
 
-		this.gameObject.transform.FindChild("CooldownText").GetComponent<Text>().text = spellCooldownCurrent.ToString();
+		this.gameObject.transform.Find("CooldownText").GetComponent<Text>().text = spellCooldownCurrent.ToString();
 
 		if (spellCooldownCurrent <= 0) {
 			this.GetComponent<Button>().interactable = true;
-			this.gameObject.transform.FindChild("CooldownText").GetComponent<CanvasGroup>().alpha = 0;
+			this.gameObject.transform.Find("CooldownText").GetComponent<CanvasGroup>().alpha = 0;
 		}
 	}
 
