@@ -10,6 +10,7 @@ public class AiManager : MonoBehaviour {
 	public List<Vector2> openRowCoords;
 	public List<GameObject> validCardsToPlay;
 	public GameObject archer,assassin,bloodmage,cavalry,diviner,druid,footsoldier,knight,monk,rogue,tower,wall;
+	public int aiSequenceTracker;
 
 	private int aiTurnTracker;
 	private PlayField playField;
@@ -18,6 +19,7 @@ public class AiManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		aiSequenceTracker = 0;
 		playField = GameObject.FindObjectOfType<PlayField>();
 		//deck = GameObject.FindObjectOfType<Deck>();
 		card = GameObject.FindObjectOfType<Card>();
@@ -25,24 +27,24 @@ public class AiManager : MonoBehaviour {
 	}
 
 	public void AiTakeTurn () {
-		AiSelectHeroCardToPlay();
-		if (Card.selectedHero && !CheckIfHomeRowIsFull()) {
-			if (Card.selectedHero.GetComponent<Hero>().id == "wolf") {
-				AiPlayHeroCard ();
-				StartCoroutine("AiRemoveHeroCardAfterDelay");
-			} else {
-				AiPlayHeroCard ();
-				AiRemoveHeroCard ();
-			}
+//		AiSelectHeroCardToPlay();
+//		AiPlayHeroCard();
+		Debug.Log("RUNNING AiTakeTurn");
 
-		} else {
-			playField.EndTurn();
+		if (aiSequenceTracker == 1) {
+			AiSelectHeroCardToPlay();
+			AiPlayHeroCard();
+			Debug.Log("aiSequenceTracker is at: " + aiSequenceTracker);
+		} else if (aiSequenceTracker == 2) {
+			Debug.Log("RUNNING aiSequenceTracker - SEQUENCE # 2");
+			GameObject spellCard = Instantiate(FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().fireballCard, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+			Card.selectedCard = spellCard;
+			Debug.Log("Card.selectedCard is: " + Card.selectedCard);
+			Debug.Log("Card.selectedCard.GetComponent<Card>().name is: " + Card.selectedCard.GetComponent<Card>().name);
+			Debug.Log("Player1Turn? " + playField.player1Turn);
+			Card.selectedCard.GetComponent<Card>().CastSpell();
+			aiSequenceTracker = 0;
 		}
-	}
-
-	IEnumerator AiRemoveHeroCardAfterDelay () {
-		yield return new WaitForSeconds(2f);
-		AiRemoveHeroCard ();
 	}
 
 	private void AiSelectHeroCardToPlay () {
@@ -70,7 +72,23 @@ public class AiManager : MonoBehaviour {
 	}
 
 	public void AiPlayHeroCard () {
-		playField.SpawnHeroForPlayer2(ReturnValidHeroSpawnCoords());
+		if (Card.selectedHero && !CheckIfHomeRowIsFull()) {
+			if (Card.selectedHero.GetComponent<Hero>().id == "wolf") {
+				playField.SpawnHeroForPlayer2(ReturnValidHeroSpawnCoords());
+				StartCoroutine("AiRemoveHeroCardAfterDelay");
+			} else {
+				playField.SpawnHeroForPlayer2(ReturnValidHeroSpawnCoords());
+				AiRemoveHeroCard ();
+			}
+
+		} else {
+			playField.EndTurn();
+		}
+	}
+
+	IEnumerator AiRemoveHeroCardAfterDelay () {
+		yield return new WaitForSeconds(2f);
+		AiRemoveHeroCard ();
 	}
 
 	private Vector2 ReturnValidHeroSpawnCoords () {

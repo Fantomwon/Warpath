@@ -24,9 +24,13 @@ public class Card : MonoBehaviour {
 	private BuffManager buffManager;
 	private GameObject player1,player2;
 
+	void Awake () {
+		Debug.Log("Running Awake() function for: " + cardName);
+		playField = FindObjectOfType<PlayField>();
+	}
+
 	// Use this for initialization
 	void Start () {
-		playField = FindObjectOfType<PlayField>();
 		deck = FindObjectOfType<Deck>();
 		buffManager = FindObjectOfType<BuffManager>();
 		player1 = GameObject.Find("player1");
@@ -85,7 +89,9 @@ public class Card : MonoBehaviour {
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		} else if (cardId == "fireball") {
+			Debug.Log("FIREBALL MARKER # 1");
 			if (playField.player1Turn) {
+				Debug.Log("FIREBALL MARKER # 2");
 				foreach (Transform hero in playField.player2.transform) {
 					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method which is part of Spell.cs and is attached to
 					//the 'Fireball' object nested under the 'FireballParticle' object)
@@ -97,6 +103,7 @@ public class Card : MonoBehaviour {
 					} 
 				}
 			} else if (!playField.player1Turn) {
+				Debug.Log("FIREBALL MARKER # 3");
 				foreach (Transform hero in playField.player1.transform) {
 					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method which is part of Spell.cs and is attached to
 					//the 'Fireball' object nested under the 'FireballParticle' object)

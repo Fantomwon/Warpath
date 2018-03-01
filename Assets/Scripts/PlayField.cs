@@ -46,7 +46,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void OnMouseDown(){
-		print (Input.mousePosition);
+		//print (Input.mousePosition);
 		//print (SnapToGrid(CalculateWorldPointOfMouseClick()));
 
 		if (!Card.selectedCard) {
@@ -127,7 +127,8 @@ public class PlayField : MonoBehaviour {
 	}
 
 	public void SpawnHeroForPlayer1 (Vector2 roundedPos) {
-		Debug.Log("roundPos is " + roundedPos);
+//		Debug.Log("roundPos is " + roundedPos);
+
 		//For some reason using 'roundedPos' in the instatiate script below will not work and the hero will always spawn at '0,0,0'. So we now update the hero's transform.position after we instantiate it
 		GameObject x = Instantiate (Card.selectedHero, new Vector3(0,0,0), Quaternion.identity) as GameObject;
 		//Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
@@ -143,7 +144,6 @@ public class PlayField : MonoBehaviour {
 	}
 
 	public void SpawnHeroForPlayer2 (Vector2 roundedPos) {
-		Debug.Log("RUNNING SpawnHeroForPlayer2");
 		//For some reason using 'roundedPos' in the instatiate script below will not work and the hero will always spawn at '0,0,0'. So we now update the hero's transform.position after we instantiate it
 		GameObject x = Instantiate (Card.selectedHero, roundedPos, Quaternion.identity) as GameObject;
 		//Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
@@ -897,6 +897,7 @@ public class PlayField : MonoBehaviour {
 
 		if (GlobalObject.aiEnabled == true) {
 			//Debug.Log("AI is enabled!!!");
+			FindObjectOfType<AiManager>().GetComponent<AiManager>().aiSequenceTracker++;
 			FindObjectOfType<AiManager>().GetComponent<AiManager>().AiTakeTurn();
 			//Player2AddMana (1);
 		} else if (GlobalObject.storyEnabled) {
