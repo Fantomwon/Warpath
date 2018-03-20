@@ -517,6 +517,46 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
+	//Looks at all heroes on the board that are NOT on your team and returns a single random hero.
+	public List<Transform> TargetSpellCheckEntireBoardOneRandomHero (string heroTypeToSearchFor) {
+		List<Transform> validHeroes = new List<Transform>();
+		BuildFullHeroTransformList();
+
+		//Check ALL of the heroes on the game board, then based on which type I'm checking for ("enemy" or "ally") add them to the appropriate list
+		if (player1Turn && heroTypeToSearchFor == "enemy") {
+			foreach (Transform hero in player2.transform) {
+				validHeroes.Add(hero);
+			}
+		} else if (!player1Turn && heroTypeToSearchFor == "enemy") {
+			foreach (Transform hero in player1.transform) {
+				Debug.Log("ADDING A HERO TO THE LIST OF HEROES I COULD FIREBALL: " + hero.name);
+				validHeroes.Add(hero);
+			}
+		} else if (player1Turn && heroTypeToSearchFor == "ally") {
+			foreach (Transform hero in player1.transform) {
+				validHeroes.Add(hero);
+			}
+		} else if (!player1Turn && heroTypeToSearchFor == "ally") {
+			foreach (Transform hero in player2.transform) {
+				validHeroes.Add(hero);
+			}
+		}
+
+		int tempListCount = validHeroes.Count;
+		for (int i = 0; i < tempListCount; i++) {
+			if (validHeroes.Count > 1) {
+				int temp = Random.Range(0, validHeroes.Count);
+				validHeroes.RemoveAt(temp);
+			}
+		}
+
+		//We store the enemies that we'll be attacking in a tempTransformList so that we can spawn the red 'attack tell boxes' beneath them, which is called from hero.cs. We have to do this b/c we are picking heroes at random, so running 
+		//the check again in a different part of the code would return possibly two different enemies than the ones that we are actually attacking.
+		tempTransformList.Clear();
+		tempTransformList = validHeroes;
+
+		return validHeroes;
+	}
 
 	//Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a list of the given herotypes that are currently located in any CARDINAL direction around the currenthero, NOT including diagonals
 	public List<Transform> TargetCheckEntireBoardTwoRandomHeroes (Transform currentHero, string heroTypeToSearchFor) {
@@ -540,7 +580,7 @@ public class PlayField : MonoBehaviour {
 		int tempListCount = validHeroes.Count;
 		for (int i = 0; i < tempListCount; i++) {
 			if (validHeroes.Count > 2) {
-				int temp = Random.Range(0, validHeroes.Count - 1);
+				int temp = Random.Range(0, validHeroes.Count);
 				validHeroes.RemoveAt(temp);
 			}
 		}

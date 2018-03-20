@@ -25,7 +25,7 @@ public class Card : MonoBehaviour {
 	private GameObject player1,player2;
 
 	void Awake () {
-		Debug.Log("Running Awake() function for: " + cardName);
+		//Debug.Log("Running Awake() function for: " + cardName);
 		playField = FindObjectOfType<PlayField>();
 	}
 
@@ -102,7 +102,7 @@ public class Card : MonoBehaviour {
 						return;
 					} 
 				}
-			} else if (!playField.player1Turn) {
+			} else if (!playField.player1Turn && !GlobalObject.aiEnabled) {
 				Debug.Log("FIREBALL MARKER # 3");
 				foreach (Transform hero in playField.player1.transform) {
 					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method which is part of Spell.cs and is attached to
@@ -114,6 +114,16 @@ public class Card : MonoBehaviour {
 						return;
 					}
 				}
+			} else if (!playField.player1Turn && GlobalObject.aiEnabled) {
+				Debug.Log("FIREBALL MARKER # 4");
+				Transform hero;
+				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("enemy")[0];
+				Debug.Log("The hero I've found is: " + hero.GetComponent<Hero>().name);
+				spellParticle.GetComponentInChildren<Spell>().hero = hero;
+				Debug.Log("spellParticle is: " + spellParticle.name);
+				Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
+				SpellCleanup ();
+				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		} else if (cardId == "flamestrike") {
@@ -415,7 +425,14 @@ public class Card : MonoBehaviour {
 	//which is a really simple gameobject that just has a gameobject variable that points to the appropriate card gameobject (i.e. instead of referencing
 	//the actual card gameobject that was just played, we point to the card gameobject in general)
 	public void RemoveCardFromHandAndAddToDiscard () {
-		//If the card is a Tower or Wall card DO NOT remove it as the Tower and Wall cards are used more like spells
+		//If Ai is enabled and the card is a spell card then destory that card then RETURN and do not add that card to my discard pile like we would normally do
+		if (GlobalObject.aiEnabled && Card.selectedCard.GetComponent<Card>().type == "SpellCard") {
+			Debug.Log("NOT ADDING THIS CARD TO DISCARD B/C AI IS ENABLED AND I SHOULDN'T DO THAT");
+			DestroyImmediate (Card.selectedCard.gameObject);
+			return;
+		}
+
+		//If the card is a Tower or Wall card DO NOT add it to my discard as the Tower and Wall cards are used more like spells
 		if (Card.selectedCard.GetComponent<Card> ().cardName != "Tower" && Card.selectedCard.GetComponent<Card> ().cardName != "Wall") {
 			if (playField.player1Turn) {
 				deck.Player1AddCardToDiscard (Card.selectedCard.GetComponent<Card>().cardReferenceObject.GetComponent<CardReference>().cardReference);

@@ -11,6 +11,7 @@ public class AiManager : MonoBehaviour {
 	public List<GameObject> validCardsToPlay;
 	public GameObject archer,assassin,bloodmage,cavalry,diviner,druid,footsoldier,knight,monk,rogue,tower,wall;
 	public int aiSequenceTracker;
+	public Transform player2Hand;
 
 	private int aiTurnTracker;
 	private PlayField playField;
@@ -37,13 +38,15 @@ public class AiManager : MonoBehaviour {
 			Debug.Log("aiSequenceTracker is at: " + aiSequenceTracker);
 		} else if (aiSequenceTracker == 2) {
 			Debug.Log("RUNNING aiSequenceTracker - SEQUENCE # 2");
-			GameObject spellCard = Instantiate(FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().fireballCard, new Vector3(0,0,0), Quaternion.identity) as GameObject;
-			Card.selectedCard = spellCard;
+			GameObject spellCard = Instantiate(FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().fireballCard, player2Hand.transform);
+			//GameObject spellCard = Instantiate(FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().fireballCard, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+			Card.selectedCard = spellCard.gameObject;
 			Debug.Log("Card.selectedCard is: " + Card.selectedCard);
 			Debug.Log("Card.selectedCard.GetComponent<Card>().name is: " + Card.selectedCard.GetComponent<Card>().name);
-			Debug.Log("Player1Turn? " + playField.player1Turn);
-			Card.selectedCard.GetComponent<Card>().CastSpell();
+			Debug.Log("spellParticle.name is: " + Card.selectedCard.GetComponent<Card>().spellParticle.name);
 			aiSequenceTracker = 0;
+			Card.selectedCard.GetComponent<Card>().CastSpell();
+			StartCoroutine("AiEndTurnAfterDelay");
 		}
 	}
 
@@ -86,9 +89,19 @@ public class AiManager : MonoBehaviour {
 		}
 	}
 
+	public void AiPlayerSpellCard () {
+		Card.selectedCard.GetComponent<Card>().CastSpell();
+
+	}
+
 	IEnumerator AiRemoveHeroCardAfterDelay () {
 		yield return new WaitForSeconds(2f);
 		AiRemoveHeroCard ();
+	}
+
+	IEnumerator AiEndTurnAfterDelay () {
+		yield return new WaitForSeconds(2f);
+		playField.EndTurn();
 	}
 
 	private Vector2 ReturnValidHeroSpawnCoords () {

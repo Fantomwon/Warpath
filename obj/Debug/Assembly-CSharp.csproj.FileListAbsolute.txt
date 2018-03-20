@@ -16,7 +16,6 @@ C:\Users\Deerok\Documents\Unity Repos\Warpath\obj\Debug\Assembly-CSharp.csprojRe
 C:\Users\Deerok\Documents\Unity Repos\Warpath\obj\Debug\Assembly-CSharp.dll
 C:\Users\Deerok\Documents\Unity Repos\Warpath\obj\Debug\Assembly-CSharp.pdb
 C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\nunit.framework.dll
-C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\SyntaxTree.VisualStudio.Unity.Bridge.dll
 C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\UnityEditor.Advertisements.dll
 C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\UnityEditor.Analytics.dll
 C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\UnityEditor.Android.Extensions.dll
@@ -51,7 +50,6 @@ C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\Unity.Legacy.NRefac
 C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\Unity.Cecil.Mdb.dll
 C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\UnityEditor.iOS.Extensions.Xcode.dll
 C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\UnityEditor.iOS.Extensions.Common.dll
-C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\SyntaxTree.VisualStudio.Unity.Messaging.dll
 C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\Unity.Cecil.Pdb.dll
 C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\UnityEditor.UI.xml
 C:\Users\Deerok\Documents\Unity Repos\Warpath\Temp\bin\Debug\UnityEditor.Networking.xml
