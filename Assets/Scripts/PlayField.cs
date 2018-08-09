@@ -236,6 +236,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	IEnumerator SwitchPlayerTurns () {
+		Debug.Log("RUNNING SwitchPlayerTurns");
 		yield return new WaitForSeconds(0.5f);
 		player1Turn = !player1Turn;
 		if (player1Turn) {
@@ -286,6 +287,7 @@ public class PlayField : MonoBehaviour {
 
 	public void ClearSelectedHeroAndSelectedCard ()
 	{
+		Debug.Log("!!!!!!!!!ClearSelectedHeroAndSelectedCard!!!!!!!!!!!!!");
 		//Debug.Log("RUNNING playField.ClearSelectedHeroAndSelectedCard()");
 		//Reset the 'selectedHero' variable so players can't place another hero before selecting another card
 		Card.selectedHero = default(GameObject);
@@ -412,6 +414,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void BuildFullHeroTransformList () {
+		Debug.Log("RUNNING BuildFullHeroTransformList");
 		fullHeroTransformList.Clear();
 		foreach (Transform hero in player1.transform) {
 			fullHeroTransformList.Add(hero);
@@ -519,6 +522,7 @@ public class PlayField : MonoBehaviour {
 
 	//Looks at all heroes on the board that are NOT on your team and returns a single random hero.
 	public List<Transform> TargetSpellCheckEntireBoardOneRandomHero (string heroTypeToSearchFor) {
+		Debug.Log("RUNNING TargetSpellCheckEntireBoardOneRandomHero");
 		List<Transform> validHeroes = new List<Transform>();
 		BuildFullHeroTransformList();
 
@@ -555,6 +559,7 @@ public class PlayField : MonoBehaviour {
 		tempTransformList.Clear();
 		tempTransformList = validHeroes;
 
+		Debug.Log("ENDING TargetSpellCheckEntireBoardOneRandomHero");
 		return validHeroes;
 	}
 
@@ -921,6 +926,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void Player2TurnStart () {
+		Debug.Log("RUNNING Player2TurnStart");
 		IncrementTurnsPlayedTracker ();
 		turnIndicator.text = "<color=red>Player 2's Turn</color>";
 		EnablePlayer2HandAndHidePlayer1Hand ();

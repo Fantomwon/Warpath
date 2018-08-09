@@ -161,10 +161,10 @@ public class Hero : MonoBehaviour {
 	}
 
 	public void AfterAttackOperations () {
-		Debug.Log("HERO ATTACK FINISHED");
+		//Debug.Log("HERO ATTACK FINISHED");
 		playField.heroAttackedATarget = false;
 		if (!usingHaste) {
-			Debug.Log("RUN MoverHeroes() - NOT USING HASTE");
+			//Debug.Log("RUN MoverHeroes() - NOT USING HASTE");
 			playField.MoveHeroes();
 		} else if (usingHaste) {
 			Debug.Log("RUN MoverHeroes() - USING HASTE");

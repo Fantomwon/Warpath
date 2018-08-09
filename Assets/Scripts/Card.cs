@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 using UnityEngine.EventSystems;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Card : MonoBehaviour {
 
@@ -75,7 +77,7 @@ public class Card : MonoBehaviour {
 						return;
 					} 
 				}
-			} else if (!playField.player1Turn) {
+			} else if (!playField.player1Turn && !GlobalObject.aiEnabled) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method which is part of Spell.cs and is attached to
 					//the 'Rock' object nested under the 'RockThrowParticle' object)
@@ -86,6 +88,13 @@ public class Card : MonoBehaviour {
 						return;
 					}
 				}
+			} else if (!playField.player1Turn && GlobalObject.aiEnabled) {
+				Transform hero;
+				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("enemy")[0];
+				spellParticle.GetComponentInChildren<Spell>().hero = hero;
+				Instantiate(spellParticle, hero.transform.localPosition, Quaternion.identity);
+				SpellCleanup ();
+				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		} else if (cardId == "fireball") {
@@ -109,7 +118,7 @@ public class Card : MonoBehaviour {
 					//the 'Fireball' object nested under the 'FireballParticle' object)
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
 						spellParticle.GetComponentInChildren<Spell>().hero = hero;
-						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, player2.transform);
+						Instantiate(spellParticle, hero.transform.localPosition, Quaternion.identity, player2.transform);
 						SpellCleanup ();
 						return;
 					}
@@ -118,10 +127,10 @@ public class Card : MonoBehaviour {
 				Debug.Log("FIREBALL MARKER # 4");
 				Transform hero;
 				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("enemy")[0];
-				Debug.Log("The hero I've found is: " + hero.GetComponent<Hero>().name);
+				//Debug.Log("The hero I've found is: " + hero.GetComponent<Hero>().name);
 				spellParticle.GetComponentInChildren<Spell>().hero = hero;
-				Debug.Log("spellParticle is: " + spellParticle.name);
-				Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
+				//Debug.Log("spellParticle is: " + spellParticle.name);
+				Instantiate(spellParticle, hero.transform.localPosition, Quaternion.identity);
 				SpellCleanup ();
 				return;
 			}
@@ -385,19 +394,37 @@ public class Card : MonoBehaviour {
 		}
 	}
 
+	public bool SpellAiConditionCheck () {
+		if (cardId == "fireball" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
+			return true;
+		} else if (cardId == "rockthrow" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	void SpellCleanup ()
 	{
 		playField.SubtractMana ();
 
 		if (Card.selectedCard.GetComponent<Card>().type == "Spell") {
+			Debug.LogError("Card.selectedCard is a SPELL ALERT ALERT ALERT");
 			SetSpellCooldown ();
+			playField.ClearSelectedHeroAndSelectedCard ();
 		}
 
-		if (Card.selectedCard.GetComponent<Card>().type == "SpellCard") {
+		if (Card.selectedCard && Card.selectedCard.GetComponent<Card>().type == "SpellCard" && ((!GlobalObject.aiEnabled) || (GlobalObject.aiEnabled && playField.player1Turn)) ) {
+			Debug.LogWarning("Card.selectedCard is a SPELLLLLLLLLLLLLCAAAAAAAAAAARRRRRRRRRRD");
 			RemoveCardFromHandAndAddToDiscard();
 		}
 
-		playField.ClearSelectedHeroAndSelectedCard ();
+		//If Ai is enabled and the card is a spell card then destroy that card then RETURN and do not add that card to my discard pile like we would normally do
+		if (Card.selectedCard && Card.selectedCard.GetComponent<Card>().type == "SpellCardForced") {
+			Debug.Log("NOT ADDING THIS CARD TO DISCARD B/C AI IS ENABLED AND I SHOULDN'T DO THAT");
+			DestroyImmediate (Card.selectedCard.gameObject);
+			playField.ClearSelectedHeroAndSelectedCard ();
+		}
 	}
 
 	public void SetSpellCooldown () {
@@ -425,22 +452,19 @@ public class Card : MonoBehaviour {
 	//which is a really simple gameobject that just has a gameobject variable that points to the appropriate card gameobject (i.e. instead of referencing
 	//the actual card gameobject that was just played, we point to the card gameobject in general)
 	public void RemoveCardFromHandAndAddToDiscard () {
-		//If Ai is enabled and the card is a spell card then destory that card then RETURN and do not add that card to my discard pile like we would normally do
-		if (GlobalObject.aiEnabled && Card.selectedCard.GetComponent<Card>().type == "SpellCard") {
-			Debug.Log("NOT ADDING THIS CARD TO DISCARD B/C AI IS ENABLED AND I SHOULDN'T DO THAT");
-			DestroyImmediate (Card.selectedCard.gameObject);
-			return;
+		if (Card.selectedCard) {
+			Debug.LogWarning("SELECTED CARD EXISTS!!!!!!!!!!!!!!" + Card.selectedCard.GetComponent<Card>().cardId);
 		}
-
 		//If the card is a Tower or Wall card DO NOT add it to my discard as the Tower and Wall cards are used more like spells
-		if (Card.selectedCard.GetComponent<Card> ().cardName != "Tower" && Card.selectedCard.GetComponent<Card> ().cardName != "Wall") {
+		if (Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card> ().cardName != "Wall") {
 			if (playField.player1Turn) {
 				deck.Player1AddCardToDiscard (Card.selectedCard.GetComponent<Card>().cardReferenceObject.GetComponent<CardReference>().cardReference);
 			} else if (!playField.player1Turn) {
+				Debug.LogWarning("SELECTED CARD EXISTS!!!!!!!!!!!!!!" + Card.selectedCard.GetComponent<Card>().cardReferenceObject.GetComponent<CardReference>().cardReference);
 				deck.Player2AddCardToDiscard (Card.selectedCard.GetComponent<Card>().cardReferenceObject.GetComponent<CardReference>().cardReference);
 				//Debug.Log("Adding card to player2 discard pile: " + Card.selectedCard.GetComponent<Card>().cardName);
 			}
-			//Get rid of the  card from my hand that I just used so I can't use it again
+			//Get rid of the card from my hand that I just used so I can't use it again
 			DestroyImmediate (Card.selectedCard.gameObject);
 		}
 	}

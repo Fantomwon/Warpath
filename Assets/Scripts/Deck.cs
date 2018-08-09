@@ -15,6 +15,7 @@ public class Deck : MonoBehaviour {
 	public GameObject blacksmithSpell1, blacksmithSpell2, blacksmithSpell3, druidSpell1, druidSpell2, druidSpell3, mageSpell1, mageSpell2, mageSpell3, rogueSpell1, rogueSpell2, rogueSpell3;
 	public Text cardsRemaining;
 
+	private AiManager aiManager;
 	private string player1Class, player2Class;
 	private int maxHandSize = 5;
 	private PlayField playField;
@@ -28,6 +29,7 @@ public class Deck : MonoBehaviour {
 			ShuffleDeck (player2Deck);
 		}
 		playField = GameObject.FindObjectOfType<PlayField>();
+		aiManager = GameObject.FindObjectOfType<AiManager>();
 		player1Class = GlobalObject.instance.player1Class;
 		player2Class = GlobalObject.instance.player2Class;
 		SetPlayerSpells();
@@ -187,6 +189,11 @@ public class Deck : MonoBehaviour {
 					//player2Deck.Insert(Random.Range(1, player2Deck.Count - 1), nextCardInDeck);
 				} else {
 					GameObject newCard = Instantiate (player2Deck[0]) as GameObject;
+					//Alter card cost if ai is enabled
+					if ( GlobalObject.aiEnabled == true ) {
+						Debug.Log("SETTING NEW MANA COST FOR CARD");
+						newCard.GetComponent<Card>().manaCost = aiManager.AiAlterCardCost(newCard);
+					}
 					newCard.transform.SetParent (GameObject.Find ("Player2 Hand").transform, false);
 					player2Deck.RemoveAt(0);
 				}
@@ -230,6 +237,7 @@ public class Deck : MonoBehaviour {
 	}
 
 	public void Player2AddCardToDiscard (GameObject card) {
+		Debug.Log("RUNNING Player2AddCardToDiscard????????????");
 		player2Discard.Add(card);
 //		for (int i=0; i<player2Discard.Count(); i++) {
 //			Debug.Log(player2Discard[i].name);

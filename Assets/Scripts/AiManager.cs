@@ -30,34 +30,57 @@ public class AiManager : MonoBehaviour {
 	public void AiTakeTurn () {
 //		AiSelectHeroCardToPlay();
 //		AiPlayHeroCard();
-		Debug.Log("RUNNING AiTakeTurn");
+		//Debug.Log("RUNNING AiTakeTurn");
 
-		if (aiSequenceTracker == 1) {
-			AiSelectHeroCardToPlay();
-			AiPlayHeroCard();
-			Debug.Log("aiSequenceTracker is at: " + aiSequenceTracker);
-		} else if (aiSequenceTracker == 2) {
-			Debug.Log("RUNNING aiSequenceTracker - SEQUENCE # 2");
-			GameObject spellCard = Instantiate(FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().fireballCard, player2Hand.transform);
-			//GameObject spellCard = Instantiate(FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().fireballCard, new Vector3(0,0,0), Quaternion.identity) as GameObject;
-			Card.selectedCard = spellCard.gameObject;
-			Debug.Log("Card.selectedCard is: " + Card.selectedCard);
-			Debug.Log("Card.selectedCard.GetComponent<Card>().name is: " + Card.selectedCard.GetComponent<Card>().name);
-			Debug.Log("spellParticle.name is: " + Card.selectedCard.GetComponent<Card>().spellParticle.name);
+		if (aiSequenceTracker >= 1) {
+			AiSelectCardToPlay();
+			AiPlayCard();
+			//Debug.Log("aiSequenceTracker is at: " + aiSequenceTracker);
+		} else if (aiSequenceTracker >= 20000) {
+			//Debug.Log("RUNNING aiSequenceTracker - SEQUENCE # 2");
+			AiForcePlaySpellCard("fireball");
 			aiSequenceTracker = 0;
-			Card.selectedCard.GetComponent<Card>().CastSpell();
-			StartCoroutine("AiEndTurnAfterDelay");
 		}
 	}
 
-	private void AiSelectHeroCardToPlay () {
+	public int AiAlterCardCost ( GameObject cardToCheck ) {
+		Debug.Log("RUNNING AiAlterCardCost");
+		if (GlobalObject.currentlyActiveStory == "boss01") {
+			switch (cardToCheck.GetComponent<Card>().cardId) {
+				case "archer":
+					return 3;
+				case "fireball":
+					return 0;
+				default:
+					return cardToCheck.GetComponent<Card>().manaCost;
+			}
+		} else if (GlobalObject.currentlyActiveStory == "boss02") {
+			switch (cardToCheck.GetComponent<Card>().cardId) {
+				case "archer":
+					return 0;
+				default:
+					return cardToCheck.GetComponent<Card>().manaCost;
+			}
+		} else {
+			return cardToCheck.GetComponent<Card>().manaCost;
+		}
+	}
+
+	private void AiSelectCardToPlay () {
 		//Clear the 'validCardsToPlay' list so we can build it so fresh and so clean clean
 		validCardsToPlay.Clear();
 
 		//Add all cards that the player has enough mana to play to the 'validCardsToPlay' list
-		foreach (Transform card in GameObject.Find("Player2 Hand").transform) {
-			if (card.GetComponent<Card>().manaCost <= playField.player2Mana) {
-				validCardsToPlay.Add(card.gameObject);
+		foreach (Transform currentCard in GameObject.Find("Player2 Hand").transform) {
+			Debug.LogWarning("FOUND a CaRd In Player2's HaND");
+			if (currentCard.GetComponent<Card>().manaCost <= playField.player2Mana) {
+				//If the card is a spell card and it doesn't pass its 'condition check', do not add it to the 'validCardsToPlay' list
+				if (currentCard.GetComponent<Card>().type == "SpellCard" && !currentCard.GetComponent<Card>().SpellAiConditionCheck()) {
+					Debug.LogError("SPELL CARD CANNOT BE CAST, NOT ADDING TO PLAYER2 HAND");
+				} else {
+					//Add this card to the 'validCardsToPlay' list
+					validCardsToPlay.Add(currentCard.gameObject);	
+				}
 			}
 		}
 
@@ -70,33 +93,53 @@ public class AiManager : MonoBehaviour {
 			int randomIndex = Random.Range(0, validCardsListLength);
 //			Debug.Log("randomIndex is: " + randomIndex);
 			Card.selectedCard = validCardsToPlay[randomIndex];
-			Card.selectedHero = validCardsToPlay[randomIndex].GetComponent<Card>().heroPrefab;
+			if (validCardsToPlay[randomIndex].GetComponent<Card>().type == "Hero") {
+				Card.selectedHero = validCardsToPlay[randomIndex].GetComponent<Card>().heroPrefab;
+			}
+
 		}
 	}
 
-	public void AiPlayHeroCard () {
-		if (Card.selectedHero && !CheckIfHomeRowIsFull()) {
+	public void AiPlayCard () {
+		if (Card.selectedHero && !CheckIfHomeRowIsFull() && Card.selectedCard && Card.selectedCard.GetComponent<Card>().type != "SpellCard") {
+			Debug.Log("Card.selectedHero exists....................");
 			if (Card.selectedHero.GetComponent<Hero>().id == "wolf") {
 				playField.SpawnHeroForPlayer2(ReturnValidHeroSpawnCoords());
-				StartCoroutine("AiRemoveHeroCardAfterDelay");
+				StartCoroutine("AiTakeTurnAfterDelay");
 			} else {
 				playField.SpawnHeroForPlayer2(ReturnValidHeroSpawnCoords());
-				AiRemoveHeroCard ();
+				StartCoroutine("AiTakeTurnAfterDelay");
 			}
-
+		} else if ( Card.selectedCard && Card.selectedCard.GetComponent<Card>().type == "SpellCard" ) {
+			Debug.Log("THE AI FOUND A SPELL CARD IN THEIR HAND");
+			//TODO If the selectedCard is a SpellCard make the computer cast it here
+			Card.selectedCard.GetComponent<Card>().CastSpell();
+			StartCoroutine("AiTakeTurnAfterDelay");
 		} else {
 			playField.EndTurn();
 		}
 	}
 
-	public void AiPlayerSpellCard () {
-		Card.selectedCard.GetComponent<Card>().CastSpell();
+	private void AiForcePlaySpellCard (string spellCardId) {
+		if (spellCardId == "fireball") {
+			GameObject spawnedSpellCard = Instantiate(FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().fireballCard, player2Hand.transform);
+			spawnedSpellCard.GetComponent<Card>().manaCost = AiAlterCardCost(spawnedSpellCard);
+			spawnedSpellCard.GetComponent<Card>().cardId = "SpellCardForced";
+			Card.selectedCard = spawnedSpellCard.gameObject;
+		}
 
+		//If a spell card was selected, cast it
+		if (Card.selectedCard) {
+			Card.selectedCard.GetComponent<Card>().CastSpell();
+			StartCoroutine("AiEndTurnAfterDelay");
+		}
 	}
 
-	IEnumerator AiRemoveHeroCardAfterDelay () {
-		yield return new WaitForSeconds(2f);
-		AiRemoveHeroCard ();
+	IEnumerator AiTakeTurnAfterDelay () {
+		card.RemoveCardFromHandAndAddToDiscard();
+		playField.ClearSelectedHeroAndSelectedCard ();
+		yield return new WaitForSeconds(1f);
+		AiTakeTurn ();
 	}
 
 	IEnumerator AiEndTurnAfterDelay () {
@@ -207,12 +250,6 @@ public class AiManager : MonoBehaviour {
 		} else {
 			return false;
 		}
-	}
-
-	private void AiRemoveHeroCard () {
-		card.RemoveCardFromHandAndAddToDiscard();
-		playField.ClearSelectedHeroAndSelectedCard ();
-		AiTakeTurn();
 	}
 
 	public void AiStoryTakeTurn () {
