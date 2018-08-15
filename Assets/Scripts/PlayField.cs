@@ -71,7 +71,7 @@ public class PlayField : MonoBehaviour {
 		Vector2 rawPos = CalculateWorldPointOfMouseClick();
 		//Use SnapToGrid method to turn rawPos into rounded integer units in world space coordinates
 		roundedPos = SnapToGrid(rawPos);
-		Debug.LogWarning("roundedPos is: " + roundedPos);
+		//Debug.LogWarning("roundedPos is: " + roundedPos);
 
 		//If the selected card is a 'Class Spell', cast it
 		if (Card.selectedCard.GetComponent<Card>().type == "Spell" && Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
@@ -131,7 +131,7 @@ public class PlayField : MonoBehaviour {
 //		Debug.Log("roundPos is " + roundedPos);
 
 		//For some reason using 'roundedPos' in the instatiate script below will not work and the hero will always spawn at '0,0,0'. So we now update the hero's transform.position after we instantiate it
-		GameObject x = Instantiate (Card.selectedHero, new Vector3(0,0,0), Quaternion.identity) as GameObject;
+		GameObject x = Instantiate (Card.selectedHero, roundedPos, Quaternion.identity) as GameObject;
 		//Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
 		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
 
