@@ -71,6 +71,7 @@ public class PlayField : MonoBehaviour {
 		Vector2 rawPos = CalculateWorldPointOfMouseClick();
 		//Use SnapToGrid method to turn rawPos into rounded integer units in world space coordinates
 		roundedPos = SnapToGrid(rawPos);
+		Debug.LogWarning("roundedPos is: " + roundedPos);
 
 		//If the selected card is a 'Class Spell', cast it
 		if (Card.selectedCard.GetComponent<Card>().type == "Spell" && Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
@@ -135,12 +136,12 @@ public class PlayField : MonoBehaviour {
 		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
 
 		//Child the newly spawned hero to the appropriate player
-		x.transform.SetParent (player1.transform, false);
+		x.transform.SetParent(player1.transform, false);
 		x.gameObject.tag = "player1";
-		Color xAlpha = x.transform.Find ("Player1Indicator").GetComponent<SpriteRenderer> ().color;
+		Color xAlpha = x.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color;
 		xAlpha.a = 0.5f;
-		x.transform.Find ("Player1Indicator").GetComponent<SpriteRenderer> ().color = xAlpha;
-		SubtractMana ();
+		x.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color = xAlpha;
+		SubtractMana();
 	}
 
 	public void SpawnHeroForPlayer2 (Vector2 roundedPos) {
@@ -150,9 +151,9 @@ public class PlayField : MonoBehaviour {
 		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
 
 		//Flip the hero so it faces to the left
-		Vector3 scale = x.transform.Find ("Image").GetComponent<SpriteRenderer> ().transform.localScale;
+		Vector3 scale = x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale;
 		(scale.x) = (scale.x *= -1);
-		x.transform.Find ("Image").GetComponent<SpriteRenderer> ().transform.localScale = scale;
+		x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale = scale;
 		//Move the Armor and Health text so that it sits on the left side of the hero
 		foreach (Transform text in x.transform) {
 			Vector3 newTextPosition = text.transform.localPosition;
@@ -162,9 +163,9 @@ public class PlayField : MonoBehaviour {
 		//Child the newly spawned hero to the appropriate player
 		x.transform.SetParent (player2.transform, false);
 		x.gameObject.tag = "player2";
-		Color xAlpha = x.transform.Find ("Player2Indicator").GetComponent<SpriteRenderer> ().color;
+		Color xAlpha = x.transform.Find("Player2Indicator").GetComponent<SpriteRenderer>().color;
 		xAlpha.a = 0.5f;
-		x.transform.Find ("Player2Indicator").GetComponent<SpriteRenderer> ().color = xAlpha;
+		x.transform.Find("Player2Indicator").GetComponent<SpriteRenderer>().color = xAlpha;
 		if (!GlobalObject.storyEnabled) {
 			SubtractMana ();
 		}
