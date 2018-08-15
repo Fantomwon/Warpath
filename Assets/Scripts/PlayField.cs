@@ -150,10 +150,21 @@ public class PlayField : MonoBehaviour {
 		//Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
 		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
 
-		//Flip the hero so it faces to the left
-		Vector3 scale = x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale;
-		(scale.x) = (scale.x *= -1);
-		x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale = scale;
+		//TEMP - SALLY ADD HERO ID'S OF HEROES YOU UPDATE HERE - I LOVE YOU!!!
+		if (x.GetComponent<Hero>().id == "druid") {
+			//Flip the hero so it faces to the left
+			Vector3 scale = x.transform.Find("Hero").GetComponent<RectTransform>().transform.localScale;
+			(scale.x) = (scale.x *= -1);
+			x.transform.Find("Hero").GetComponent<RectTransform>().transform.localScale = scale;
+		}
+
+		if (x.GetComponent<Hero>().id != "druid") {
+			//Flip the hero so it faces to the left
+			Vector3 scale = x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale;
+			(scale.x) = (scale.x *= -1);
+			x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale = scale;
+		}  
+
 		//Move the Armor and Health text so that it sits on the left side of the hero
 		foreach (Transform text in x.transform) {
 			Vector3 newTextPosition = text.transform.localPosition;

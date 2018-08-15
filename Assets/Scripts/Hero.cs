@@ -149,14 +149,14 @@ public class Hero : MonoBehaviour {
 
 	IEnumerator PlayAttackAnimation () {
 		TargetTellTurnOn();
-		yield return new WaitForSeconds(attackRightAnim.length + 0.5f);
+		yield return new WaitForSeconds(0.5f);
 		//Damage is dealt through an animation event
 		if (playField.player1Turn) {
 			myAnimator.SetTrigger("attackRight");
 		} else if (!playField.player1Turn) {
 			myAnimator.SetTrigger("attackLeft");
 		}
-		yield return new WaitForSeconds(attackRightAnim.length + 0.5f);
+		yield return new WaitForSeconds(0.5f);
 		AfterAttackOperations ();
 	}
 
