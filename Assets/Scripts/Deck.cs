@@ -237,7 +237,7 @@ public class Deck : MonoBehaviour {
 	}
 
 	public void Player2AddCardToDiscard (GameObject card) {
-		Debug.Log("RUNNING Player2AddCardToDiscard????????????");
+		//Debug.Log("RUNNING Player2AddCardToDiscard????????????");
 		player2Discard.Add(card);
 //		for (int i=0; i<player2Discard.Count(); i++) {
 //			Debug.Log(player2Discard[i].name);

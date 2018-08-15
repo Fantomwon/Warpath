@@ -172,7 +172,7 @@ public class Card : MonoBehaviour {
 						return;
 					} 
 				}
-			} else if (!playField.player1Turn) {
+			} else if (!playField.player1Turn && !GlobalObject.aiEnabled) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on AND they are below max health AND they are not a 'Ghost' then heal them for the proper amount
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
@@ -184,6 +184,13 @@ public class Card : MonoBehaviour {
 						return;
 					}
 				}
+			} else if (!playField.player1Turn && GlobalObject.aiEnabled) {
+				Transform hero;
+				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("ally","heal")[0];
+				Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
+				hero.GetComponent<Hero>().HealPartial(3);
+				SpellCleanup ();
+				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		} else if (cardId == "haste") {
@@ -398,6 +405,8 @@ public class Card : MonoBehaviour {
 		if (cardId == "fireball" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
 			return true;
 		} else if (cardId == "rockthrow" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
+			return true;
+		} else if (cardId == "heal" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal").Count > 0) {
 			return true;
 		} else {
 			return false;

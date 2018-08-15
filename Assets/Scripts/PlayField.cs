@@ -414,7 +414,6 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void BuildFullHeroTransformList () {
-		Debug.Log("RUNNING BuildFullHeroTransformList");
 		fullHeroTransformList.Clear();
 		foreach (Transform hero in player1.transform) {
 			fullHeroTransformList.Add(hero);
@@ -521,28 +520,56 @@ public class PlayField : MonoBehaviour {
 	}
 
 	//Looks at all heroes on the board that are NOT on your team and returns a single random hero.
-	public List<Transform> TargetSpellCheckEntireBoardOneRandomHero (string heroTypeToSearchFor) {
-		Debug.Log("RUNNING TargetSpellCheckEntireBoardOneRandomHero");
+	public List<Transform> TargetSpellCheckEntireBoardOneRandomHero (string heroTypeToSearchFor, string optionalFunctionIdentifier = "default") {
 		List<Transform> validHeroes = new List<Transform>();
 		BuildFullHeroTransformList();
 
-		//Check ALL of the heroes on the game board, then based on which type I'm checking for ("enemy" or "ally") add them to the appropriate list
-		if (player1Turn && heroTypeToSearchFor == "enemy") {
+		//Check ALL of the heroes on the game board, then based on which type I'm checking for ("enemy" or "ally") AND the optionalFunctionIdentifier ("heal", etc...)
+		//add them to the appropriate list
+		if (player1Turn && heroTypeToSearchFor == "enemy" && optionalFunctionIdentifier == "default") {
 			foreach (Transform hero in player2.transform) {
 				validHeroes.Add(hero);
 			}
-		} else if (!player1Turn && heroTypeToSearchFor == "enemy") {
+		} else if (!player1Turn && heroTypeToSearchFor == "enemy" && optionalFunctionIdentifier == "default") {
 			foreach (Transform hero in player1.transform) {
 				Debug.Log("ADDING A HERO TO THE LIST OF HEROES I COULD FIREBALL: " + hero.name);
 				validHeroes.Add(hero);
 			}
-		} else if (player1Turn && heroTypeToSearchFor == "ally") {
+		} else if (player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "default") {
 			foreach (Transform hero in player1.transform) {
 				validHeroes.Add(hero);
 			}
-		} else if (!player1Turn && heroTypeToSearchFor == "ally") {
+		} else if (!player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "default") {
 			foreach (Transform hero in player2.transform) {
 				validHeroes.Add(hero);
+			}
+		} else if (player1Turn && heroTypeToSearchFor == "enemy" && optionalFunctionIdentifier == "heal") {
+			foreach (Transform hero in player2.transform) {
+				if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
+					Debug.Log("1 ADDING A HERO TO THE LIST OF HEROES I COULD HEAL: " + hero.name);
+					validHeroes.Add(hero);
+				}
+			}
+		} else if (!player1Turn && heroTypeToSearchFor == "enemy" && optionalFunctionIdentifier == "heal") {
+			foreach (Transform hero in player1.transform) {
+				if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
+					Debug.Log("2 ADDING A HERO TO THE LIST OF HEROES I COULD HEAL: " + hero.name);
+					validHeroes.Add(hero);
+				}
+			}
+		} else if (player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "heal") {
+			foreach (Transform hero in player1.transform) {
+				if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
+					Debug.Log("3 ADDING A HERO TO THE LIST OF HEROES I COULD HEAL: " + hero.name);
+					validHeroes.Add(hero);
+				}
+			}
+		} else if (!player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "heal") {
+			foreach (Transform hero in player2.transform) {
+				if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
+					Debug.Log("4 ADDING A HERO TO THE LIST OF HEROES I COULD HEAL: " + hero.name);
+					validHeroes.Add(hero);
+				}
 			}
 		}
 
@@ -559,7 +586,6 @@ public class PlayField : MonoBehaviour {
 		tempTransformList.Clear();
 		tempTransformList = validHeroes;
 
-		Debug.Log("ENDING TargetSpellCheckEntireBoardOneRandomHero");
 		return validHeroes;
 	}
 
