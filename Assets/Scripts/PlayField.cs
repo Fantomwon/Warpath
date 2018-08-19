@@ -151,14 +151,14 @@ public class PlayField : MonoBehaviour {
 		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
 
 		//TEMP - SALLY ADD HERO ID'S OF HEROES YOU UPDATE HERE - I LOVE YOU!!!
-		if (x.GetComponent<Hero>().id == "druid") {
+		if (x.GetComponent<Hero>().id == "druid" || x.GetComponent<Hero>().id == "archer") {
 			//Flip the hero so it faces to the left
 			Vector3 scale = x.transform.Find("Hero").GetComponent<RectTransform>().transform.localScale;
 			(scale.x) = (scale.x *= -1);
 			x.transform.Find("Hero").GetComponent<RectTransform>().transform.localScale = scale;
 		}
 
-		if (x.GetComponent<Hero>().id != "druid") {
+		if (x.GetComponent<Hero>().id != "druid" || x.GetComponent<Hero>().id != "archer") {
 			//Flip the hero so it faces to the left
 			Vector3 scale = x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale;
 			(scale.x) = (scale.x *= -1);
