@@ -544,7 +544,6 @@ public class PlayField : MonoBehaviour {
 			}
 		} else if (!player1Turn && heroTypeToSearchFor == "enemy" && optionalFunctionIdentifier == "default") {
 			foreach (Transform hero in player1.transform) {
-				Debug.Log("ADDING A HERO TO THE LIST OF HEROES I COULD FIREBALL: " + hero.name);
 				validHeroes.Add(hero);
 			}
 		} else if (player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "default") {
@@ -555,36 +554,53 @@ public class PlayField : MonoBehaviour {
 			foreach (Transform hero in player2.transform) {
 				validHeroes.Add(hero);
 			}
-		} else if (player1Turn && heroTypeToSearchFor == "enemy" && optionalFunctionIdentifier == "heal") {
+		}
+		//These conditions should only be checked if it is the AI's turn in PvE content
+		  else if (!player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "heal") {
 			foreach (Transform hero in player2.transform) {
 				if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
-					Debug.Log("1 ADDING A HERO TO THE LIST OF HEROES I COULD HEAL: " + hero.name);
 					validHeroes.Add(hero);
 				}
-			}
-		} else if (!player1Turn && heroTypeToSearchFor == "enemy" && optionalFunctionIdentifier == "heal") {
-			foreach (Transform hero in player1.transform) {
-				if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
-					Debug.Log("2 ADDING A HERO TO THE LIST OF HEROES I COULD HEAL: " + hero.name);
-					validHeroes.Add(hero);
+				//If there is more than one valid hero, cycle through them and find the one with lowest health and set them as the only valid hero
+				if (validHeroes.Count() > 1 ) {
+					List<Transform> preferredHero = new List<Transform>();
+					Transform currentPreferredHero = validHeroes[0];
+
+					foreach (Transform validHero in validHeroes) {
+						if (validHero.GetComponent<Hero>().currentHealth < currentPreferredHero.GetComponent<Hero>().currentHealth) {
+							preferredHero.Clear();
+							preferredHero.Add(validHero);
+						}
+					}
+
+					validHeroes.Clear();
+					validHeroes = preferredHero;					
 				}
 			}
-		} else if (player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "heal") {
-			foreach (Transform hero in player1.transform) {
-				if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
-					Debug.Log("3 ADDING A HERO TO THE LIST OF HEROES I COULD HEAL: " + hero.name);
-					validHeroes.Add(hero);
-				}
-			}
-		} else if (!player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "heal") {
+		} else if (!player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "armor") {
 			foreach (Transform hero in player2.transform) {
 				if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
-					Debug.Log("4 ADDING A HERO TO THE LIST OF HEROES I COULD HEAL: " + hero.name);
 					validHeroes.Add(hero);
+				}
+				//If there is more than one valid hero, cycle through them and find the one with lowest health and set them as the only valid hero
+				if (validHeroes.Count() > 1 ) {
+					List<Transform> preferredHero = new List<Transform>();
+					Transform currentPreferredHero = validHeroes[0];
+
+					foreach (Transform validHero in validHeroes) {
+						if (validHero.GetComponent<Hero>().currentHealth < currentPreferredHero.GetComponent<Hero>().currentHealth) {
+							preferredHero.Clear();
+							preferredHero.Add(validHero);
+						}
+					}
+
+					validHeroes.Clear();
+					validHeroes = preferredHero;					
 				}
 			}
 		}
 
+		//Reduce the list of heroes that down to one random hero
 		int tempListCount = validHeroes.Count;
 		for (int i = 0; i < tempListCount; i++) {
 			if (validHeroes.Count > 1) {

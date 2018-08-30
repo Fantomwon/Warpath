@@ -276,7 +276,7 @@ public class Card : MonoBehaviour {
 						return;
 					} 
 				}
-			} else if (!playField.player1Turn) {
+			} else if (!playField.player1Turn && !GlobalObject.aiEnabled) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on AND they are not a 'Ghost' then add to their armor value by the appropriate amount
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
@@ -287,6 +287,13 @@ public class Card : MonoBehaviour {
 						return;
 					}
 				}
+			} else if (!playField.player1Turn && GlobalObject.aiEnabled) {
+				Transform hero;
+				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("ally")[0];
+				Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
+				hero.GetComponent<Hero>().AddArmor(2);
+				SpellCleanup ();
+				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		} else if (cardId == "blessing") {
@@ -408,6 +415,8 @@ public class Card : MonoBehaviour {
 			return true;
 		} else if (cardId == "heal" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal").Count > 0) {
 			return true;
+		} else if (cardId == "armor" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "armor").Count > 0) {
+			return true; 
 		} else {
 			return false;
 		}
