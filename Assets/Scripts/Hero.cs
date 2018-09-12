@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class Hero : MonoBehaviour {
 
 	public Text armorDisplay;
+	public Image armorImage;
 	public Text healthDisplay;
 	public string id;
 	public int maxHealth;
@@ -366,9 +367,17 @@ public class Hero : MonoBehaviour {
 
 	void UpdateArmorDisplay () {
 		if (currentArmor <= 0) {
-			hero.transform.Find("Armor").GetComponent<Text>().enabled = false;
+			//hero.transform.Find("Armor").GetComponent<Text>().enabled = false;
+			armorDisplay.enabled = false;
+			if (armorImage != null) {
+				armorImage.enabled = false;
+			}
 		} else if (currentArmor > 0) {
-			hero.transform.Find("Armor").GetComponent<Text>().enabled = true;
+			//hero.transform.Find("Armor").GetComponent<Text>().enabled = true;
+			armorDisplay.enabled = true;
+			if (armorImage != null) {
+				armorImage.enabled = true;
+			}
 		}
 
 		armorDisplay.text = hero.currentArmor.ToString();
