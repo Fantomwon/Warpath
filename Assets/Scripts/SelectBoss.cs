@@ -156,7 +156,7 @@ public class SelectBoss : MonoBehaviour {
 			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.archerCard);
 			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rogueCard);
 			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.knightCard);
-			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.armorCard);
+			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.healCard);
 		} else if (boss02Button.isOn) {
 			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.archerCard);
 			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.bloodMageCard);

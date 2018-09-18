@@ -72,11 +72,11 @@ public class AiManager : MonoBehaviour {
 
 		//Add all cards that the player has enough mana to play to the 'validCardsToPlay' list
 		foreach (Transform currentCard in GameObject.Find("Player2 Hand").transform) {
-			Debug.LogWarning("FOUND a CaRd In Player2's HaND");
+			//Debug.LogWarning("FOUND a CaRd In Player2's HaND");
 			if (currentCard.GetComponent<Card>().manaCost <= playField.player2Mana) {
 				//If the card is a spell card and it doesn't pass its 'condition check', do not add it to the 'validCardsToPlay' list
 				if (currentCard.GetComponent<Card>().type == "SpellCard" && !currentCard.GetComponent<Card>().SpellAiConditionCheck()) {
-					Debug.LogError("SPELL CARD CANNOT BE CAST, NOT ADDING TO PLAYER2 HAND");
+					Debug.LogError("SPELL CARD CANNOT BE CAST, NOT ADDING TO LIST OF VALID CARDS TO PLAY");
 				} else {
 					//Add this card to the 'validCardsToPlay' list
 					validCardsToPlay.Add(currentCard.gameObject);	
@@ -102,7 +102,6 @@ public class AiManager : MonoBehaviour {
 
 	public void AiPlayCard () {
 		if (Card.selectedHero && !CheckIfHomeRowIsFull() && Card.selectedCard && Card.selectedCard.GetComponent<Card>().type != "SpellCard") {
-			Debug.Log("Card.selectedHero exists....................");
 			if (Card.selectedHero.GetComponent<Hero>().id == "wolf") {
 				playField.SpawnHeroForPlayer2(ReturnValidHeroSpawnCoords());
 				StartCoroutine("AiTakeTurnAfterDelay");
@@ -111,8 +110,6 @@ public class AiManager : MonoBehaviour {
 				StartCoroutine("AiTakeTurnAfterDelay");
 			}
 		} else if ( Card.selectedCard && Card.selectedCard.GetComponent<Card>().type == "SpellCard" ) {
-			Debug.Log("THE AI FOUND A SPELL CARD IN THEIR HAND");
-			//TODO If the selectedCard is a SpellCard make the computer cast it here
 			Card.selectedCard.GetComponent<Card>().CastSpell();
 			StartCoroutine("AiTakeTurnAfterDelay");
 		} else {

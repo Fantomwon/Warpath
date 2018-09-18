@@ -248,7 +248,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	IEnumerator SwitchPlayerTurns () {
-		Debug.Log("RUNNING SwitchPlayerTurns");
+		//Debug.Log("RUNNING SwitchPlayerTurns");
 		yield return new WaitForSeconds(0.5f);
 		player1Turn = !player1Turn;
 		if (player1Turn) {
@@ -264,7 +264,7 @@ public class PlayField : MonoBehaviour {
 
 		// If there are no more heroes left to move then end my turn
 		if (sortedHeroCoords.ToArray().Length <= 0) {
-			Debug.Log("CHANGING PLAYER TURNS");
+			//Debug.Log("CHANGING PLAYER TURNS");
 			EndOfTurnEffects ();
 			StartCoroutine("SwitchPlayerTurns");
 			return;
@@ -316,7 +316,7 @@ public class PlayField : MonoBehaviour {
 			//Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
 			if (hero.y == currentHero.transform.position.y && ((hero.x - currentHero.transform.position.x) < closestHero) && ((hero.x - currentHero.transform.position.x) > 0)) {
 				closestHero = hero.x - currentHero.transform.position.x;
-				Debug.Log("FOUND A HERO IN MY WAY. I AM: " + currentHero.GetComponent<Hero>().name + " and there is another hero at: " + hero.x + "," + hero.y);
+				//Debug.Log("FOUND A HERO IN MY WAY. I AM: " + currentHero.GetComponent<Hero>().name + " and there is another hero at: " + hero.x + "," + hero.y);
 			}
 		}
 
@@ -385,6 +385,7 @@ public class PlayField : MonoBehaviour {
 
 	public float FindClosestHeroToTheRight (Transform currentHero) {
 		BuildFullHeroList ();
+		//DO NOT CHANGE the 999f value as it is referenced in logic at other points in the code (search for 999f in this script to see some examples)
 		float closestHero = 999f;
 		foreach (Vector2 hero in fullHeroCoords) {
 			//Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
@@ -533,6 +534,7 @@ public class PlayField : MonoBehaviour {
 
 	//Looks at all heroes on the board that are NOT on your team and returns a single random hero.
 	public List<Transform> TargetSpellCheckEntireBoardOneRandomHero (string heroTypeToSearchFor, string optionalFunctionIdentifier = "default") {
+		Debug.LogError("RUNNING TargetSpellCheckEntireBoardOneRandomHero()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		List<Transform> validHeroes = new List<Transform>();
 		BuildFullHeroTransformList();
 
@@ -556,51 +558,134 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 		//These conditions should only be checked if it is the AI's turn in PvE content
-		  else if (!player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "heal") {
+		  else if (!player1Turn && heroTypeToSearchFor == "ally" && (optionalFunctionIdentifier == "heal") || (optionalFunctionIdentifier == "blessing")) {
 			foreach (Transform hero in player2.transform) {
 				if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
-					validHeroes.Add(hero);
+					validHeroes.Add(hero);	
 				}
-				//If there is more than one valid hero, cycle through them and find the one with lowest health and set them as the only valid hero
-				if (validHeroes.Count() > 1 ) {
-					List<Transform> preferredHero = new List<Transform>();
-					Transform currentPreferredHero = validHeroes[0];
+			}
 
-					foreach (Transform validHero in validHeroes) {
-						if (validHero.GetComponent<Hero>().currentHealth < currentPreferredHero.GetComponent<Hero>().currentHealth) {
-							preferredHero.Clear();
-							preferredHero.Add(validHero);
-						}
+			//If there is more than one valid hero, cycle through them and find the one with lowest health and set them as the only valid hero
+			if (validHeroes.Count() > 1 ) {
+				List<Transform> preferredHero = new List<Transform>();
+				Transform currentPreferredHero = validHeroes[0];
+				preferredHero.Add(currentPreferredHero);
+				foreach (Transform validHero in validHeroes) {
+					if (validHero.GetComponent<Hero>().currentHealth < currentPreferredHero.GetComponent<Hero>().currentHealth) {
+						preferredHero.Clear();
+						preferredHero.Add(validHero);	
 					}
-
-					validHeroes.Clear();
-					validHeroes = preferredHero;					
-				}
+				}	
+				validHeroes.Clear();
+				//preferredHero.CopyTo(List<Transform> validHeroes);
+				validHeroes = preferredHero;
+				//validHeroes = preferredHero;		
 			}
 		} else if (!player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "armor") {
 			foreach (Transform hero in player2.transform) {
-				if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
+				if (hero.GetComponent<Hero>().id != "ghost") {
 					validHeroes.Add(hero);
 				}
-				//If there is more than one valid hero, cycle through them and find the one with lowest health and set them as the only valid hero
-				if (validHeroes.Count() > 1 ) {
-					List<Transform> preferredHero = new List<Transform>();
-					Transform currentPreferredHero = validHeroes[0];
+			}
 
-					foreach (Transform validHero in validHeroes) {
-						if (validHero.GetComponent<Hero>().currentHealth < currentPreferredHero.GetComponent<Hero>().currentHealth) {
+			//If there is more than one valid hero, cycle through them and find the one with lowest health and set them as the only valid hero
+			if (validHeroes.Count() > 1 ) {
+				List<Transform> preferredHero = new List<Transform>();
+				Transform currentPreferredHero = validHeroes[0];
+				preferredHero.Add(currentPreferredHero);
+
+				foreach (Transform validHero in validHeroes) {
+					if (validHero.GetComponent<Hero>().currentHealth < currentPreferredHero.GetComponent<Hero>().currentHealth) {
+						preferredHero.Clear();
+						preferredHero.Add(validHero);
+					}
+				}
+
+				validHeroes.Clear();
+				validHeroes = preferredHero;					
+			}
+		} else if (!player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "might") {
+			foreach (Transform hero in player2.transform) {
+				//Check the hero to see if they already have the Might buff. If they do, don't add them.
+				if (buffManager.CheckForExistingBuff(hero, "might") != true) {
+					validHeroes.Add(hero);	
+				}
+			}
+
+			//If there is more than one valid hero, cycle through them and try to find a hero that has an enemy in range
+			if (validHeroes.Count() > 1 ) {
+				List<Transform> preferredHero = new List<Transform>();
+				Transform currentPreferredHero = validHeroes[0];
+				preferredHero.Add(currentPreferredHero);
+
+				foreach (Transform validHero in validHeroes) {
+					foreach (Transform enemy in player2.transform) {
+						if (((validHero.transform.position.x - enemy.transform.position.x) <= validHero.GetComponent<Hero>().range) && (validHero.transform.position.y == enemy.transform.position.y)) {
 							preferredHero.Clear();
 							preferredHero.Add(validHero);
-						}
-					}
-
-					validHeroes.Clear();
-					validHeroes = preferredHero;					
+						}							
+					}			
 				}
+
+				validHeroes.Clear();
+				validHeroes = preferredHero;					
+			}
+		} else if (!player1Turn && heroTypeToSearchFor == "ally" && optionalFunctionIdentifier == "shroud") {
+			foreach (Transform hero in player2.transform) {
+				//Check the hero to see if they already have the Shroud buff. If they do, don't add them.
+				if (buffManager.CheckForExistingBuff(hero, "shroud") != true) {
+					validHeroes.Add(hero);	
+				}
+			}
+
+			//If there is more than one valid hero, cycle through them and try to find a hero that is WITHIN an enemy's range
+			if (validHeroes.Count() > 1 ) {
+				List<Transform> preferredHero = new List<Transform>();
+				Transform currentPreferredHero = validHeroes[0];
+				preferredHero.Add(currentPreferredHero);
+
+				foreach (Transform validHero in validHeroes) {
+					foreach (Transform enemy in player1.transform) {
+						if (((validHero.transform.position.x - enemy.transform.position.x) <= enemy.GetComponent<Hero>().range) && (validHero.transform.position.y == enemy.transform.position.y)) {
+							preferredHero.Clear();
+							preferredHero.Add(validHero);
+						}							
+					}			
+				}
+
+				validHeroes.Clear();
+				validHeroes = preferredHero;					
+			}
+		} else if (!player1Turn && heroTypeToSearchFor == "enemy" && optionalFunctionIdentifier == "root") {
+			foreach (Transform hero in player1.transform) {
+				//Check the hero to see if they already have the Shroud buff. If they do, don't add them.
+				if ((buffManager.CheckForExistingBuff(hero, "root") != true) && (FindClosestHeroToTheRight(hero) > 1)) {
+					Debug.Log("ADDING VALID HERO FOR THE SPELL: ROOT!!!!!!!!!!!! Hero is: " + hero);
+					validHeroes.Add(hero);	
+				}
+			}
+
+			//If there is more than one valid hero, cycle through them and try to find a hero that could potentially score on the next turn
+			if (validHeroes.Count() > 1 ) {
+				Debug.Log("validHeroes.Count() is longer than one. It's: " + validHeroes.Count()); 
+				List<Transform> preferredHero = new List<Transform>();
+				Transform currentPreferredHero = validHeroes[0];
+				preferredHero.Add(currentPreferredHero);
+
+				foreach (Transform validHero in validHeroes) {
+					//If the validHero is within range (movement speed) of scoring AND there are no other heroes to the right of them, set them to be the preferred target
+					if (((player2HomeColumn - validHero.transform.position.x) <= validHero.GetComponent<Hero>().speed) && (FindClosestHeroToTheRight(validHero) == 999f)) {
+						preferredHero.Clear();
+						preferredHero.Add(validHero);
+					}									
+				}
+
+				validHeroes.Clear();
+				validHeroes = preferredHero;					
 			}
 		}
 
-		//Reduce the list of heroes that down to one random hero
+		//Reduce the list of heroes down to one random hero
 		int tempListCount = validHeroes.Count;
 		for (int i = 0; i < tempListCount; i++) {
 			if (validHeroes.Count > 1) {
@@ -980,7 +1065,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void Player2TurnStart () {
-		Debug.Log("RUNNING Player2TurnStart");
+		//Debug.Log("RUNNING Player2TurnStart");
 		IncrementTurnsPlayedTracker ();
 		turnIndicator.text = "<color=red>Player 2's Turn</color>";
 		EnablePlayer2HandAndHidePlayer1Hand ();

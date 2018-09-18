@@ -12,7 +12,7 @@ public class GlobalObject : MonoBehaviour {
 	public List<GameObject> player1DeckSelect;
 	public List<GameObject> player2DeckSelect;
 	public GameObject archerCard, assassinCard, blacksmithCard, bloodMageCard, cavalryCard, championCard, chaosMageCard, divinerCard, druidCard, slingerCard, dwarfCard, footSoldierCard, ghostCard, knightCard, monkCard, paladinCard, rogueCard, sapperCard, sorcererCard, wolfCard,
-					  armorCard, buffMightCard, buffShroudCard, debuffRootCard, fireballCard, healCard, rockThrowCard, windGustCard;
+					  armorCard, buffMightCard, buffShroudCard, debuffRootCard, fireballCard, healCard, blessingCard, rockThrowCard, windGustCard;
 	public string player1Class, player2Class;
 
 	public List<GameObject> boss01PlayerCards, boss02PlayerCards, boss03PlayerCards, boss04PlayerCards, boss05PlayerCards;

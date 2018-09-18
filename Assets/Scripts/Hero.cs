@@ -28,7 +28,7 @@ public class Hero : MonoBehaviour {
 	public GameObject dodgeParticleGameObject;
 	public AnimationClip attackRightAnim;
 	public AnimationClip attackLeftAnim;
-	public List<GameObject> buffList;
+	public Transform buffList;
 	public GameObject attackTellBox;
 	public GameObject combatText;
 

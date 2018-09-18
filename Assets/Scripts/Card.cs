@@ -229,7 +229,7 @@ public class Card : MonoBehaviour {
 						return;
 					} 
 				}
-			} else if (!playField.player1Turn) {
+			} else if (!playField.player1Turn && !GlobalObject.aiEnabled ) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on then give them the 'Might' buff for the appropriate duration
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
@@ -239,6 +239,13 @@ public class Card : MonoBehaviour {
 						return;
 					}
 				}
+			} else if (!playField.player1Turn && GlobalObject.aiEnabled) {
+				Transform hero;
+				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("ally","might")[0];
+				Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
+				buffManager.ApplyBuff("might", hero);
+				SpellCleanup ();
+				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		} else if (cardId == "shroud") {
@@ -252,7 +259,7 @@ public class Card : MonoBehaviour {
 						return;
 					} 
 				}
-			} else if (!playField.player1Turn) {
+			} else if (!playField.player1Turn && !GlobalObject.aiEnabled) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on then give them the 'Shroud' buff for the appropriate duration
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
@@ -262,6 +269,13 @@ public class Card : MonoBehaviour {
 						return;
 					}
 				}
+			} else if (!playField.player1Turn && GlobalObject.aiEnabled) {
+				Transform hero;
+				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("ally","shroud")[0];
+				Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
+				buffManager.ApplyBuff("shroud", hero);
+				SpellCleanup ();
+				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		} else if (cardId == "armor") {
@@ -289,7 +303,7 @@ public class Card : MonoBehaviour {
 				}
 			} else if (!playField.player1Turn && GlobalObject.aiEnabled) {
 				Transform hero;
-				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("ally")[0];
+				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("ally","armor")[0];
 				Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
 				hero.GetComponent<Hero>().AddArmor(2);
 				SpellCleanup ();
@@ -309,7 +323,7 @@ public class Card : MonoBehaviour {
 						return;
 					} 
 				}
-			} else if (!playField.player1Turn) {
+			} else if (!playField.player1Turn && !GlobalObject.aiEnabled) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If one of my heroes is in the square I clicked on AND they are not a 'Ghost' then add to their armor value by the appropriate amount
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
@@ -321,6 +335,14 @@ public class Card : MonoBehaviour {
 						return;
 					}
 				}
+			} else if (!playField.player1Turn && GlobalObject.aiEnabled) {
+				Transform hero;
+				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("ally","blessing")[0];
+				Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
+				hero.GetComponent<Hero>().HealFull();
+				hero.GetComponent<Hero>().AddArmor(3);
+				SpellCleanup ();
+				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		} else if (cardId == "root") {
@@ -335,7 +357,7 @@ public class Card : MonoBehaviour {
 						return;
 					} 
 				}
-			} else if (!playField.player1Turn) {
+			} else if (!playField.player1Turn && !GlobalObject.aiEnabled) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If there is an enemy in the square I clicked on then cast the 'Root' debuff on them
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
@@ -346,6 +368,14 @@ public class Card : MonoBehaviour {
 						return;
 					}
 				}
+			} else if (!playField.player1Turn && GlobalObject.aiEnabled) {
+				Transform hero;
+				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("enemy","root")[0];
+				Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
+				buffManager.ApplyBuff("root", hero);
+				//DoSpellDamage(hero,spellDamage);
+				SpellCleanup ();
+				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
 		} else if (cardId == "windgust") {
@@ -413,9 +443,17 @@ public class Card : MonoBehaviour {
 			return true;
 		} else if (cardId == "rockthrow" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
 			return true;
+		} else if (cardId == "blessing" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "blessing").Count > 0) {
+			return true;
 		} else if (cardId == "heal" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal").Count > 0) {
 			return true;
 		} else if (cardId == "armor" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "armor").Count > 0) {
+			return true; 
+		} else if (cardId == "might" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "might").Count > 0) {
+			return true; 
+		} else if (cardId == "shroud" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "shroud").Count > 0) {
+			return true; 
+		} else if (cardId == "root" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy", "root").Count > 0) {
 			return true; 
 		} else {
 			return false;
