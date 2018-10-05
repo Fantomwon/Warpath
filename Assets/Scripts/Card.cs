@@ -10,11 +10,11 @@ public class Card : MonoBehaviour {
 	public static GameObject selectedHero;
 	public static GameObject selectedCard;
 	public GameObject heroPrefab;
-	public GameObject cardReferenceObject;
 	public Text ManaCost, NameText, PowerText, HealthText, SpeedText, RangeText;
 	public string cardId;
 	public string cardName;
 	public string type;
+	public GameObject image;
 	public int manaCost;
 	public int quantity;
 	public int spellDamage;
@@ -41,7 +41,7 @@ public class Card : MonoBehaviour {
 		if (type != "Spell") {
 			NameText.text = cardName.ToString();
 		}
-		if (type == "Hero" || cardName == "Tower" || cardName == "Wall") {
+		if (type == "hero" || cardName == "Tower" || cardName == "Wall") {
 			PowerText.text = heroPrefab.GetComponent<Hero>().power.ToString();
 			HealthText.text = heroPrefab.GetComponent<Hero>().maxHealth.ToString();
 			SpeedText.text = heroPrefab.GetComponent<Hero>().speed.ToString();
@@ -53,7 +53,7 @@ public class Card : MonoBehaviour {
 		if (spellCooldownCurrent <= 0) {
 			selectedCard = gameObject;
 			Debug.Log("SELECTED CARD IS " + selectedCard.name);
-			if (type == "Hero" || cardName =="Tower" || cardName == "Wall") {
+			if (type == "hero" || cardName =="Tower" || cardName == "Wall") {
 				selectedHero = heroPrefab;
 			}
 		}
@@ -472,7 +472,7 @@ public class Card : MonoBehaviour {
 
 		if (Card.selectedCard && Card.selectedCard.GetComponent<Card>().type == "SpellCard" && ((!GlobalObject.aiEnabled) || (GlobalObject.aiEnabled && playField.player1Turn)) ) {
 			Debug.LogWarning("Card.selectedCard is a SPELLLLLLLLLLLLLCAAAAAAAAAAARRRRRRRRRRD");
-			RemoveCardFromHandAndAddToDiscard();
+			deck.RemoveCardFromHandAndAddToDiscard();
 		}
 
 		//If Ai is enabled and the card is a spell card then destroy that card then RETURN and do not add that card to my discard pile like we would normally do
@@ -500,28 +500,6 @@ public class Card : MonoBehaviour {
 		if (spellCooldownCurrent <= 0) {
 			this.GetComponent<Button>().interactable = true;
 			this.gameObject.transform.Find("CooldownText").GetComponent<CanvasGroup>().alpha = 0;
-		}
-	}
-
-	//Adds the card I just played to my discard pile. We can't add the ACTUAL card object we just played b/c it gets destroyed from your hand, and
-	//when that happens it also destroys it from the discard list. SO WHAT WE DO INSTEAD is each spell card has a variable for a 'cardReference' gameobject, 
-	//which is a really simple gameobject that just has a gameobject variable that points to the appropriate card gameobject (i.e. instead of referencing
-	//the actual card gameobject that was just played, we point to the card gameobject in general)
-	public void RemoveCardFromHandAndAddToDiscard () {
-		if (Card.selectedCard) {
-			Debug.LogWarning("SELECTED CARD EXISTS!!!!!!!!!!!!!!" + Card.selectedCard.GetComponent<Card>().cardId);
-		}
-		//If the card is a Tower or Wall card DO NOT add it to my discard as the Tower and Wall cards are used more like spells
-		if (Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card> ().cardName != "Wall") {
-			if (playField.player1Turn) {
-				deck.Player1AddCardToDiscard (Card.selectedCard.GetComponent<Card>().cardReferenceObject.GetComponent<CardReference>().cardReference);
-			} else if (!playField.player1Turn) {
-				Debug.LogWarning("SELECTED CARD EXISTS!!!!!!!!!!!!!!" + Card.selectedCard.GetComponent<Card>().cardReferenceObject.GetComponent<CardReference>().cardReference);
-				deck.Player2AddCardToDiscard (Card.selectedCard.GetComponent<Card>().cardReferenceObject.GetComponent<CardReference>().cardReference);
-				//Debug.Log("Adding card to player2 discard pile: " + Card.selectedCard.GetComponent<Card>().cardName);
-			}
-			//Get rid of the card from my hand that I just used so I can't use it again
-			DestroyImmediate (Card.selectedCard.gameObject);
 		}
 	}
 }

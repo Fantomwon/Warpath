@@ -15,14 +15,17 @@ public class AiManager : MonoBehaviour {
 
 	private int aiTurnTracker;
 	private PlayField playField;
+	private GlobalObject globalObject;
+	private Deck deck;
 	//private Deck deck;
 	private Card card;
 
 	// Use this for initialization
 	void Start () {
 		aiSequenceTracker = 0;
+		globalObject  = GameObject.FindObjectOfType<GlobalObject>();
 		playField = GameObject.FindObjectOfType<PlayField>();
-		//deck = GameObject.FindObjectOfType<Deck>();
+		deck = GameObject.FindObjectOfType<Deck>();
 		card = GameObject.FindObjectOfType<Card>();
 		AiStoryInitialBoardSetup ();
 	}
@@ -75,7 +78,7 @@ public class AiManager : MonoBehaviour {
 			//Debug.LogWarning("FOUND a CaRd In Player2's HaND");
 			if (currentCard.GetComponent<Card>().manaCost <= playField.player2Mana) {
 				//If the card is a spell card and it doesn't pass its 'condition check', do not add it to the 'validCardsToPlay' list
-				if (currentCard.GetComponent<Card>().type == "SpellCard" && !currentCard.GetComponent<Card>().SpellAiConditionCheck()) {
+				if (currentCard.GetComponent<Card>().type == "spell" && !currentCard.GetComponent<Card>().SpellAiConditionCheck()) {
 					Debug.LogError("SPELL CARD CANNOT BE CAST, NOT ADDING TO LIST OF VALID CARDS TO PLAY");
 				} else {
 					//Add this card to the 'validCardsToPlay' list
@@ -93,7 +96,7 @@ public class AiManager : MonoBehaviour {
 			int randomIndex = Random.Range(0, validCardsListLength);
 //			Debug.Log("randomIndex is: " + randomIndex);
 			Card.selectedCard = validCardsToPlay[randomIndex];
-			if (validCardsToPlay[randomIndex].GetComponent<Card>().type == "Hero") {
+			if (validCardsToPlay[randomIndex].GetComponent<Card>().type == "hero") {
 				Card.selectedHero = validCardsToPlay[randomIndex].GetComponent<Card>().heroPrefab;
 			}
 
@@ -101,7 +104,7 @@ public class AiManager : MonoBehaviour {
 	}
 
 	public void AiPlayCard () {
-		if (Card.selectedHero && !CheckIfHomeRowIsFull() && Card.selectedCard && Card.selectedCard.GetComponent<Card>().type != "SpellCard") {
+		if (Card.selectedHero && !CheckIfHomeRowIsFull() && Card.selectedCard && Card.selectedCard.GetComponent<Card>().type != "spell") {
 			if (Card.selectedHero.GetComponent<Hero>().id == "wolf") {
 				playField.SpawnHeroForPlayer2(ReturnValidHeroSpawnCoords());
 				StartCoroutine("AiTakeTurnAfterDelay");
@@ -109,7 +112,7 @@ public class AiManager : MonoBehaviour {
 				playField.SpawnHeroForPlayer2(ReturnValidHeroSpawnCoords());
 				StartCoroutine("AiTakeTurnAfterDelay");
 			}
-		} else if ( Card.selectedCard && Card.selectedCard.GetComponent<Card>().type == "SpellCard" ) {
+		} else if ( Card.selectedCard && Card.selectedCard.GetComponent<Card>().type == "spell" ) {
 			Card.selectedCard.GetComponent<Card>().CastSpell();
 			StartCoroutine("AiTakeTurnAfterDelay");
 		} else {
@@ -119,7 +122,8 @@ public class AiManager : MonoBehaviour {
 
 	private void AiForcePlaySpellCard (string spellCardId) {
 		if (spellCardId == "fireball") {
-			GameObject spawnedSpellCard = Instantiate(FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().fireballCard, player2Hand.transform);
+			globalObject.SetTemplateCardAttributes(spellCardId);
+			GameObject spawnedSpellCard = Instantiate (globalObject.templateCard, player2Hand.transform) as GameObject;
 			spawnedSpellCard.GetComponent<Card>().manaCost = AiAlterCardCost(spawnedSpellCard);
 			spawnedSpellCard.GetComponent<Card>().cardId = "SpellCardForced";
 			Card.selectedCard = spawnedSpellCard.gameObject;
@@ -133,7 +137,7 @@ public class AiManager : MonoBehaviour {
 	}
 
 	IEnumerator AiTakeTurnAfterDelay () {
-		card.RemoveCardFromHandAndAddToDiscard();
+		deck.RemoveCardFromHandAndAddToDiscard();
 		playField.ClearSelectedHeroAndSelectedCard ();
 		yield return new WaitForSeconds(1f);
 		AiTakeTurn ();

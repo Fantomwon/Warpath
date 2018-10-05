@@ -29,6 +29,7 @@ public class PlayField : MonoBehaviour {
 	public int player1Mana = 0, player2Mana = 0;
 
 	private Card card;
+	private Deck deck;
 	private int player1ManaMax = 10, player2ManaMax = 10;
 	private int manaPerTurn = 4;
 	private int turnsPlayed = 0;
@@ -41,6 +42,7 @@ public class PlayField : MonoBehaviour {
 		player1HealthText.text = player1Health.ToString();
 		player2HealthText.text = player2Health.ToString();
 		card = FindObjectOfType<Card>();
+		deck = FindObjectOfType<Deck>();
 		player2ManaText.text = player2Mana.ToString();
 		buffManager = FindObjectOfType<BuffManager>();
 	}
@@ -121,7 +123,7 @@ public class PlayField : MonoBehaviour {
 		}
 
 		//Put the card that was just played into the appropriate player's discard pile.
-		card.RemoveCardFromHandAndAddToDiscard ();
+		deck.RemoveCardFromHandAndAddToDiscard ();
 
 		//Set the 'selected hero' and 'selected card' variables to default so the game doesn't think I still have anything selected
 		ClearSelectedHeroAndSelectedCard ();
@@ -1102,11 +1104,21 @@ public class PlayField : MonoBehaviour {
 		foreach (BoxCollider2D col in player2Cards) {
 			col.enabled = false;
 		}
+
 		//Visually show player 1 cards and hide player 2 cards
 		GameObject.Find ("Player1 Hand").GetComponentInChildren<CanvasGroup> ().alpha = 1;
 		GameObject.Find ("Player1 Hand").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = true;
 		GameObject.Find ("Player2 Hand").GetComponentInChildren<CanvasGroup> ().alpha = 0;
 		GameObject.Find ("Player2 Hand").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = false;
+
+		//Enable hero image on player 1 cards
+		foreach (Transform card in GameObject.Find("Player1 Hand").gameObject.transform) {
+			card.gameObject.transform.Find("Image").gameObject.SetActive(true);
+		}
+		//Disable hero image on player 2 cards
+		foreach (Transform card in GameObject.Find("Player2 Hand").gameObject.transform) {
+			card.gameObject.transform.Find("Image").gameObject.SetActive(false);
+		}
 	}
 
 	void EnablePlayer2HandAndHidePlayer1Hand () {
@@ -1120,11 +1132,21 @@ public class PlayField : MonoBehaviour {
 		foreach (BoxCollider2D col in player2Cards) {
 			col.enabled = true;
 		}
+
 		//Visually show player 2 cards and hide player 1 cards
 		GameObject.Find ("Player1 Hand").GetComponentInChildren<CanvasGroup> ().alpha = 0;
 		GameObject.Find ("Player1 Hand").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = false;
 		GameObject.Find ("Player2 Hand").GetComponentInChildren<CanvasGroup> ().alpha = 1;
 		GameObject.Find ("Player2 Hand").GetComponentInChildren<CanvasGroup> ().blocksRaycasts = true;
+
+		//Enable hero image on player 2 cards
+		foreach (Transform card in GameObject.Find("Player2 Hand").gameObject.transform) {
+			card.gameObject.transform.Find("Image").gameObject.SetActive(true);
+		}
+		//Disable hero image on player 1 cards
+		foreach (Transform card in GameObject.Find("Player1 Hand").gameObject.transform) {
+			card.gameObject.transform.Find("Image").gameObject.SetActive(false);
+		}
 	}
 
 	void EnablePlayer1SpellsAndHidePlayer2Spells () {

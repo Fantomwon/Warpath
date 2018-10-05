@@ -5,7 +5,7 @@ public class TestObject : MonoBehaviour {
 
 	private PlayField playField;
 	private Deck deck;
-
+	private int quantityPerCard = 3;
 	// Use this for initialization
 	void Start () {
 		playField = FindObjectOfType<PlayField>();
@@ -31,8 +31,8 @@ public class TestObject : MonoBehaviour {
 
 	public void BuildDeck () {
 		Debug.Log("RUNNING BUILDDECK()");
-		foreach (GameObject card in GlobalObject.instance.player1DeckSelect) {
-			for (int i=0; i<card.GetComponent<Card>().quantity; i++) {
+		foreach (string card in GlobalObject.instance.player1DeckSelect) {
+			for (int i=0; i<quantityPerCard; i++) {
 				Debug.Log("FOUND A CARD IN PLAYER1DECKSELECTLIST");
 				FindObjectOfType<Deck>().player1Deck.Add(card);
 			}

@@ -28,20 +28,20 @@ public class CardsSelected : MonoBehaviour {
 	}
 
 	public void IncrementSelectedNumber (string cardType) {
-		if (cardType == "Hero") {
+		if (cardType == "hero") {
 			selectedCharacterCardsNumber += 1;
 			selectedCharacterCards.text = selectedCharacterCardsNumber.ToString();
-		} else if (cardType == "SpellCard") {
+		} else if (cardType == "spell") {
 			selectedSpellCardsNumber += 1;
 			selectedSpellCards.text = selectedSpellCardsNumber.ToString();
 		}
 	}
 
 	public void DecrementSelectedNumber (string cardType) {
-		if (cardType == "Hero") {
+		if (cardType == "hero") {
 			selectedCharacterCardsNumber -= 1;
 			selectedCharacterCards.text = selectedCharacterCardsNumber.ToString();
-		} else if (cardType == "SpellCard") {
+		} else if (cardType == "spell") {
 			selectedSpellCardsNumber -= 1;
 			selectedSpellCards.text = selectedSpellCardsNumber.ToString();
 		}
