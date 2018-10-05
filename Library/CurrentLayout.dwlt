@@ -108,7 +108,7 @@ MonoBehaviour:
   m_MinSize: {x: 787, y: 492}
   m_MaxSize: {x: 16012, y: 14042}
   vertical: 0
-  controlID: 118
+  controlID: 120
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_MinSize: {x: 787, y: 492}
   m_MaxSize: {x: 16012, y: 14042}
   vertical: 1
-  controlID: 119
+  controlID: 121
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_MinSize: {x: 787, y: 221}
   m_MaxSize: {x: 16012, y: 4021}
   vertical: 0
-  controlID: 120
+  controlID: 101
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -202,8 +202,8 @@ MonoBehaviour:
     y: 0
     width: 389
     height: 645
-  m_MinSize: {x: 279, y: 71}
-  m_MaxSize: {x: 4004, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -392,23 +392,23 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 4861f8ff
-    m_LastClickedID: -499384
-    m_ExpandedIDs: 4e61f8ff5e61f8ff7c61f8ff2e6ef8ffaaaef8ffacaef8ffc8b0f8ff16b8f8ff28e4f8ff46e4f8ffcc00f9ffba0df9ff0a11f9ff9e16f9ff5619f9ff6619f9fff21ff9fff61ff9ff0c20f9ffbc3ff9ffbe3ff9ff4a6df9ff4c6df9ffc6a0f9ffd6a0f9ff06a8f9ffe2aaf9ff8a83faff8c83fafff487faffe093faffe4dcfaffc8ebfaff547efbff60ddfbff0e05fdff6c2afdff6e2afdffa8f2fdffc238feff0059feff225ffeffa66efeff3686feffdca6feff42defeff7afcfeffaa03ffff7606ffff4039ffff7439ffff9639ffffb439ffffb639ffffe640ffff3649ffff525fffffa475ffff868bffffd8a1ffff7aafffff66b9ffff40e7ffffdcf6ffff9efbfffff4ffffff000000004a820000ec870000ca8b0000ea8b0000168c0000208c00002a8c0000ee960000b29b0000b89c00007abe000064bf0000e2d90000ccda000078df000098df0000c4df0000cedf0000d8df000074e700007ae8000088eb000072ec000024ed00000eee0000d2f10000bcf20000
+    m_SelectedIDs: 
+    m_LastClickedID: 0
+    m_ExpandedIDs: 16bdf7ff1ebdf7ff3cbdf7ffd6bdf7ffe6bdf7ff34c6f7ff24d8f7ffe0daf7ff5617f8ff601ff8ff6a1ff8ffd422f8ff1046f8ffa87af8ff08ccf8ff18ccf8ff4ed0f8ff5ae3f8ff9243f9ff2649f9ffc049f9ffd049f9ff1855f9ffa29ef9fff6c0f9ff68b5faff18e8faffbeeefaff6e95fbffb497fbffc0aefbff8ed7fbff9ed7fbffceddfbffdeddfbff40e0fbffda01fcff1e23fcff7640fcffec56fcfff85afcff3883fcff3c83fcff3287fcff0c89fcff64befcff1cc2fcffc8fcfcffd0fcfcfff8fcfcff92fdfcffa2fdfcffc0fdfcff5435fdff446efdff688bfdfff89bfdff46b9fdffaabafdffd01ffeff6034feffa05efeff0061feffb277feff3a25ffff3e25ffff4425ffff4825ffffd625ffff9052ffff107cffff127cffff147cffff2680ffff048affffa4c4ffff82dbfffff2f9ffff9efbfffff4ffffff000000005635000040360000327a00001c7b0000c2820000ac83000044840000988c0000828d000098a1000082a2000034a300001ea400006aa5000054a6000018aa00002cae000040b2000054b600003eb7000068ba000052bb00006ebb00007cbe000066bf000008c50000f2c5000028e40000aee4000094eb0000b4eb0000e0eb0000eaeb0000f4eb000050ec000002f0000068f0000052f100007ef40000a6fc000090fd00004602010066020100920201009c020100a602010002030100ec030100
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: Hero
+      m_OriginalName: Hero
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: -197424
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 8}
     m_SearchString: 
@@ -479,14 +479,14 @@ MonoBehaviour:
     height: 624
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneLighting: 1
-  lastFramingTime: 271301.3778761296
+  lastFramingTime: 7416.8214915160515
   m_2DMode: 1
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0.2508963, y: 1.3856826, z: 0.115703635}
+    m_Target: {x: 4.0988774, y: 0.6434643, z: -80.05176}
     speed: 2
-    m_Value: {x: 0.2508963, y: 1.3856826, z: 0.115703635}
+    m_Value: {x: 4.0988774, y: 0.6434643, z: -80.05176}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -514,9 +514,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 5.679339
+    m_Target: 7.5717664
     speed: 2
-    m_Value: 5.679339
+    m_Value: 7.5717664
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -630,24 +630,24 @@ MonoBehaviour:
   m_LastProjectPath: C:\Users\Deerok\Documents\Unity Repos\Warpath
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 268}
+    scrollPos: {x: 0, y: 188}
     m_SelectedIDs: 44300000
     m_LastClickedID: 12356
-    m_ExpandedIDs: 00000000b4270000b0280000d02c0000da2c00005e2d0000062e0000703100001a3300007433000000ca9a3bffffff7f
+    m_ExpandedIDs: 00000000b4270000b0280000d02c00005e2d0000062e0000703100001a3300007433000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Heroes
-      m_OriginalName: Heroes
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 10416
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 4
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 12}
     m_SearchString: 
@@ -661,7 +661,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000b4270000b0280000fa290000d02c0000da2c00005e2d0000062e0000703100001a33000074330000
+    m_ExpandedIDs: 00000000b4270000b0280000d02c0000da2c00005e2d0000062e0000703100001a33000074330000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
