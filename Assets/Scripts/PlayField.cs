@@ -88,13 +88,13 @@ public class PlayField : MonoBehaviour {
 		}
 
 		//Check to make sure the player is placing their hero in an appropriate location (e.g. Towers/Walls cannot be placed in home rows, all other heroes MUST be placed in home rows, etc...)
-		if ((Card.selectedCard.GetComponent<Card>().cardName == "Tower" || Card.selectedCard.GetComponent<Card>().cardName == "Wall") && (roundedPos.x == player1HomeColumn || roundedPos.x == player2HomeColumn)) {
+		if ((Card.selectedCard.GetComponent<Card>().type == "heroStationary") && (roundedPos.x == player1HomeColumn || roundedPos.x == player2HomeColumn)) {
 			Debug.LogWarning("THIS HERO CANNOT BE PLACED IN EITHER PLAYER'S HOME ROW");
 			return;
-		} else if (player1Turn && roundedPos.x != player1HomeColumn && Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
+		} else if (player1Turn && roundedPos.x != player1HomeColumn && Card.selectedCard.GetComponent<Card>().type != "heroStationary") {
 			Debug.LogWarning("YOU MUST PLACE THIS HERO IN THE PLAYER 1 HOME ROW");
 			return;
-		} else if (!player1Turn && roundedPos.x != player2HomeColumn && Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
+		} else if (!player1Turn && roundedPos.x != player2HomeColumn && Card.selectedCard.GetComponent<Card>().type != "heroStationary") {
 			Debug.LogWarning("YOU MUST PLACE THIS HERO IN THE PLAYER 2 HOME ROW");
 			return;
 		}

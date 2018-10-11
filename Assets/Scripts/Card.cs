@@ -41,7 +41,7 @@ public class Card : MonoBehaviour {
 		if (type != "Spell") {
 			NameText.text = cardName.ToString();
 		}
-		if (type == "hero" || cardName == "Tower" || cardName == "Wall") {
+		if (type == "hero" || type == "heroStationary") {
 			PowerText.text = heroPrefab.GetComponent<Hero>().power.ToString();
 			HealthText.text = heroPrefab.GetComponent<Hero>().maxHealth.ToString();
 			SpeedText.text = heroPrefab.GetComponent<Hero>().speed.ToString();
@@ -53,7 +53,7 @@ public class Card : MonoBehaviour {
 		if (spellCooldownCurrent <= 0) {
 			selectedCard = gameObject;
 			Debug.Log("SELECTED CARD IS " + selectedCard.name);
-			if (type == "hero" || cardName =="Tower" || cardName == "Wall") {
+			if (type == "hero" || type == "heroStationary") {
 				selectedHero = heroPrefab;
 			}
 		}

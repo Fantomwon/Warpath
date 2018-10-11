@@ -29,7 +29,12 @@ public class SelectCardForDeck : MonoBehaviour {
 				Debug.Log("CANNOT ADD ANYMORE SPELL CARDS TO DECK, CURRENTLY AT MAX SPELL CARDS ALLOWED");
 				return;
 			} else {
-				GlobalObject.instance.player1DeckSelect.Add(GetComponentInParent<Card>().cardId);
+				//Add the cardId to the appropriate player's deckSelect list
+				if (SceneManager.GetActiveScene().name == "CardSelectP1" || SceneManager.GetActiveScene().name == "CardSelectSinglePlayer") {
+					GlobalObject.instance.player1DeckSelect.Add(GetComponentInParent<Card>().cardId);
+				} else if (SceneManager.GetActiveScene().name == "CardSelectP2") {
+					GlobalObject.instance.player2DeckSelect.Add(GetComponentInParent<Card>().cardId);
+				}
 				selected = true;
 				text.GetComponent<Text>().enabled = false;
 				checkmark.GetComponent<Image>().enabled = true;
