@@ -148,8 +148,7 @@ public class Deck : MonoBehaviour {
 					player1Discard.Clear();
 				}
 				//TODO Come up with a better way to check if the cardId in the List<string> is a spell card or not
-				if (CheckIfAllCardsInHandAreSpellCards() && (player1Deck[0] == "armor" || player1Deck[0] == "might" || player1Deck[0] == "shroud" || player1Deck[0] == "root" || 
-					player1Deck[0] == "fireball" || player1Deck[0] == "heal" || player1Deck[0] == "rockthrow" || player1Deck[0] == "windgust")) {
+				if (CheckIfAllCardsInHandAreSpellCards() && CheckIfCardIdIsASpellCard(player1Deck[0])) {
 					Debug.Log("4 SPELL CARDS IN HAND, NOT LETTING THAT HAPPEN!");
 					string nextCardInDeck = player1Deck[0];
 					player1Deck.RemoveAt(0);
@@ -157,16 +156,23 @@ public class Deck : MonoBehaviour {
 					Player1DealCards();
 					//player1Deck.Insert(Random.Range(1, player1Deck.Count - 1), nextCardInDeck);
 				} else {
-					globalObject.SetTemplateCardAttributes(player1Deck[0]);
-					GameObject newCard = Instantiate (globalObject.templateCard) as GameObject;
-					newCard.transform.SetParent (GameObject.Find ("Player1 Hand").transform, false);
-					globalObject.SetTemplateCardImage(newCard.GetComponent<Card>().cardId, newCard);
+					if (!CheckIfCardIdIsASpellCard(player1Deck[0])) {
+						globalObject.SetTemplateHeroCardAttributes(player1Deck[0]);
+						GameObject newCard = Instantiate (globalObject.templateHeroCard) as GameObject;
+						newCard.transform.SetParent (GameObject.Find ("Player1 Hand").transform, false);
+						globalObject.SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId, newCard);
+					} else if (CheckIfCardIdIsASpellCard(player1Deck[0])) {
+						globalObject.SetTemplateSpellCardAttributes(player1Deck[0]);
+						GameObject newCard = Instantiate (globalObject.templateSpellCard) as GameObject;
+						newCard.transform.SetParent (GameObject.Find ("Player1 Hand").transform, false);
+						//globalObject.SetTemplateCardImage(newCard.GetComponent<Card>().cardId, newCard);
+					}
 					player1Deck.RemoveAt(0);
+
 				}
 			}
 		}
 		cardsRemaining.text = player1Deck.Count.ToString ();
-//		Debug.Log("FINISHED PLAYER1DEALCARDS");
 	}
 
 	public void Player2DealCards () {
@@ -197,20 +203,31 @@ public class Deck : MonoBehaviour {
 					Player2DealCards();
 					//player2Deck.Insert(Random.Range(1, player2Deck.Count - 1), nextCardInDeck);
 				} else {
-					globalObject.SetTemplateCardAttributes(player2Deck[0]);
-					GameObject newCard = Instantiate (globalObject.templateCard) as GameObject;
-					//Alter card cost if ai is enabled
-					if ( GlobalObject.aiEnabled == true ) {
-						Debug.Log("SETTING NEW MANA COST FOR CARD");
-						newCard.GetComponent<Card>().manaCost = aiManager.AiAlterCardCost(newCard);
+					if (!CheckIfCardIdIsASpellCard(player2Deck[0])) {
+						globalObject.SetTemplateHeroCardAttributes(player2Deck[0]);
+						GameObject newCard = Instantiate (globalObject.templateHeroCard) as GameObject;
+						//Alter card cost if ai is enabled
+						if ( GlobalObject.aiEnabled == true ) {
+							Debug.Log("SETTING NEW MANA COST FOR CARD");
+							newCard.GetComponent<Card>().manaCost = aiManager.AiAlterCardCost(newCard);
+						}
+						newCard.transform.SetParent (GameObject.Find ("Player2 Hand").transform, false);
+						globalObject.SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId, newCard);
+					} else if (CheckIfCardIdIsASpellCard(player2Deck[0])) {
+						globalObject.SetTemplateSpellCardAttributes(player2Deck[0]);
+						GameObject newCard = Instantiate (globalObject.templateSpellCard) as GameObject;
+						//Alter card cost if ai is enabled
+						if ( GlobalObject.aiEnabled == true ) {
+							Debug.Log("SETTING NEW MANA COST FOR CARD");
+							newCard.GetComponent<Card>().manaCost = aiManager.AiAlterCardCost(newCard);
+						}
+						newCard.transform.SetParent (GameObject.Find ("Player2 Hand").transform, false);
+						//globalObject.SetTemplateCardImage(newCard.GetComponent<Card>().cardId, newCard);
 					}
-					newCard.transform.SetParent (GameObject.Find ("Player2 Hand").transform, false);
-					globalObject.SetTemplateCardImage(newCard.GetComponent<Card>().cardId, newCard);
-					player2Deck.RemoveAt(0);
+					player2Deck.RemoveAt(0); 
 				}
 			}
 		}
-
 		cardsRemaining.text = player2Deck.Count.ToString ();
 	}
 
@@ -234,6 +251,16 @@ public class Deck : MonoBehaviour {
 		}
 
 		if (spellCardCount == 4) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private bool CheckIfCardIdIsASpellCard (string cardId) {
+		//MAKE SURE YOU UPDATE THIS LIST WHENEVER YOU ADD A NEW SPELL CARD TO ACCOUNT FOR THAT NEW CARD'S ID
+		if ( cardId == "armor" || cardId == "might" || cardId == "shroud" || cardId == "root" || cardId == "fireball" || cardId == "heal" ||
+			 cardId == "rockthrow" || cardId == "windgust") {
 			return true;
 		} else {
 			return false;

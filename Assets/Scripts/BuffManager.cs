@@ -16,15 +16,13 @@ public class BuffManager : MonoBehaviour {
 		if (buffId == "might") {
 			GameObject buff = Instantiate (buffMight, hero.GetComponent<Hero>().buffList.transform.localPosition, Quaternion.identity, hero.GetComponent<Hero>().buffList.transform) as GameObject;
 			buff.GetComponent<Buff>().myHero = hero;
-		}
-		if (buffId == "shroud") {
+		} else if (buffId == "shroud") {
 			GameObject buff = Instantiate (buffShroud, hero.GetComponent<Hero>().buffList.transform.localPosition, Quaternion.identity, hero.GetComponent<Hero>().buffList.transform) as GameObject;
 			buff.GetComponent<Buff>().myHero = hero;
 		} else if (buffId == "root") {
 			GameObject buff = Instantiate (debuffRoot, hero.GetComponent<Hero>().buffList.transform.localPosition, Quaternion.identity, hero.GetComponent<Hero>().buffList.transform) as GameObject;
 			buff.GetComponent<Buff>().myHero = hero;
 		}
-
 	}
 
 	public void DecrementBuffDurations (Transform hero) {

@@ -82,7 +82,7 @@ public class PlayField : MonoBehaviour {
 		}
 
 		//If the selected card is a 'Spell Card', cast it
-		if (Card.selectedCard.GetComponent<Card>().type == "SpellCard") {
+		if (Card.selectedCard.GetComponent<Card>().type == "spell") {
 			Card.selectedCard.GetComponent<Card>().CastSpell();
 			return;
 		}

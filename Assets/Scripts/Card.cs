@@ -166,7 +166,7 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
 					    && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth
 					    && hero.GetComponent<Hero>().id != "ghost") {
-						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
+						//Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealPartial(3);
 						SpellCleanup ();
 						return;
@@ -178,7 +178,7 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
 					    && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth
 						&& hero.GetComponent<Hero>().id != "ghost") {
-						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
+						//Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 						hero.GetComponent<Hero>().HealPartial(3);
 						SpellCleanup ();
 						return;
@@ -187,7 +187,7 @@ public class Card : MonoBehaviour {
 			} else if (!playField.player1Turn && GlobalObject.aiEnabled) {
 				Transform hero;
 				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("ally","heal")[0];
-				Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
+				//Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
 				hero.GetComponent<Hero>().HealPartial(3);
 				SpellCleanup ();
 				return;
@@ -470,8 +470,7 @@ public class Card : MonoBehaviour {
 			playField.ClearSelectedHeroAndSelectedCard ();
 		}
 
-		if (Card.selectedCard && Card.selectedCard.GetComponent<Card>().type == "SpellCard" && ((!GlobalObject.aiEnabled) || (GlobalObject.aiEnabled && playField.player1Turn)) ) {
-			Debug.LogWarning("Card.selectedCard is a SPELLLLLLLLLLLLLCAAAAAAAAAAARRRRRRRRRRD");
+		if (Card.selectedCard && Card.selectedCard.GetComponent<Card>().type == "spell" && ((!GlobalObject.aiEnabled) || (GlobalObject.aiEnabled && playField.player1Turn)) ) {
 			deck.RemoveCardFromHandAndAddToDiscard();
 		}
 

@@ -392,23 +392,23 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 462c0000
+    m_SelectedIDs: 482c0000
     m_LastClickedID: 0
-    m_ExpandedIDs: 62bdfdff5ac8fdff94e9fdfff415feff864dfeff745dfeffba5dfeffbc5dfeffec64feffc280feffe880feff0881feff0a81feff3a88feff028bfeffaca2feffdca9feffc6b2feff06b6feff3ac4feff60e6feff86e6feffa6e6feffa8e6feffd8edfeffd011fffff611ffff1612ffff1812ffff4819ffff381cffffaa99ffffae99ffffd499fffff299fffff499fffff699fffffe99ffff98d2ffffc2d2ffffeadaffffeedaffff14dbffff34dbffff36dbffff66e2ffff9efbfffff4ffffff00000000b44a0000ee4a0000524e00007e500000b45000001c510000ac510000dc54000040550000be650000a86600005a6d0000
+    m_ExpandedIDs: b688ffff9e9affffa69bffff02a8ffff20b9ffff76bcffff9efbfffff4ffffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Image
-      m_OriginalName: Image
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: -11582
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 8}
     m_SearchString: 
@@ -631,9 +631,9 @@ MonoBehaviour:
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 220}
-    m_SelectedIDs: f62e0000
-    m_LastClickedID: 12022
-    m_ExpandedIDs: 00000000b427000080280000bc290000482c0000c62c0000422d00002030000052310000aa31000000ca9a3bffffff7f
+    m_SelectedIDs: f82e0000
+    m_LastClickedID: 12024
+    m_ExpandedIDs: 00000000b627000082280000be2900004a2c0000c82c0000442d00002230000054310000ac31000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -661,7 +661,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000b427000080280000bc290000482c0000c62c0000422d00002030000052310000aa310000
+    m_ExpandedIDs: 00000000b627000082280000be2900004a2c0000c82c0000442d00002230000054310000ac310000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

@@ -122,8 +122,8 @@ public class AiManager : MonoBehaviour {
 
 	private void AiForcePlaySpellCard (string spellCardId) {
 		if (spellCardId == "fireball") {
-			globalObject.SetTemplateCardAttributes(spellCardId);
-			GameObject spawnedSpellCard = Instantiate (globalObject.templateCard, player2Hand.transform) as GameObject;
+			globalObject.SetTemplateSpellCardAttributes(spellCardId);
+			GameObject spawnedSpellCard = Instantiate (globalObject.templateHeroCard, player2Hand.transform) as GameObject;
 			spawnedSpellCard.GetComponent<Card>().manaCost = AiAlterCardCost(spawnedSpellCard);
 			spawnedSpellCard.GetComponent<Card>().cardId = "SpellCardForced";
 			Card.selectedCard = spawnedSpellCard.gameObject;
