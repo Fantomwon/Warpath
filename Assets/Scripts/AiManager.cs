@@ -20,7 +20,7 @@ public class AiManager : MonoBehaviour {
 	//private Deck deck;
 	private Card card;
 
-	// Use this for initialization
+	// Use this for initialization - Test for commit
 	void Start () {
 		aiSequenceTracker = 0;
 		globalObject  = GameObject.FindObjectOfType<GlobalObject>();
