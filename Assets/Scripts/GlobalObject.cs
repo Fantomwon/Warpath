@@ -22,7 +22,7 @@ public class GlobalObject : MonoBehaviour {
 	public List<string> fullPlayerSpellCardList;
 
 	void Awake () {
-//		Debug.Log("RUNNING AWAKE FUNCTION OF GLOBALOBJECT.CS");
+		Debug.Log("RUNNING AWAKE FUNCTION OF GLOBALOBJECT.CS");
 		if (instance == null) {
 			instance = this;
 			DontDestroyOnLoad(gameObject);

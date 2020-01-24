@@ -16,5 +16,4 @@ public class AnimationEvents : MonoBehaviour {
 	public void RunHeroTargetCheck () {
 		playField.HeroTargetCheck(myTransform);
 	}
-
 }
