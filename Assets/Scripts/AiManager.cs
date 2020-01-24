@@ -50,11 +50,19 @@ public class AiManager : MonoBehaviour {
 		Debug.Log("RUNNING AiAlterCardCost");
 		if (GlobalObject.currentlyActiveStory == "boss01") {
 			switch (cardToCheck.GetComponent<Card>().cardId) {
-				case "archer":
-					return 3;
-				case "fireball":
-					return 0;
-				default:
+                case "archer":
+                    return 3;
+                case "slinger":
+					return 4;
+				case "assassin":
+					return 5;
+                case "sapper":
+                    return 2;
+                case "rockthrow":
+                    return 1;
+                case "fireball":
+                    return 3;
+                default:
 					return cardToCheck.GetComponent<Card>().manaCost;
 			}
 		} else if (GlobalObject.currentlyActiveStory == "boss02") {

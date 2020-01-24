@@ -39,54 +39,61 @@ public class Deck : MonoBehaviour {
 	}
 
 	void BuildDeck () {
-//		Debug.Log("RUNNING BUILDDECK()");
-		foreach (string cardId in GlobalObject.instance.player1DeckSelect) {
-			for (int i=0; i<quantityPerCard; i++) {
-//				Debug.Log("FOUND A CARD IN PLAYER1DECKSELECTLIST");
-				player1Deck.Add(cardId);
-			}
-		}
+        foreach (string cardId in GlobalObject.instance.player1DeckSelect) {
+            player1Deck.Add(cardId);
+        }
 
-		foreach (string cardId in GlobalObject.instance.player2DeckSelect) {
-			for (int i=0; i<quantityPerCard; i++) {
-				player2Deck.Add(cardId);
-			}
-		}
+        foreach (string cardId in GlobalObject.instance.player2DeckSelect) {
+            player2Deck.Add(cardId);
+        }
 
-		//TEMP: Just manually adding cards to the deck for now. Eventually will need to hook up deck loadouts.
-//		for (int i=0; i < player1Card1.GetComponent<Card>().quantity; i++) {
-//			player1Deck.Add (player1Card1);
-//		}
-//		for (int i=0; i < player1Card2.GetComponent<Card>().quantity; i++) {
-//			player1Deck.Add (player1Card2);
-//		}
-//		for (int i=0; i < player1Card3.GetComponent<Card>().quantity; i++) {
-//			player1Deck.Add (player1Card3);
-//		}
-//		for (int i=0; i < player1Card4.GetComponent<Card>().quantity; i++) {
-//			player1Deck.Add (player1Card4);
-//		}
-//		for (int i=0; i < player1Card5.GetComponent<Card>().quantity; i++) {
-//			player1Deck.Add (player1Card5);
-//		}
+        //TEMP: We used to add the same number of 
+        //foreach (string cardId in GlobalObject.instance.player1DeckSelect) {
+        //	for (int i=0; i<quantityPerCard; i++) {
+        //		player1Deck.Add(cardId);
+        //	}
+        //}
 
-		//TEMP: Just manually adding cards to the deck for now. Eventually will need to hook up deck loadouts.
-//		for (int i=0; i < player2Card1.GetComponent<Card>().quantity; i++) {
-//			player2Deck.Add (player2Card1);
-//		}
-//		for (int i=0; i < player2Card2.GetComponent<Card>().quantity; i++) {
-//			player2Deck.Add (player2Card2);
-//		}
-//		for (int i=0; i < player2Card3.GetComponent<Card>().quantity; i++) {
-//			player2Deck.Add (player2Card3);
-//		}
-//		for (int i=0; i < player2Card4.GetComponent<Card>().quantity; i++) {
-//			player2Deck.Add (player2Card4);
-//		}
-//		for (int i=0; i < player2Card5.GetComponent<Card>().quantity; i++) {
-//			player2Deck.Add (player2Card5);
-//		}
-	}
+        //foreach (string cardId in GlobalObject.instance.player2DeckSelect) {
+        //	for (int i=0; i<quantityPerCard; i++) {
+        //		player2Deck.Add(cardId);
+        //	}
+        //}
+
+        //TEMP: Just manually adding cards to the deck for now. Eventually will need to hook up deck loadouts.
+        //		for (int i=0; i < player1Card1.GetComponent<Card>().quantity; i++) {
+        //			player1Deck.Add (player1Card1);
+        //		}
+        //		for (int i=0; i < player1Card2.GetComponent<Card>().quantity; i++) {
+        //			player1Deck.Add (player1Card2);
+        //		}
+        //		for (int i=0; i < player1Card3.GetComponent<Card>().quantity; i++) {
+        //			player1Deck.Add (player1Card3);
+        //		}
+        //		for (int i=0; i < player1Card4.GetComponent<Card>().quantity; i++) {
+        //			player1Deck.Add (player1Card4);
+        //		}
+        //		for (int i=0; i < player1Card5.GetComponent<Card>().quantity; i++) {
+        //			player1Deck.Add (player1Card5);
+        //		}
+
+        //TEMP: Just manually adding cards to the deck for now. Eventually will need to hook up deck loadouts.
+        //		for (int i=0; i < player2Card1.GetComponent<Card>().quantity; i++) {
+        //			player2Deck.Add (player2Card1);
+        //		}
+        //		for (int i=0; i < player2Card2.GetComponent<Card>().quantity; i++) {
+        //			player2Deck.Add (player2Card2);
+        //		}
+        //		for (int i=0; i < player2Card3.GetComponent<Card>().quantity; i++) {
+        //			player2Deck.Add (player2Card3);
+        //		}
+        //		for (int i=0; i < player2Card4.GetComponent<Card>().quantity; i++) {
+        //			player2Deck.Add (player2Card4);
+        //		}
+        //		for (int i=0; i < player2Card5.GetComponent<Card>().quantity; i++) {
+        //			player2Deck.Add (player2Card5);
+        //		}
+    }
 
 	public void RedealHand () {
 		if (playField.player1Turn) {

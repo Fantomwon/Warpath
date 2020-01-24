@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\CardReference.cs" />
     <Compile Include="Assets\Scripts\CardsSelected.cs" />
     <Compile Include="Assets\Scripts\CombatText.cs" />
+    <Compile Include="Assets\Scripts\DebugManager.cs" />
     <Compile Include="Assets\Scripts\Deck.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GlobalObject.cs" />

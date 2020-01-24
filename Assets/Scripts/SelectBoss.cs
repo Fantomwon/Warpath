@@ -153,11 +153,22 @@ public class SelectBoss : MonoBehaviour {
 		GlobalObject.instance.player2DeckSelect.Clear();
 
 		if (boss01Button.isOn) {
-			GlobalObject.instance.player2DeckSelect.Add("archer");
-			GlobalObject.instance.player2DeckSelect.Add("footsoldier");
-			GlobalObject.instance.player2DeckSelect.Add("rogue");
-//			GlobalObject.instance.player2DeckSelect.Add("heal");
-		} else if (boss02Button.isOn) {
+            GlobalObject.instance.player2DeckSelect.Add("archer");
+            GlobalObject.instance.player2DeckSelect.Add("archer");
+            GlobalObject.instance.player2DeckSelect.Add("archer");
+            GlobalObject.instance.player2DeckSelect.Add("archer");
+            GlobalObject.instance.player2DeckSelect.Add("slinger");
+            GlobalObject.instance.player2DeckSelect.Add("slinger");
+            GlobalObject.instance.player2DeckSelect.Add("assassin");
+            GlobalObject.instance.player2DeckSelect.Add("assassin");
+            GlobalObject.instance.player2DeckSelect.Add("sapper");
+            GlobalObject.instance.player2DeckSelect.Add("sapper");
+            GlobalObject.instance.player2DeckSelect.Add("sapper");
+            GlobalObject.instance.player2DeckSelect.Add("rockthrow");
+            GlobalObject.instance.player2DeckSelect.Add("rockthrow");
+            GlobalObject.instance.player2DeckSelect.Add("rockthrow");
+            GlobalObject.instance.player2DeckSelect.Add("fireball");
+        } else if (boss02Button.isOn) {
 			GlobalObject.instance.player2DeckSelect.Add("archer");
 			GlobalObject.instance.player2DeckSelect.Add("rogue");
 			GlobalObject.instance.player2DeckSelect.Add("knight");
