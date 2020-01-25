@@ -60,14 +60,12 @@ public class Hero : MonoBehaviour {
 				myAnimator.ResetTrigger("isWalking");
 				//This is where heroes ATTACK (or more specifically this is where heroes run through their targeting logic and do w/e it is they do to all of their valid targets)
 				CheckForValidTargetsToAttack(myTransform);
-                //Debug.Log("heroAttackedATarget is " + playField.heroAttackedATarget);
 				CenterHero ();
 
-                //WE CAN PROBABLY DELETE THIS SHIT BELOW
-                //Check to see if the hero is sitting in the enemy's home row
-                //ScoreCheckMove(gameObject);
+				//Check to see if the hero is sitting in the enemy's home row
+				ScoreCheckMove(gameObject);
 
-                if (!playField.heroAttackedATarget && usingHaste) {
+				if (!playField.heroAttackedATarget && usingHaste) {
 					usingHaste = !usingHaste;
 				} else if (!playField.heroAttackedATarget && !usingHaste) {
 					//Run MoveHeroes() again to check if there are any more heroes to move. MAKE SURE THIS IS RUN AFTER ScoreCheck() OR ELSE THERE WILL BE PROBLEMS!!! This is because
@@ -79,19 +77,19 @@ public class Hero : MonoBehaviour {
 			if (transform.position.x > distToMove) {
 				transform.Translate(Vector2.left * Time.deltaTime * 3);
 				myAnimator.SetTrigger("isWalking");
+
 			} else {
 				moveLeftAndAttack = false;
 				myAnimator.ResetTrigger("isWalking");
 				//This is where heroes ATTACK (or more specifically this is where heroes run through their targeting logic and do w/e it is they do to all of their valid targets)
 				CheckForValidTargetsToAttack(myTransform);
-				//Debug.LogWarning("HERO ATTACKED A TARGET: " + playField.heroAttackedATarget);
+//				Debug.LogWarning("HERO ATTACKED A TARGET: " + playField.heroAttackedATarget);
 				CenterHero ();
 
-                //WE CAN PROBABLY DELETE THIS SHIT BELOW
-                //Check to see if the hero is sitting in the enemy's home row
-                //ScoreCheckMove(gameObject);
+				//Check to see if the hero is sitting in the enemy's home row
+				ScoreCheckMove(gameObject);
 
-                if (!playField.heroAttackedATarget && usingHaste) {
+				if (!playField.heroAttackedATarget && usingHaste) {
 					usingHaste = !usingHaste; 
 				} else if (!playField.heroAttackedATarget && !usingHaste) {
 					//Run MoveHeroes() again to check if there are any more heroes to move. MAKE SURE THIS IS RUN AFTER ScoreCheck() OR ELSE THERE WILL BE PROBLEMS!!! This is because
@@ -123,30 +121,36 @@ public class Hero : MonoBehaviour {
 	//Checks to see if there are any valid targets for the hero to attack. If there are any valid targets then the hero plays the 'PlayAttackAnimation' coroutine.
 	public void CheckForValidTargetsToAttack (Transform currentHero) {
         //Debug.Log("RUNNING CheckForValidTargetsToAttack()");
-        if (currentHero.GetComponent<Hero>().id == "rogue" && playField.TargetCheckCardinalDirections(currentHero, "enemy").Count > 0) {
-            StartCoroutine("PlayAttackAnimation");
-        } else if (currentHero.GetComponent<Hero>().id == "tower" && playField.TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
-            StartCoroutine("PlayAttackAnimation");
-        } else if (currentHero.GetComponent<Hero>().id == "archer" && playField.TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
-            StartCoroutine("PlayAttackAnimation");
-        } else if (currentHero.GetComponent<Hero>().id == "sapper" && playField.TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
-            StartCoroutine("PlayAttackAnimation");
-        } else if (currentHero.GetComponent<Hero>().id == "chaosmage" && playField.TargetCheckEntireBoardTwoRandomHeroes(currentHero, "enemy").Count > 0) {
-            StartCoroutine("PlayAttackAnimation");
-        } else if (playField.TargetCheckClosestHeroInRange(currentHero, "enemy").Count > 0) {
-            StartCoroutine("PlayAttackAnimation");
-        } else if ((playField.player1Turn && currentHero.GetComponent<Hero>().range >= playField.player2HomeColumn - currentHero.transform.position.x) || (!playField.player1Turn && currentHero.GetComponent<Hero>().range >= currentHero.transform.position.x - playField.player1HomeColumn)) {
-            //We are attacking the enemy Summoner here
-            playField.heroAttackedATarget = true;
-            StartCoroutine("PlayAttackAnimation");
-        }
-        //WE CAN PROBABLY DELETE THIS SHIT BELOW
-        //else if ((playField.player1Turn && currentHero.transform.position.x == playField.player2HomeColumn - 1) || (!playField.player1Turn && currentHero.transform.position.x == playField.player1HomeColumn + 1)) {
-        //    //We are attacking the enemy Summoner here
-        //    playField.heroAttackedATarget = true;
-        //    StartCoroutine("PlayAttackAnimation");
-        //}
-    }
+        if (currentHero.GetComponent<Hero>().id == "rogue") {
+            if (playField.TargetCheckCardinalDirections(currentHero, "enemy").Count > 0) {
+                StartCoroutine("PlayAttackAnimation");
+            }
+        } else if (currentHero.GetComponent<Hero>().id == "tower") {
+            if (playField.TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
+                StartCoroutine("PlayAttackAnimation");
+            }
+        } else if (currentHero.GetComponent<Hero>().id == "archer") {
+            if (playField.TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
+                StartCoroutine("PlayAttackAnimation");
+            }
+        } else if (currentHero.GetComponent<Hero>().id == "sapper") {
+            if (playField.TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
+                StartCoroutine("PlayAttackAnimation");
+            }
+        } else if (currentHero.GetComponent<Hero>().id == "chaosmage") {
+            if (playField.TargetCheckEntireBoardTwoRandomHeroes(currentHero, "enemy").Count > 0) {
+                StartCoroutine("PlayAttackAnimation");
+            }
+        } else if (currentHero.GetComponent<Hero>().id == "crossbowman") {
+            if (playField.TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
+                StartCoroutine("PlayAttackAnimation");
+            }
+        } else {
+            if (playField.TargetCheckClosestHeroInRange(currentHero, "enemy").Count > 0) {
+                StartCoroutine("PlayAttackAnimation");
+            }
+        } 
+	}
 
 	IEnumerator PlayAttackAnimation () {
 		TargetTellTurnOn();
@@ -248,8 +252,7 @@ public class Hero : MonoBehaviour {
 		//If the hero's health is zero or below check if their death causes the enemy to score a point and also destroy them.
 		if (hero.currentHealth <= 0) {
 //			Debug.Log("RUNNING HERO DEATH CODE");
-            //DISABLING THIS FOR THE WIN CONDITION PROTOTYPE
-			//ScoreCheckDeath(gameObject);
+			ScoreCheckDeath(gameObject);
 			Destroy(gameObject);
 		}
 		Instantiate (hitParticle, hero.transform.position, Quaternion.identity);
@@ -315,20 +318,18 @@ public class Hero : MonoBehaviour {
 		distToMove = transform.position.x - dist;
 	}
 
-    //Only used in specific instances (like the 'Wind Gust' spell). NOT used when we are iterating through heroes in an 'EndTurn' scenario b/c this will NOT continue to iterate through remaining heroes in a turn.
 	public void MoveSingleHeroRight(float dist) {
 		moveRight = true;
 		distToMove = dist + transform.position.x;
 	}
 
-    //Only used in specific instances (like the 'Wind Gust' spell). NOT used when we are iterating through heroes in an 'EndTurn' scenario b/c this will NOT continue to iterate through remaining heroes in a turn.
-    public void MoveSingleHeroLeft(float dist) {
+	public void MoveSingleHeroLeft(float dist) {
 		moveLeft = true;
 		distToMove = transform.position.x - dist;
 	}
 
-    //Make sure that the hero is sitting on a rounded X position 
-    void CenterHero () {
+	void CenterHero () //Make sure that the hero is sitting on a rounded X position 
+	{
 		Vector3 currentPos = transform.position;
 		currentPos.x = Mathf.RoundToInt (transform.position.x);
 		transform.position = currentPos;

@@ -22,7 +22,7 @@ public class GlobalObject : MonoBehaviour {
 	public List<string> fullPlayerSpellCardList;
 
 	void Awake () {
-		Debug.Log("RUNNING AWAKE FUNCTION OF GLOBALOBJECT.CS");
+//		Debug.Log("RUNNING AWAKE FUNCTION OF GLOBALOBJECT.CS");
 		if (instance == null) {
 			instance = this;
 			DontDestroyOnLoad(gameObject);
@@ -41,51 +41,53 @@ public class GlobalObject : MonoBehaviour {
 	}
 
 	public GameObject SetTemplateHeroCardAttributes (string id) {
-		if (id == "wall") {
-			return SetTemplateHeroCardAttributesConstructor("WallCard", "wall", "heroStationary", 2, "Test: Wall", "PrefabsHeroes/Wall");
-		} else if (id == "archer") {
-			return SetTemplateHeroCardAttributesConstructor("ArcherCard", "archer", "hero", 3, "Test: Archer", "PrefabsHeroes/Archer");
-		} else if (id == "footsoldier") {
-			return SetTemplateHeroCardAttributesConstructor("FootSoldierCard", "footsoldier", "hero", 3, "Test:Foot Soldier", "PrefabsHeroes/FootSoldier");
-		} else if (id == "dwarf") {
-			return SetTemplateHeroCardAttributesConstructor("DwarfCard", "dwarf", "hero", 3, "Test:Dwarf", "PrefabsHeroes/Dwarf");
-		} else if (id == "ghost") {
-			return SetTemplateHeroCardAttributesConstructor("GhostCard", "ghost", "hero", 3, "Test:Ghost", "PrefabsHeroes/Ghost");
-		} else if (id == "sapper") {
-			return SetTemplateHeroCardAttributesConstructor("SapperCard", "sapper", "hero", 3, "Test:Sapper", "PrefabsHeroes/Sapper");
-		} else if (id == "rogue") {
-			return SetTemplateHeroCardAttributesConstructor("RogueCard", "rogue", "hero", 4, "Test:Rogue", "PrefabsHeroes/Rogue");
-		} else if (id == "druid") {
-			return SetTemplateHeroCardAttributesConstructor("DruidCard", "druid", "hero", 4, "Test:Druid", "PrefabsHeroes/Druid");
-		} else if (id == "monk") {
-			return SetTemplateHeroCardAttributesConstructor("MonkCard", "monk", "hero", 4, "Test:monk", "PrefabsHeroes/Monk");
-		} else if (id == "slinger") {
-			return SetTemplateHeroCardAttributesConstructor("SlingerCard", "slinger", "hero", 4, "Test:slinger", "PrefabsHeroes/Slinger");
-		} else if (id == "bloodmage") {
-			return SetTemplateHeroCardAttributesConstructor("BloodmageCard", "bloodmage", "hero", 4, "Test:bloodmage", "PrefabsHeroes/Bloodmage");
-		} else if (id == "blacksmith") {
-			return SetTemplateHeroCardAttributesConstructor("BlacksmithCard", "blacksmith", "hero", 4, "Test:blacksmith", "PrefabsHeroes/Blacksmith");
-		} else if (id == "wolf") {
-			return SetTemplateHeroCardAttributesConstructor("WolfCard", "wolf", "hero", 4, "Test:wolf", "PrefabsHeroes/Wolf");
-		} else if (id == "chaosmage") {
-			return SetTemplateHeroCardAttributesConstructor("ChaosMageCard", "chaosmage", "hero", 4, "Test:chaosmage", "PrefabsHeroes/ChaosMage");
-		} else if (id == "sorcerer") {
-			return SetTemplateHeroCardAttributesConstructor("SorcererCard", "sorcerer", "hero", 4, "Test:sorcerer", "PrefabsHeroes/Sorcerer");
-		} else if (id == "assassin") {
-			return SetTemplateHeroCardAttributesConstructor("AssassinCard", "assassin", "hero", 4, "Test:assassin", "PrefabsHeroes/Assassin");
-		} else if (id == "knight") {
-			return SetTemplateHeroCardAttributesConstructor("KnightCard", "knight", "hero", 5, "Test:knight", "PrefabsHeroes/Knight");
-		} else if (id == "paladin") {
-			return SetTemplateHeroCardAttributesConstructor("PaladinCard", "paladin", "hero", 5, "Test:paladin", "PrefabsHeroes/Paladin");
-		} else if (id == "tower") {
-			return SetTemplateHeroCardAttributesConstructor("TowerCard", "tower", "heroStationary", 5, "Test:tower", "PrefabsHeroes/Tower");
-		} else if (id == "champion") {
-			return SetTemplateHeroCardAttributesConstructor("ChampionCard", "champion", "hero", 5, "Test:champion", "PrefabsHeroes/Champion");
-		} else if (id == "cavalry") {
-			return SetTemplateHeroCardAttributesConstructor("CavalryCard", "cavalry", "hero", 5, "Test:cavalry", "PrefabsHeroes/Cavalry");
-		} else if (id == "diviner") {
-			return SetTemplateHeroCardAttributesConstructor("DivinerCard", "diviner", "hero", 5, "Test:diviner", "PrefabsHeroes/Diviner");
-		} else {
+        if (id == "wall") {
+            return SetTemplateHeroCardAttributesConstructor("WallCard", "wall", "heroStationary", 2, "Test: Wall", "PrefabsHeroes/Wall");
+        } else if (id == "archer") {
+            return SetTemplateHeroCardAttributesConstructor("ArcherCard", "archer", "hero", 3, "Test: Archer", "PrefabsHeroes/Archer");
+        } else if (id == "footsoldier") {
+            return SetTemplateHeroCardAttributesConstructor("FootSoldierCard", "footsoldier", "hero", 3, "Test:Foot Soldier", "PrefabsHeroes/FootSoldier");
+        } else if (id == "dwarf") {
+            return SetTemplateHeroCardAttributesConstructor("DwarfCard", "dwarf", "hero", 3, "Test:Dwarf", "PrefabsHeroes/Dwarf");
+        } else if (id == "ghost") {
+            return SetTemplateHeroCardAttributesConstructor("GhostCard", "ghost", "hero", 3, "Test:Ghost", "PrefabsHeroes/Ghost");
+        } else if (id == "sapper") {
+            return SetTemplateHeroCardAttributesConstructor("SapperCard", "sapper", "hero", 3, "Test:Sapper", "PrefabsHeroes/Sapper");
+        } else if (id == "rogue") {
+            return SetTemplateHeroCardAttributesConstructor("RogueCard", "rogue", "hero", 4, "Test:Rogue", "PrefabsHeroes/Rogue");
+        } else if (id == "druid") {
+            return SetTemplateHeroCardAttributesConstructor("DruidCard", "druid", "hero", 4, "Test:Druid", "PrefabsHeroes/Druid");
+        } else if (id == "monk") {
+            return SetTemplateHeroCardAttributesConstructor("MonkCard", "monk", "hero", 4, "Test:monk", "PrefabsHeroes/Monk");
+        } else if (id == "slinger") {
+            return SetTemplateHeroCardAttributesConstructor("SlingerCard", "slinger", "hero", 4, "Test:slinger", "PrefabsHeroes/Slinger");
+        } else if (id == "bloodmage") {
+            return SetTemplateHeroCardAttributesConstructor("BloodmageCard", "bloodmage", "hero", 4, "Test:bloodmage", "PrefabsHeroes/Bloodmage");
+        } else if (id == "blacksmith") {
+            return SetTemplateHeroCardAttributesConstructor("BlacksmithCard", "blacksmith", "hero", 4, "Test:blacksmith", "PrefabsHeroes/Blacksmith");
+        } else if (id == "wolf") {
+            return SetTemplateHeroCardAttributesConstructor("WolfCard", "wolf", "hero", 4, "Test:wolf", "PrefabsHeroes/Wolf");
+        } else if (id == "chaosmage") {
+            return SetTemplateHeroCardAttributesConstructor("ChaosMageCard", "chaosmage", "hero", 4, "Test:chaosmage", "PrefabsHeroes/ChaosMage");
+        } else if (id == "sorcerer") {
+            return SetTemplateHeroCardAttributesConstructor("SorcererCard", "sorcerer", "hero", 4, "Test:sorcerer", "PrefabsHeroes/Sorcerer");
+        } else if (id == "assassin") {
+            return SetTemplateHeroCardAttributesConstructor("AssassinCard", "assassin", "hero", 4, "Test:assassin", "PrefabsHeroes/Assassin");
+        } else if (id == "knight") {
+            return SetTemplateHeroCardAttributesConstructor("KnightCard", "knight", "hero", 5, "Test:knight", "PrefabsHeroes/Knight");
+        } else if (id == "paladin") {
+            return SetTemplateHeroCardAttributesConstructor("PaladinCard", "paladin", "hero", 5, "Test:paladin", "PrefabsHeroes/Paladin");
+        } else if (id == "tower") {
+            return SetTemplateHeroCardAttributesConstructor("TowerCard", "tower", "heroStationary", 5, "Test:tower", "PrefabsHeroes/Tower");
+        } else if (id == "champion") {
+            return SetTemplateHeroCardAttributesConstructor("ChampionCard", "champion", "hero", 5, "Test:champion", "PrefabsHeroes/Champion");
+        } else if (id == "cavalry") {
+            return SetTemplateHeroCardAttributesConstructor("CavalryCard", "cavalry", "hero", 5, "Test:cavalry", "PrefabsHeroes/Cavalry");
+        } else if (id == "diviner") {
+            return SetTemplateHeroCardAttributesConstructor("DivinerCard", "diviner", "hero", 5, "Test:diviner", "PrefabsHeroes/Diviner");
+        }else if (id == "crossbowman") {
+            return SetTemplateHeroCardAttributesConstructor("CrossbowmanCard", "crossbowman", "hero", 3, "Test:crossbowman", "PrefabsHeroes/Crossbowman");
+        } else {
 			return null;
 		}
 	}
@@ -172,6 +174,7 @@ public class GlobalObject : MonoBehaviour {
 		fullPlayerHeroCardList.Add("champion");
 		fullPlayerHeroCardList.Add("cavalry");
 		fullPlayerHeroCardList.Add("diviner");
+        fullPlayerHeroCardList.Add("crossbowman");
 
 		//Full list of all player spell cards for pass and play
 		fullPlayerSpellCardList.Add("armor");
@@ -185,10 +188,12 @@ public class GlobalObject : MonoBehaviour {
 
 		//boss01 player cards
 		boss01PlayerHeroCards.Add("archer");
-        boss01PlayerHeroCards.Add("footsoldier");
-        boss01PlayerHeroCards.Add("rogue");
-        boss01PlayerHeroCards.Add("druid");
-        boss01PlayerSpellCards.Add("heal");
+		boss01PlayerHeroCards.Add("footsoldier");
+		boss01PlayerHeroCards.Add("rogue");
+		boss01PlayerHeroCards.Add("druid");
+		boss01PlayerHeroCards.Add("sapper");
+		boss01PlayerSpellCards.Add("heal");
+		boss01PlayerSpellCards.Add("windgust");
 		boss01PlayerSpellCards.Add("fireball");
 
 		//boss02 player cards

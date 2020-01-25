@@ -153,14 +153,14 @@ public class PlayField : MonoBehaviour {
 		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
 
 		//TEMP - SALLY ADD HERO ID'S OF HEROES YOU UPDATE HERE - I LOVE YOU!!!
-		if (x.GetComponent<Hero>().id == "druid" || x.GetComponent<Hero>().id == "archer" || x.GetComponent<Hero>().id == "knight" || x.GetComponent<Hero>().id == "rogue" || x.GetComponent<Hero>().id == "footsoldier" ) {
+		if (x.GetComponent<Hero>().id == "crossbowman" || x.GetComponent<Hero>().id == "druid" || x.GetComponent<Hero>().id == "archer" || x.GetComponent<Hero>().id == "knight" || x.GetComponent<Hero>().id == "rogue" || x.GetComponent<Hero>().id == "footsoldier" ) {
 			//Flip the hero so it faces to the left
 			Vector3 scale = x.transform.Find("Hero").GetComponent<RectTransform>().transform.localScale;
 			(scale.x) = (scale.x *= -1);
 			x.transform.Find("Hero").GetComponent<RectTransform>().transform.localScale = scale;
 		}
 
-		if (x.GetComponent<Hero>().id != "druid" || x.GetComponent<Hero>().id != "archer" || x.GetComponent<Hero>().id != "knight" || x.GetComponent<Hero>().id != "rogue" || x.GetComponent<Hero>().id != "footsolder") {
+		if (x.GetComponent<Hero>().id != "crossbowman" || x.GetComponent<Hero>().id != "druid" || x.GetComponent<Hero>().id != "archer" || x.GetComponent<Hero>().id != "knight" || x.GetComponent<Hero>().id != "rogue" || x.GetComponent<Hero>().id != "footsolder") {
 			//Flip the hero so it faces to the left
 			Vector3 scale = x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale;
 			(scale.x) = (scale.x *= -1);
@@ -340,52 +340,49 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 
-        //If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
-        if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero) && (currentHero.transform.position.x + currentHero.GetComponent<Hero>().speed >= player2HomeColumn)) {
-            currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack((player2HomeColumn-currentHero.transform.position.x)-1);
-        } else if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
+		//If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
+		 if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
 			currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(currentHero.GetComponent<Hero>().speed);
 		} else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
 			currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(Mathf.RoundToInt(closestHero)-1);
+
 		}
 	}
 
-    void Player2MoveCheck(Transform currentHero) {
-        BuildFullHeroList();
-        float closestHero = 999f;
-        foreach (Vector2 hero in fullHeroCoords) {
-            //Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
-            if (hero.y == currentHero.transform.position.y && ((currentHero.transform.position.x - hero.x) < closestHero) && ((currentHero.transform.position.x - hero.x) > 0)) {
-                closestHero = currentHero.transform.position.x - hero.x;
-            }
-        }
+	void Player2MoveCheck (Transform currentHero) {
+		BuildFullHeroList ();
+		float closestHero = 999f;
+		foreach (Vector2 hero in fullHeroCoords) {
+			//Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
+			if (hero.y == currentHero.transform.position.y && ((currentHero.transform.position.x - hero.x) < closestHero) && ((currentHero.transform.position.x - hero.x) > 0)) {
+				closestHero = currentHero.transform.position.x - hero.x;
+			}
+		}
 
-        //Check to see if I have any enemies in range. If I do, run MoveSingleHeroRightAndAttack but don't actually move the hero
-        foreach (Transform enemy in player1.transform) {
-            if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) <= currentHero.GetComponent<Hero>().range)
-            && (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) > 0)
-            && enemy.transform.position.y == currentHero.transform.position.y) {
-                currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(0);
-                return;
-            }
-        }
+		//Check to see if I have any enemies in range. If I do, run MoveSingleHeroRightAndAttack but don't actually move the hero
+		foreach (Transform enemy in player1.transform) {
+			if ((Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) <= currentHero.GetComponent<Hero>().range)
+			&& (Mathf.RoundToInt(currentHero.transform.position.x) - Mathf.RoundToInt(enemy.transform.position.x) > 0)
+			&& enemy.transform.position.y == currentHero.transform.position.y) {
+				currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(0);
+				return;
+			}
+		}
 
-        //Special case for the Cavalry unit, which will move all the way to the next enemy in his row. If there is no enemy then he will move by his full move speed.
-        if (currentHero.GetComponent<Hero>().id == "cavalry") {
-            if (closestHero < 999f) {
-                currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(Mathf.RoundToInt(closestHero) - 1);
-                return;
-            }
-        }
+		//Special case for the Cavalry unit, which will move all the way to the next enemy in his row. If there is no enemy then he will move by his full move speed.
+		if (currentHero.GetComponent<Hero>().id == "cavalry") {
+			if (closestHero < 999f) {
+				currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(Mathf.RoundToInt(closestHero)-1);
+				return;
+			}
+		}
 
-        //If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
-        if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero) && (currentHero.transform.position.x - player1HomeColumn <= currentHero.GetComponent<Hero>().speed)) {
-            currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack((currentHero.transform.position.x - player1HomeColumn)-1);
-        } else if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
-            currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(currentHero.GetComponent<Hero>().speed);
-        } else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
-            currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(Mathf.RoundToInt(closestHero)-1);
-        }
+		//If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
+		if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
+			currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(currentHero.GetComponent<Hero>().speed);
+		} else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
+			currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(Mathf.RoundToInt(closestHero)-1);
+		}
 	}
 
 	public float FindClosestHeroToTheRight (Transform currentHero) {
@@ -443,21 +440,19 @@ public class PlayField : MonoBehaviour {
 
 	//Gets called from AnimationEvents.cs via an animation event on the hero's attack animation
 	public void HeroTargetCheck (Transform currentHero) {
-        if (currentHero.GetComponent<Hero>().id == "rogue" && TargetCheckCardinalDirections(currentHero, "enemy").Count > 0) {
-            AttackEnemiesInList(currentHero, TargetCheckCardinalDirections(currentHero, "enemy"));
-        } else if (currentHero.GetComponent<Hero>().id == "tower" && TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
-            AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy", null));
-        } else if ((currentHero.GetComponent<Hero>().id == "archer" || currentHero.GetComponent<Hero>().id == "slinger") && TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
-            AttackEnemiesInList(currentHero, TargetCheckAllHeroesInRange(currentHero, "enemy"));
-        } else if (currentHero.GetComponent<Hero>().id == "sapper" && TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
-            AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy", null));
-        } else if (currentHero.GetComponent<Hero>().id == "chaosmage" & tempTransformList.Count > 0) {
-            AttackEnemiesInList(currentHero, tempTransformList);
-        } else if (TargetCheckClosestHeroInRange(currentHero, "enemy").Count > 0) {
-            AttackEnemiesInList(currentHero, TargetCheckClosestHeroInRange(currentHero, "enemy"));
-        } else {
-            LosePlayerHealth(currentHero.GetComponent<Hero>().playerDamage);
-        }
+		if (currentHero.GetComponent<Hero>().id == "rogue") {
+			AttackEnemiesInList(currentHero, TargetCheckCardinalDirections(currentHero, "enemy"));
+		} else if (currentHero.GetComponent<Hero>().id == "tower") {
+			AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy", null));
+		} else if (currentHero.GetComponent<Hero>().id == "archer" || currentHero.GetComponent<Hero>().id == "slinger" || currentHero.GetComponent<Hero>().id == "crossbowman") {
+			AttackEnemiesInList(currentHero, TargetCheckAllHeroesInRange(currentHero, "enemy"));
+		} else if (currentHero.GetComponent<Hero>().id == "sapper") {
+			AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy", null));
+		} else if (currentHero.GetComponent<Hero>().id == "chaosmage") {
+			AttackEnemiesInList(currentHero, tempTransformList);
+		} else {
+			AttackEnemiesInList(currentHero, TargetCheckClosestHeroInRange(currentHero, "enemy"));
+		}
 	}
 
 	//Takes a 'currentHero' and a list of enemy heroes, then the currentHero attacks all of the enemy heroes in the list using the 'TakeDamage()' method
