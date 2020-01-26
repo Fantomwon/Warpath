@@ -207,7 +207,12 @@ public class Hero : MonoBehaviour {
 				GameObject spawnedAttackTellBox = Instantiate (attackTellBox, enemy.transform.position, Quaternion.identity, FindObjectOfType<AttackTellBoxes>().transform) as GameObject;
 				spawnedAttackTellBox.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y, enemy.transform.position.z);
 			}
-		} else {
+		}else if( hero.id == "crossbowman") {
+            foreach (Transform enemy in playField.TargetCheckAllHeroesInRange(hero.transform, "enemy")) {
+                GameObject spawnedAttackTellBox = Instantiate(attackTellBox, enemy.transform.position, Quaternion.identity, FindObjectOfType<AttackTellBoxes>().transform) as GameObject;
+                spawnedAttackTellBox.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y, enemy.transform.position.z);
+            }
+        } else {
 			foreach (Transform enemy in playField.TargetCheckClosestHeroInRange(hero.transform, "enemy")) {
 				GameObject spawnedAttackTellBox = Instantiate (attackTellBox, enemy.transform.position, Quaternion.identity, FindObjectOfType<AttackTellBoxes>().transform) as GameObject;
 				spawnedAttackTellBox.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y, enemy.transform.position.z);
@@ -225,17 +230,24 @@ public class Hero : MonoBehaviour {
 	}
 
 	//These are the things that we want heroes to do ONLY when they attack
-	public void HeroAttackEffects () {
+	public void HeroAttackEffects ( bool targetDied ) {
 		if (id == "bloodmage") {
 			hero.HealPartial(hero.healValue);
-		}
+		}else if(id == "bloodknight"){
+            if( targetDied) {
+                hero.HealPartial(hero.healValue);
+            }
+        }
 
+        
 //		if (id == "sapper") {
 //			hero.TakeDamage(hero.GetComponent<Hero>().currentHealth);
 //		}
 	}
 
-	public void TakeDamage (int dmg) {
+	public bool TakeDamage (int dmg) {
+        bool wasLethal = false;
+
 		if (hero.GetComponent<Hero>().id == "ghost") {
 			dmg = 1;
 		}
@@ -251,6 +263,7 @@ public class Hero : MonoBehaviour {
 
 		//If the hero's health is zero or below check if their death causes the enemy to score a point and also destroy them.
 		if (hero.currentHealth <= 0) {
+            wasLethal = true;
 //			Debug.Log("RUNNING HERO DEATH CODE");
 			ScoreCheckDeath(gameObject);
 			Destroy(gameObject);
@@ -263,6 +276,8 @@ public class Hero : MonoBehaviour {
 		GameObject x = Instantiate(combatText, new Vector3 (hero.transform.position.x, hero.transform.position.y + 0.5f, hero.transform.position.z), Quaternion.identity) as GameObject;
 		x.GetComponentInChildren<TextMesh>().text = "-" + dmg.ToString();
 		x.GetComponentInChildren<TextMesh>().color = Color.red;
+
+        return wasLethal;
 	}
 
 	public void DodgeDamage () {

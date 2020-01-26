@@ -153,19 +153,23 @@ public class PlayField : MonoBehaviour {
 		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
 
 		//TEMP - SALLY ADD HERO ID'S OF HEROES YOU UPDATE HERE - I LOVE YOU!!!
-		if (x.GetComponent<Hero>().id == "crossbowman" || x.GetComponent<Hero>().id == "druid" || x.GetComponent<Hero>().id == "archer" || x.GetComponent<Hero>().id == "knight" || x.GetComponent<Hero>().id == "rogue" || x.GetComponent<Hero>().id == "footsoldier" ) {
+		if ( x.GetComponent<Hero>().id == "bloodknight" || x.GetComponent<Hero>().id == "crossbowman" || x.GetComponent<Hero>().id == "druid" || x.GetComponent<Hero>().id == "archer" || x.GetComponent<Hero>().id == "knight" || x.GetComponent<Hero>().id == "rogue" || x.GetComponent<Hero>().id == "footsoldier" ) {
 			//Flip the hero so it faces to the left
 			Vector3 scale = x.transform.Find("Hero").GetComponent<RectTransform>().transform.localScale;
 			(scale.x) = (scale.x *= -1);
 			x.transform.Find("Hero").GetComponent<RectTransform>().transform.localScale = scale;
-		}
+        } else {
+            Vector3 scale = x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale;
+            (scale.x) = (scale.x *= -1);
+            x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale = scale;
+        }
 
-		if (x.GetComponent<Hero>().id != "crossbowman" || x.GetComponent<Hero>().id != "druid" || x.GetComponent<Hero>().id != "archer" || x.GetComponent<Hero>().id != "knight" || x.GetComponent<Hero>().id != "rogue" || x.GetComponent<Hero>().id != "footsolder") {
-			//Flip the hero so it faces to the left
-			Vector3 scale = x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale;
-			(scale.x) = (scale.x *= -1);
-			x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale = scale;
-		}  
+		//if (x.GetComponent<Hero>().id != "crossbowman" || x.GetComponent<Hero>().id != "druid" || x.GetComponent<Hero>().id != "archer" || x.GetComponent<Hero>().id != "knight" || x.GetComponent<Hero>().id != "rogue" || x.GetComponent<Hero>().id != "footsolder") {
+		//	//Flip the hero so it faces to the left
+		//	Vector3 scale = x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale;
+		//	(scale.x) = (scale.x *= -1);
+		//	x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale = scale;
+		//}  
 
 		//Move the Armor and Health text so that it sits on the left side of the hero
 		foreach (Transform text in x.transform) {
@@ -509,9 +513,9 @@ public class PlayField : MonoBehaviour {
 //			}
 
 			//Do your damage vs. the current target
-			enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+			bool wasLethal = enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
 			//Do any special attack effects associated with the currentHero that is attacking
-			currentHero.GetComponent<Hero>().HeroAttackEffects();
+			currentHero.GetComponent<Hero>().HeroAttackEffects( wasLethal );
 		}
 
 		if (currentHero.GetComponent<Hero>().id == "sapper") {

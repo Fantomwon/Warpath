@@ -40,7 +40,7 @@ public class GlobalObject : MonoBehaviour {
 		
 	}
 
-	public GameObject SetTemplateHeroCardAttributes (string id) {
+    public GameObject SetTemplateHeroCardAttributes (string id) {
         if (id == "wall") {
             return SetTemplateHeroCardAttributesConstructor("WallCard", "wall", "heroStationary", 2, "Test: Wall", "PrefabsHeroes/Wall");
         } else if (id == "archer") {
@@ -85,8 +85,10 @@ public class GlobalObject : MonoBehaviour {
             return SetTemplateHeroCardAttributesConstructor("CavalryCard", "cavalry", "hero", 5, "Test:cavalry", "PrefabsHeroes/Cavalry");
         } else if (id == "diviner") {
             return SetTemplateHeroCardAttributesConstructor("DivinerCard", "diviner", "hero", 5, "Test:diviner", "PrefabsHeroes/Diviner");
-        }else if (id == "crossbowman") {
+        } else if (id == "crossbowman") {
             return SetTemplateHeroCardAttributesConstructor("CrossbowmanCard", "crossbowman", "hero", 3, "Test:crossbowman", "PrefabsHeroes/Crossbowman");
+        }else if (id == "bloodknight") {
+            return SetTemplateHeroCardAttributesConstructor("BloodknightCard", "bloodknight", "hero", 5, "Test:bloodknight", "PrefabsHeroes/Bloodknight");
         } else {
 			return null;
 		}
@@ -175,9 +177,10 @@ public class GlobalObject : MonoBehaviour {
 		fullPlayerHeroCardList.Add("cavalry");
 		fullPlayerHeroCardList.Add("diviner");
         fullPlayerHeroCardList.Add("crossbowman");
+        fullPlayerHeroCardList.Add("bloodknight");
 
-		//Full list of all player spell cards for pass and play
-		fullPlayerSpellCardList.Add("armor");
+        //Full list of all player spell cards for pass and play
+        fullPlayerSpellCardList.Add("armor");
 		fullPlayerSpellCardList.Add("rockthrow");
 		fullPlayerSpellCardList.Add("root");
 		fullPlayerSpellCardList.Add("windgust");
@@ -297,3 +300,4 @@ public class GlobalObject : MonoBehaviour {
 		}
 	}
 }
+//https://www.youtube.com/watch?v=D9_Z4wb7940&ab_channel=MichelKlaasen
