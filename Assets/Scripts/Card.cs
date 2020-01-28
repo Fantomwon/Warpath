@@ -15,7 +15,11 @@ public class Card : MonoBehaviour {
 	public string cardName;
 	public string type;
 	public GameObject image;
-	public int manaCost;
+    public int power;
+    public int maxHealth;
+    public int speed;
+    public int range;
+    public int manaCost;
 	public int quantity;
 	public int spellDamage;
 	public int spellCooldownStart, spellCooldownCurrent;
@@ -42,11 +46,18 @@ public class Card : MonoBehaviour {
 			NameText.text = cardName.ToString();
 		}
 		if (type == "hero" || type == "heroStationary") {
-			PowerText.text = heroPrefab.GetComponent<Hero>().power.ToString();
-			HealthText.text = heroPrefab.GetComponent<Hero>().maxHealth.ToString();
-			SpeedText.text = heroPrefab.GetComponent<Hero>().speed.ToString();
-			RangeText.text = heroPrefab.GetComponent<Hero>().range.ToString();
-		}
+            //Set text values on the card
+            PowerText.text = power.ToString();
+            HealthText.text = maxHealth.ToString();
+            SpeedText.text = speed.ToString();
+            RangeText.text = range.ToString();
+            //Set the hero stats on the hero prefab associated with this card
+            heroPrefab.GetComponent<Hero>().power = power;
+            heroPrefab.GetComponent<Hero>().maxHealth = maxHealth;
+            heroPrefab.GetComponent<Hero>().currentHealth = maxHealth;
+            heroPrefab.GetComponent<Hero>().range = range;
+            heroPrefab.GetComponent<Hero>().speed = speed;
+        }
 	}
 
 	void OnMouseDown () {
