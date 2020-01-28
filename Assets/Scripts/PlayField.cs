@@ -461,9 +461,15 @@ public class PlayField : MonoBehaviour {
         } else if (TargetCheckClosestHeroInRange(currentHero, "enemy").Count > 0) {
             AttackEnemiesInList(currentHero, TargetCheckClosestHeroInRange(currentHero, "enemy"));
         } else {
-            LosePlayerHealth(currentHero.GetComponent<Hero>().playerDamage);
+            LosePlayerHealth(currentHero.GetComponent<Hero>().power);
         }
-	}
+
+        //Special check to see if the hero was a Sapper and needs to be removed from the game space
+        if (currentHero.GetComponent<Hero>().id == "sapper") {
+            currentHero.GetComponent<Hero>().AfterAttackOperations();
+            currentHero.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().currentHealth + currentHero.GetComponent<Hero>().currentArmor);
+        }
+    }
 
 	//Takes a 'currentHero' and a list of enemy heroes, then the currentHero attacks all of the enemy heroes in the list using the 'TakeDamage()' method
 	public void AttackEnemiesInList (Transform currentHero, List<Transform> enemies) {
@@ -511,22 +517,10 @@ public class PlayField : MonoBehaviour {
 				return;
 			}
 
-//			if (currentHero.GetComponent<Hero>().id == "sapper") {
-//				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
-////				currentHero.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().currentHealth + currentHero.GetComponent<Hero>().currentArmor);
-////				MoveHeroes();
-////				return;
-//			}
-
 			//Do your damage vs. the current target
 			bool wasLethal = enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
 			//Do any special attack effects associated with the currentHero that is attacking
 			currentHero.GetComponent<Hero>().HeroAttackEffects( wasLethal );
-		}
-
-		if (currentHero.GetComponent<Hero>().id == "sapper") {
-			currentHero.GetComponent<Hero>().AfterAttackOperations();
-			currentHero.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().currentHealth + currentHero.GetComponent<Hero>().currentArmor);
 		}
 	}
 

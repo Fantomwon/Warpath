@@ -195,13 +195,11 @@ public class GlobalObject : MonoBehaviour {
 
 		//boss01 player cards
 		boss01PlayerHeroCards.Add("archer");
-		boss01PlayerHeroCards.Add("footsoldier");
-		boss01PlayerHeroCards.Add("rogue");
-		boss01PlayerHeroCards.Add("druid");
-		boss01PlayerHeroCards.Add("sapper");
-		boss01PlayerSpellCards.Add("heal");
-		boss01PlayerSpellCards.Add("windgust");
-		boss01PlayerSpellCards.Add("fireball");
+        boss01PlayerHeroCards.Add("footsoldier");
+        boss01PlayerHeroCards.Add("rogue");
+        boss01PlayerHeroCards.Add("druid");
+        boss01PlayerSpellCards.Add("heal");
+        boss01PlayerSpellCards.Add("fireball");
 
 		//boss02 player cards
 		boss02PlayerHeroCards.Add("archer");
