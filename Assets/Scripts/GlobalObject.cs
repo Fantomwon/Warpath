@@ -13,6 +13,7 @@ public class GlobalObject : MonoBehaviour {
 	public List<string> player2DeckSelect;
 	public GameObject templateHeroCard;
 	public GameObject templateSpellCard;
+    public GameObject templateCommander;
 	public string player1Class, player2Class;
 
 	//Idk know why these variables need to be public... but every time I set them to 'private' ZERO cards will show up in the various 'deckSelect' screens. Maybe one day I'll figure this out, or perhaps I never will...
@@ -21,24 +22,62 @@ public class GlobalObject : MonoBehaviour {
 	public List<string> fullPlayerHeroCardList;
 	public List<string> fullPlayerSpellCardList;
 
-	void Awake () {
+    //List for commanders used for UI purposes or any time all commanders are needed to be loaded
+    public List<CommanderData> commandersData;
+
+    void Awake () {
 //		Debug.Log("RUNNING AWAKE FUNCTION OF GLOBALOBJECT.CS");
-		if (instance == null) {
-			instance = this;
-			DontDestroyOnLoad(gameObject);
+		if (GlobalObject.instance == null) {
+			GlobalObject.instance = this;
+			DontDestroyOnLoad(this.gameObject);
 		} else if (instance != this) {
-			Destroy(gameObject);
+			Destroy(this.gameObject);
 		}
 
-		if (SceneManager.GetActiveScene().name != "BossSelect" && SceneManager.GetActiveScene().name != "Game") {
-			AssignPlayerCards();
-			InstantiatePlayerCards ();
-		}
-	}
+        //Hardcoded list of commanders - putting this in code here until it can be generated as json and loaded in later
+        this.commandersData = new List<CommanderData>();
+        //Holy commander Constantine, the Knight Templar
+        string path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Templar"; 
+        CommanderData templar = new CommanderData("The Knight Templar", GameConstants.FactionType.Holy, 20, 5, path);
+        this.commandersData.Add(templar);
+
+        if (SceneManager.GetActiveScene().buildIndex == GameConstants.SCENE_INDEX_COMMANDER_SELECT) {
+            GlobalObject.instance.LoadCommanderSelectUI();
+        } else if (SceneManager.GetActiveScene().name != "BossSelect" && SceneManager.GetActiveScene().name != "Game") {
+            AssignPlayerCards();
+            InstantiatePlayerCards();
+        }
+
+    }
 
 	void Start () {
 		
 	}
+
+    void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
+        Debug.Log("Global object: Scene loaded! => name:" + scene.name + " index: " + scene.buildIndex.ToString() );
+        Debug.Log(mode);
+        if( scene.buildIndex == GameConstants.SCENE_INDEX_COMMANDER_SELECT) {
+            GlobalObject.instance.LoadCommanderSelectUI();
+        }
+    }
+
+    void LoadCommanderSelectUI() {
+        //Load commanders
+        foreach (CommanderData cData in GlobalObject.instance.commandersData) {
+            //Instantiate empty template commander UI element
+            GameObject listItem = GameObject.Instantiate(this.templateCommander);
+            //populate data for commander
+            Commander commanderListItem = listItem.GetComponent<Commander>();
+            GameObject commanderPrefab = Resources.Load<GameObject>(cData.PrefabPath);
+            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.MaxHP, cData.StartingHandSize);
+            //Add list item to scrollview UI
+            listItem.transform.SetParent(GameObject.Find("LevelCanvasCommanderSelect/CommanderSelectionScrollList/Viewport/Content/CommanderContainer").transform, false);
+            //Create prefab to use as image on list item
+            GameObject commanderGameObject = GameObject.Instantiate(commanderPrefab) as GameObject;
+            commanderGameObject.transform.SetParent(listItem.transform.Find("Image").transform, false);
+        }
+    }
 
     public GameObject SetTemplateHeroCardAttributes (string id) {
         if (id == "wall") {
