@@ -28,12 +28,12 @@ public class SelectCardForDeck : MonoBehaviour {
         } else if (SceneManager.GetActiveScene().name == "CardSelectP2") {
             GlobalObject.instance.player2DeckSelect.Add(GetComponentInParent<Card>().cardId);
             Debug.Log("ADDED A CARD TO PLAYER 2 DECK");
-        }
-
-        if (GetComponentInParent<Card>().type == "hero" || GetComponentInParent<Card>().type == "heroStationary") {
-            cardsSelected.IncrementSelectedNumber("hero");
-        } else if (GetComponentInParent<Card>().type == "spell") {
-            cardsSelected.IncrementSelectedNumber("spell");
+        }else if (SceneManager.GetActiveScene().buildIndex != GameConstants.SCENE_INDEX_COMMANDER_SELECT) {
+            if (GetComponentInParent<Card>().type == "hero" || GetComponentInParent<Card>().type == "heroStationary") {
+                cardsSelected.IncrementSelectedNumber("hero");
+            } else if (GetComponentInParent<Card>().type == "spell") {
+                cardsSelected.IncrementSelectedNumber("spell");
+            }
         }
 
         //DISABLING THIS FOR NOW - This was used when selecting a card for your deck was binary i.e. when you'd say "I want the Archer" and the game would give you X copies of the archer for your deck.

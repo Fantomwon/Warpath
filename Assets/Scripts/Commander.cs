@@ -28,6 +28,7 @@ public class Commander : MonoBehaviour
     }
 
     public void SetCommanderAttributes( string name, GameObject prefab, int startingHp, int startingHandSize ) {
+        //Data members
         this.commanderName = name;
         this.commanderPrefab = prefab;
         this.hp = startingHp;

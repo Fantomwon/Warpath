@@ -2,6 +2,7 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GlobalObject : MonoBehaviour {
 
@@ -65,8 +66,10 @@ public class GlobalObject : MonoBehaviour {
     void LoadCommanderSelectUI() {
         //Load commanders
         foreach (CommanderData cData in GlobalObject.instance.commandersData) {
+            //Rename object so instance name matches current commander
+            this.templateCommander.GetComponent<Commander>().name = cData.CharName+"Commander";
             //Instantiate empty template commander UI element
-            GameObject listItem = GameObject.Instantiate(this.templateCommander);
+            GameObject listItem = GameObject.Instantiate(this.templateCommander) as GameObject;
             //populate data for commander
             Commander commanderListItem = listItem.GetComponent<Commander>();
             GameObject commanderPrefab = Resources.Load<GameObject>(cData.PrefabPath);
@@ -76,6 +79,11 @@ public class GlobalObject : MonoBehaviour {
             //Create prefab to use as image on list item
             GameObject commanderGameObject = GameObject.Instantiate(commanderPrefab) as GameObject;
             commanderGameObject.transform.SetParent(listItem.transform.Find("Image").transform, false);
+            //Set display name
+            var nameTransform = listItem.transform.Find("header/Name");
+            if( nameTransform && nameTransform != null) {
+                nameTransform.GetComponent<Text>().text = cData.CharName;
+            }
         }
     }
 

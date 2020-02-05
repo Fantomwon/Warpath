@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\CommanderSelectUI.cs" />
     <Compile Include="Assets\Scripts\AiManager.cs" />
     <Compile Include="Assets\Scripts\AnimationEvents.cs" />
     <Compile Include="Assets\Scripts\AttackTellBoxes.cs" />
