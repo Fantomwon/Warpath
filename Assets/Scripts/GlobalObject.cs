@@ -91,19 +91,19 @@ public class GlobalObject : MonoBehaviour {
         if (id == "wall") {
             return SetTemplateHeroCardAttributesConstructor("WallCard", "wall", "heroStationary", 2, "Test: Wall", "PrefabsHeroes/Wall", 0, 4, 0, 0);
         } else if (id == "archer") {
-            return SetTemplateHeroCardAttributesConstructor("ArcherCard", "archer", "hero", 3, "Test: Archer", "PrefabsHeroes/Archer", 1, 4, 2, 3);
+            return SetTemplateHeroCardAttributesConstructor("ArcherCard", "archer", "hero", 2, "Test: Archer", "PrefabsHeroes/Archer", 2, 2, 2, 3);
         } else if (id == "footsoldier") {
-            return SetTemplateHeroCardAttributesConstructor("FootSoldierCard", "footsoldier", "hero", 3, "Test:Foot Soldier", "PrefabsHeroes/FootSoldier", 1, 4, 4, 1);
+            return SetTemplateHeroCardAttributesConstructor("FootSoldierCard", "footsoldier", "hero", 2, "Test:Foot Soldier", "PrefabsHeroes/FootSoldier", 2, 3, 3, 1);
         } else if (id == "dwarf") {
             return SetTemplateHeroCardAttributesConstructor("DwarfCard", "dwarf", "hero", 3, "Test:Dwarf", "PrefabsHeroes/Dwarf", 3, 1, 5, 2);
         } else if (id == "ghost") {
             return SetTemplateHeroCardAttributesConstructor("GhostCard", "ghost", "hero", 3, "Test:Ghost", "PrefabsHeroes/Ghost", 1, 3, 2, 1);
         } else if (id == "sapper") {
-            return SetTemplateHeroCardAttributesConstructor("SapperCard", "sapper", "hero", 3, "Test:Sapper", "PrefabsHeroes/Sapper", 2, 3, 2, 1);
+            return SetTemplateHeroCardAttributesConstructor("SapperCard", "sapper", "hero", 2, "Test:Sapper", "PrefabsHeroes/Sapper", 2, 2, 2, 1);
         } else if (id == "rogue") {
-            return SetTemplateHeroCardAttributesConstructor("RogueCard", "rogue", "hero", 4, "Test:Rogue", "PrefabsHeroes/Rogue", 2, 5, 2, 1);
+            return SetTemplateHeroCardAttributesConstructor("RogueCard", "rogue", "hero", 3, "Test:Rogue", "PrefabsHeroes/Rogue", 2, 4, 2, 1);
         } else if (id == "druid") {
-            return SetTemplateHeroCardAttributesConstructor("DruidCard", "druid", "hero", 4, "Test:Druid", "PrefabsHeroes/Druid", 2, 5, 2, 2);
+            return SetTemplateHeroCardAttributesConstructor("DruidCard", "druid", "hero", 3, "Test:Druid", "PrefabsHeroes/Druid", 1, 4, 2, 2);
         } else if (id == "monk") {
             return SetTemplateHeroCardAttributesConstructor("MonkCard", "monk", "hero", 4, "Test:monk", "PrefabsHeroes/Monk", 2, 5, 2, 1);
         } else if (id == "slinger") {
@@ -121,7 +121,7 @@ public class GlobalObject : MonoBehaviour {
         } else if (id == "assassin") {
             return SetTemplateHeroCardAttributesConstructor("AssassinCard", "assassin", "hero", 4, "Test:assassin", "PrefabsHeroes/Assassin", 2, 5, 2, 1);
         } else if (id == "knight") {
-            return SetTemplateHeroCardAttributesConstructor("KnightCard", "knight", "hero", 5, "Test:knight", "PrefabsHeroes/Knight", 3, 6, 1, 1);
+            return SetTemplateHeroCardAttributesConstructor("KnightCard", "knight", "hero", 4, "Test:knight", "PrefabsHeroes/Knight", 3, 7, 1, 1);
         } else if (id == "paladin") {
             return SetTemplateHeroCardAttributesConstructor("PaladinCard", "paladin", "hero", 5, "Test:paladin", "PrefabsHeroes/Paladin", 2, 5, 1, 1);
         } else if (id == "tower") {
@@ -143,21 +143,21 @@ public class GlobalObject : MonoBehaviour {
 
 	public GameObject SetTemplateSpellCardAttributes (string id) {
 		if (id == "armor") {
-			return SetTemplateSpellCardAttributesConstructor("ArmorCard", "armor", "spell", 2, "Test:armor", "Particles/DodgeParticle");
+			return SetTemplateSpellCardAttributesConstructor("ArmorCard", "armor", "spell", 1, "Test:armor", "Particles/DodgeParticle");
 		} else if (id == "rockthrow") {
-			return SetTemplateSpellCardAttributesConstructor("RockthrowCard", "rockthrow", "spell", 2, "Test:rock throw", "Particles/RockThrowParticle");
+			return SetTemplateSpellCardAttributesConstructor("RockthrowCard", "rockthrow", "spell", 1, "Test:rock throw", "Particles/RockThrowParticle");
 		} else if (id == "root") {
 			return SetTemplateSpellCardAttributesConstructor("RootCard", "root", "spell", 3, "Test:root", "Particles/DodgeParticle");
 		} else if (id == "windgust") {
 			return SetTemplateSpellCardAttributesConstructor("WindGustCard", "windgust", "spell", 3, "Test:wind gust", "Particles/WindGustParticle");
 		} else if (id == "heal") {
-			return SetTemplateSpellCardAttributesConstructor("HealCard", "heal", "spell", 3, "Test:heal", "Particles/HealLightParticle");
+			return SetTemplateSpellCardAttributesConstructor("HealCard", "heal", "spell", 2, "Test:heal", "Particles/HealLightParticle");
 		}  else if (id == "shroud") {
-			return SetTemplateSpellCardAttributesConstructor("ShroudCard", "shroud", "spell", 3, "Test:shroud", "Particles/DodgeParticle");
+			return SetTemplateSpellCardAttributesConstructor("ShroudCard", "shroud", "spell", 2, "Test:shroud", "Particles/DodgeParticle");
 		}  else if (id == "might") {
-			return SetTemplateSpellCardAttributesConstructor("MightCard", "might", "spell", 3, "Test:might", "Particles/DodgeParticle");
+			return SetTemplateSpellCardAttributesConstructor("MightCard", "might", "spell", 2, "Test:might", "Particles/DodgeParticle");
 		}  else if (id == "fireball") {
-			return SetTemplateSpellCardAttributesConstructor("FireballCard", "fireball", "spell", 4, "Test:fireball", "Particles/FireballParticle");
+			return SetTemplateSpellCardAttributesConstructor("FireballCard", "fireball", "spell", 2, "Test:fireball", "Particles/FireballParticle");
 		} else {
 			return null;
 		}
@@ -244,9 +244,9 @@ public class GlobalObject : MonoBehaviour {
 		boss01PlayerHeroCards.Add("archer");
         boss01PlayerHeroCards.Add("footsoldier");
         boss01PlayerHeroCards.Add("rogue");
-        boss01PlayerHeroCards.Add("druid");
+        boss01PlayerSpellCards.Add("rockthrow");
         boss01PlayerSpellCards.Add("heal");
-        boss01PlayerSpellCards.Add("fireball");
+        boss01PlayerSpellCards.Add("might");
 
 		//boss02 player cards
 		boss02PlayerHeroCards.Add("archer");

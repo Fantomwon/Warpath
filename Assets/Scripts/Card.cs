@@ -178,7 +178,7 @@ public class Card : MonoBehaviour {
 					    && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth
 					    && hero.GetComponent<Hero>().id != "ghost") {
 						//Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
-						hero.GetComponent<Hero>().HealPartial(3);
+						hero.GetComponent<Hero>().HealPartial(2);
 						SpellCleanup ();
 						return;
 					} 
@@ -190,7 +190,7 @@ public class Card : MonoBehaviour {
 					    && hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth
 						&& hero.GetComponent<Hero>().id != "ghost") {
 						//Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
-						hero.GetComponent<Hero>().HealPartial(3);
+						hero.GetComponent<Hero>().HealPartial(2);
 						SpellCleanup ();
 						return;
 					}
@@ -199,7 +199,7 @@ public class Card : MonoBehaviour {
 				Transform hero;
 				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("ally","heal")[0];
 				//Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
-				hero.GetComponent<Hero>().HealPartial(3);
+				hero.GetComponent<Hero>().HealPartial(2);
 				SpellCleanup ();
 				return;
 			}
@@ -296,7 +296,7 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
 						&& hero.GetComponent<Hero>().id != "ghost") {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
-						hero.GetComponent<Hero>().AddArmor(2);
+						hero.GetComponent<Hero>().AddArmor(1);
 						SpellCleanup ();
 						return;
 					} 
@@ -307,7 +307,7 @@ public class Card : MonoBehaviour {
 					if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y
 						&& hero.GetComponent<Hero>().id != "ghost") {
 						Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
-						hero.GetComponent<Hero>().AddArmor(2);
+						hero.GetComponent<Hero>().AddArmor(1);
 						SpellCleanup ();
 						return;
 					}
@@ -316,7 +316,7 @@ public class Card : MonoBehaviour {
 				Transform hero;
 				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("ally","armor")[0];
 				Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity, hero.transform);
-				hero.GetComponent<Hero>().AddArmor(2);
+				hero.GetComponent<Hero>().AddArmor(1);
 				SpellCleanup ();
 				return;
 			}
@@ -471,8 +471,7 @@ public class Card : MonoBehaviour {
 		}
 	}
 
-	void SpellCleanup ()
-	{
+	void SpellCleanup () {
 		playField.SubtractMana ();
 
 		if (Card.selectedCard.GetComponent<Card>().type == "Spell") {

@@ -32,6 +32,7 @@ public class PlayField : MonoBehaviour {
 	private Deck deck;
 	private int player1ManaMax = 10, player2ManaMax = 10;
 	private int manaPerTurn = 4;
+    private int manaPerTurnAi = 3;
 	private int turnsPlayed = 0;
 
 	// Use this for initialization
@@ -214,15 +215,33 @@ public class PlayField : MonoBehaviour {
 	} 
 
 	public void EndTurn () {
-		BuildSortedHeroList ();
-		MoveHeroes ();
-		ClearSelectedHeroAndSelectedCard ();
-		FindObjectOfType<HandHider>().HideHand();
+        ClearAllCardsFromHand();
+        BuildSortedHeroList();
+        MoveHeroes();
+        ClearSelectedHeroAndSelectedCard();
+        FindObjectOfType<HandHider>().HideHand();
 	}
 
-	void BuildSortedHeroList () {
-		//Debug.LogWarning("BUILDING SORTED HERO LIST");
+    void ClearAllCardsFromHand() {
+        //TEST This is to test drawing a completely new hand at the start of each turn
+        if (player1Turn) {
+            foreach (Transform leftoverCard in GameObject.Find("LevelCanvas/Player1 Hand").transform) {
+                Debug.Log("FOUND A CARD IN PLAYER 1 HAND~~~~~~~~~~~~~~~~~~~");
+                deck.player1Discard.Add(leftoverCard.GetComponent<Card>().cardId);
+                Destroy(leftoverCard.gameObject);
+            }
+            //GameObject.Find("Player1 Hand").transform.DetachChildren();
+        } else if (!player1Turn) {
+            foreach (Transform leftoverCard in GameObject.Find("LevelCanvas/Player2 Hand").transform) {
+                Debug.Log("FOUND A CARD IN PLAYER 2 HAND~~~~~~~~~~~~~~~~~~~");
+                deck.player2Discard.Add(leftoverCard.GetComponent<Card>().cardId);
+                Destroy(leftoverCard.gameObject);
+            }
+            //GameObject.Find("Player2 Hand").transform.DetachChildren();
+        }
+    }
 
+	void BuildSortedHeroList () {
 		//Empty the heroCoords list so we can build it again
 		myHeroCoords.Clear();
 
@@ -265,8 +284,7 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
-	public void MoveHeroes ()
-	{
+	public void MoveHeroes () {
 		//Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
 
 		// If there are no more heroes left to move then end my turn
@@ -304,8 +322,7 @@ public class PlayField : MonoBehaviour {
 		}
 	}
 
-	public void ClearSelectedHeroAndSelectedCard ()
-	{
+	public void ClearSelectedHeroAndSelectedCard () {
 		Debug.Log("!!!!!!!!!ClearSelectedHeroAndSelectedCard!!!!!!!!!!!!!");
 		//Debug.Log("RUNNING playField.ClearSelectedHeroAndSelectedCard()");
 		//Reset the 'selectedHero' variable so players can't place another hero before selecting another card
@@ -540,7 +557,6 @@ public class PlayField : MonoBehaviour {
 
 	//Looks at all heroes on the board that are NOT on your team and returns a single random hero.
 	public List<Transform> TargetSpellCheckEntireBoardOneRandomHero (string heroTypeToSearchFor, string optionalFunctionIdentifier = "default") {
-		Debug.LogError("RUNNING TargetSpellCheckEntireBoardOneRandomHero()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		List<Transform> validHeroes = new List<Transform>();
 		BuildFullHeroTransformList();
 
@@ -1062,7 +1078,7 @@ public class PlayField : MonoBehaviour {
 		EnablePlayer1HandAndHidePlayer2Hand ();
 		EnablePlayer1SpellsAndHidePlayer2Spells ();
 
-		Player1AddMana (manaPerTurn);
+        Player1AddMana(manaPerTurn);
 		StartOfTurnEffects ();
 		ReduceSpellCooldowns ();
 
@@ -1077,8 +1093,8 @@ public class PlayField : MonoBehaviour {
 		EnablePlayer2HandAndHidePlayer1Hand ();
 		EnablePlayer2SpellsAndHidePlayer1Spells ();
 
-		Player2AddMana (manaPerTurn);
-		StartOfTurnEffects ();
+        Player2AddMana(manaPerTurn);
+        StartOfTurnEffects ();
 		ReduceSpellCooldowns ();
 
 		//Checks your current hand size and deals you back up to max
@@ -1191,26 +1207,36 @@ public class PlayField : MonoBehaviour {
 
 	void Player1AddMana (int amt)
 	{
-		//Add one mana to this player's mana pool
-		if (amt < player1ManaMax) {
-			player1Mana += amt;
-			if (player1Mana > player1ManaMax) {
-				player1Mana = player1ManaMax;
-			}
-		}
+        //TEST This is to test the mechanic of setting mana to the same value each turn
+        player1Mana = manaPerTurn;
+        //TEST Disabling this for the above test
+        //Add mana to this player's mana pool
+  //      if (amt < player1ManaMax) {
+		//	player1Mana += amt;
+		//	if (player1Mana > player1ManaMax) {
+		//		player1Mana = player1ManaMax;
+		//	}
+		//}
 		player1ManaText.text = player1Mana.ToString ();
 	}
 
 	void Player2AddMana (int amt)
 	{
-		//Add one mana to this player's mana pool
-		if (player2Mana < player2ManaMax) {
-			player2Mana += amt;
-			if (player2Mana > player2ManaMax) {
-				player2Mana = player2ManaMax;
-			}
-		}
-		player2ManaText.text = player2Mana.ToString ();
+        //TEST This is to test the mechanic of setting mana to the same value each turn
+        if (GlobalObject.aiEnabled) {
+            player2Mana = manaPerTurnAi;
+        } else {
+            player2Mana = manaPerTurn;
+        }
+        //TEST Disabling this for the above test
+        //Add mana to this player's mana pool
+        //      if (player2Mana < player2ManaMax) {
+        //	player2Mana += amt;
+        //	if (player2Mana > player2ManaMax) {
+        //		player2Mana = player2ManaMax;
+        //	}
+        //}
+        player2ManaText.text = player2Mana.ToString ();
 	}
 
 	public void LosePlayerHealth (int dmg) {

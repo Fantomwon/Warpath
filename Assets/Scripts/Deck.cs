@@ -136,6 +136,7 @@ public class Deck : MonoBehaviour {
 	public void Player1DealCards () {
 //		Debug.Log("RUNNING PLAYER1DEALCARDS");
 		int currentCards = GameObject.Find("Player1 Hand").transform.childCount;
+
 		//If my current hand size is under maxHandSize then deal me cards until I'm back up to max
 		//As cards are dealt they are removed from the deck
 		if (currentCards < maxHandSize) {
@@ -163,6 +164,7 @@ public class Deck : MonoBehaviour {
 					Player1DealCards();
 					//player1Deck.Insert(Random.Range(1, player1Deck.Count - 1), nextCardInDeck);
 				} else {
+                    //Instantiate the new Spell Card or Hero Card in my hand
 					if (!CheckIfCardIdIsASpellCard(player1Deck[0])) {
 						globalObject.SetTemplateHeroCardAttributes(player1Deck[0]);
 						GameObject newCard = Instantiate (globalObject.templateHeroCard) as GameObject;
@@ -184,7 +186,8 @@ public class Deck : MonoBehaviour {
 
 	public void Player2DealCards () {
 		int currentCards = GameObject.Find("Player2 Hand").transform.childCount;
-		if (currentCards < maxHandSize) {
+
+        if (currentCards < maxHandSize) {
 			for (int i = 0; i < maxHandSize-currentCards; i++) {
 				//If I don't have any cards in my Deck, then shuffle my discard pile and make it my new deck
 				if (player2Deck.Count == 0) {
@@ -274,10 +277,6 @@ public class Deck : MonoBehaviour {
 		}
 	}
 
-	//Adds the card I just played to my discard pile. We can't add the ACTUAL card object we just played b/c it gets destroyed from your hand, and
-	//when that happens it also destroys it from the discard list. SO WHAT WE DO INSTEAD is each spell card has a variable for a 'cardReference' gameobject, 
-	//which is a really simple gameobject that just has a gameobject variable that points to the appropriate card gameobject (i.e. instead of referencing
-	//the actual card gameobject that was just played, we point to the card gameobject in general)
 	public void RemoveCardFromHandAndAddToDiscard () {
 		if (Card.selectedCard) {
 			Debug.LogWarning("SELECTED CARD EXISTS****************" + Card.selectedCard.GetComponent<Card>().cardId);
