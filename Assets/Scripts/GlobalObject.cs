@@ -75,7 +75,7 @@ public class GlobalObject : MonoBehaviour {
             GameObject commanderPrefab = Resources.Load<GameObject>(cData.PrefabPath);
             commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.MaxHP, cData.StartingHandSize);
             //Add list item to scrollview UI
-            listItem.transform.SetParent(GameObject.Find("LevelCanvasCommanderSelect/CommanderSelectionScrollList/Viewport/Content/CommanderContainer").transform, false);
+            listItem.transform.SetParent(GameObject.Find("CommanderSelectUIManager/CommanderSelectionScrollList/Viewport/Content/CommanderContainer").transform, false);
             //Create prefab to use as image on list item
             GameObject commanderGameObject = GameObject.Instantiate(commanderPrefab) as GameObject;
             commanderGameObject.transform.SetParent(listItem.transform.Find("Image").transform, false);

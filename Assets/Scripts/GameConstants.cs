@@ -8,8 +8,9 @@ public static class GameConstants
 
     //In game factions. Certain cards are surfaced during selection process based on the selected Commander's faction
     [Serializable]
-    public enum FactionType {Holy,Undead,Druid}
+    public enum FactionType {Holy,Undead,Druid }
 
-    
-    
+
+    //Tags
+    public const string TAG_COMMANDER_SELECT_UI_MANAGER = "commanderSelectUIManager";
 }
