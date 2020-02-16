@@ -6,6 +6,7 @@ public class Commander : MonoBehaviour
 {
     public string commanderName;
     public GameObject commanderPrefab;
+    public string selectedCommanderPrefabPath;
     public Sprite commanderAbilitySprite;
     public int hp;
     public int handSize;
@@ -27,10 +28,11 @@ public class Commander : MonoBehaviour
         return true;
     }
 
-    public void SetCommanderAttributes( string name, GameObject prefab, int startingHp, int startingHandSize ) {
+    public void SetCommanderAttributes( string name, GameObject prefab, string selectedCommanderPrefabPath, int startingHp, int startingHandSize ) {
         //Data members
         this.commanderName = name;
         this.commanderPrefab = prefab;
+        this.selectedCommanderPrefabPath = selectedCommanderPrefabPath;
         this.hp = startingHp;
         this.handSize = startingHandSize;
     }

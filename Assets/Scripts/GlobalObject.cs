@@ -41,6 +41,9 @@ public class GlobalObject : MonoBehaviour {
         string path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Templar"; 
         CommanderData templar = new CommanderData("The Knight Templar", GameConstants.FactionType.Holy, 20, 5, path);
         this.commandersData.Add(templar);
+        path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Cardinal";
+        CommanderData cardinal = new CommanderData("The Cardinal", GameConstants.FactionType.Holy, 15, 6, path);
+        this.commandersData.Add(cardinal);
 
         if (SceneManager.GetActiveScene().buildIndex == GameConstants.SCENE_INDEX_COMMANDER_SELECT) {
             GlobalObject.instance.LoadCommanderSelectUI();
@@ -73,7 +76,7 @@ public class GlobalObject : MonoBehaviour {
             //populate data for commander
             Commander commanderListItem = listItem.GetComponent<Commander>();
             GameObject commanderPrefab = Resources.Load<GameObject>(cData.PrefabPath);
-            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.MaxHP, cData.StartingHandSize);
+            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize);
             //Add list item to scrollview UI
             listItem.transform.SetParent(GameObject.Find("CommanderSelectUIManager/CommanderSelectionScrollList/Viewport/Content/CommanderContainer").transform, false);
             //Create prefab to use as image on list item

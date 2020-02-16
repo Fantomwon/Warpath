@@ -13,4 +13,8 @@ public static class GameConstants
 
     //Tags
     public const string TAG_COMMANDER_SELECT_UI_MANAGER = "commanderSelectUIManager";
+
+    //UI Offsets
+    public const float SELECTED_COMMANDER_IMAGE_OFFSET_POS_X = 100;
+    public const float SELECTED_COMMANDER_IMAGE_OFFSET_POS_Y = 100;
 }

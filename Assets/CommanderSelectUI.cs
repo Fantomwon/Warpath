@@ -31,6 +31,7 @@ public class CommanderSelectUI : MonoBehaviour
         Debug.Log("Commander Select Clicked!");
         if( this.commanderUiManager != null) {
             this.commanderUiManager.SetSelectedCommanderText(commanderScript);
+            this.commanderUiManager.SetSelectedCommanderImages(commanderScript);
         }
     }
 }
