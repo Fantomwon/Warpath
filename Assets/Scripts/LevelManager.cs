@@ -7,13 +7,23 @@ public class LevelManager : MonoBehaviour {
 
 	private static string currentLevel;
 
-	public void LoadLevel(string name){
+    void Awake() {
+
+    }
+
+    public void LoadLevel(string name){
 		//Debug.Log ("Level load requested for "+ name);
 		SceneManager.LoadScene(name);
 		SetCurrentLevel();
 	}
- 	
- 	public void QuitRequest(){
+
+    public void LoadLevel(int levelIndex) {
+        //Debug.Log ("Level load requested for "+ name);
+        SceneManager.LoadScene(levelIndex);
+        SetCurrentLevel();
+    }
+
+    public void QuitRequest(){
  		Debug.Log ("Quit Request sent");
  	}
  	

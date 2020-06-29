@@ -22,6 +22,9 @@ public class Deck : MonoBehaviour {
 	private int quantityPerCard = 5;
 	private PlayField playField;
 
+    public Commander player1Commander;
+    public Commander player2Commander;
+
 	// Use this for initialization
 	void Start () {
 //		Debug.Log("RUNNING START FUNCTION OF DECK.CS");
@@ -36,6 +39,9 @@ public class Deck : MonoBehaviour {
 		player1Class = GlobalObject.instance.player1Class;
 		player2Class = GlobalObject.instance.player2Class;
 		SetPlayerSpells();
+        if( GlobalObject.instance.useCommanders) {
+
+        }
 	}
 
 	void BuildDeck () {

@@ -15,19 +15,31 @@ public class GlobalObject : MonoBehaviour {
 	public GameObject templateHeroCard;
 	public GameObject templateSpellCard;
     public GameObject templateCommander;
-	public string player1Class, player2Class;
+    //UI objects
+    public BattleUIManager battleUIManagerScript;
 
+	public string player1Class, player2Class;
+    //Flag for whether battles should try to use commanders to make testing easier
+    public bool useCommanders = true;
 	//Idk know why these variables need to be public... but every time I set them to 'private' ZERO cards will show up in the various 'deckSelect' screens. Maybe one day I'll figure this out, or perhaps I never will...
 	public List<string> boss01PlayerHeroCards, boss02PlayerHeroCards, boss03PlayerHeroCards, boss04PlayerHeroCards, boss05PlayerHeroCards;
 	public List<string> boss01PlayerSpellCards, boss02PlayerSpellCards, boss03PlayerSpellCards, boss04PlayerSpellCards, boss05PlayerSpellCards;
 	public List<string> fullPlayerHeroCardList;
 	public List<string> fullPlayerSpellCardList;
+    //Using hard coded value for now to quickly populate commandrers for each encounter. Ideally we will be able to later read these in from a file
+    public int numEncounters = 8;
 
     //List for commanders used for UI purposes or any time all commanders are needed to be loaded
     public List<CommanderData> commandersData;
 
+    //cached boss commander for npc player updated prior to level load
+    public Dictionary<int, CommanderData> enemyEncounterCommanders;
+    //Player and npc selected commander
+    public CommanderData selectedCommanderData;
+    public CommanderData enemyCommanderData;
+
     void Awake () {
-//		Debug.Log("RUNNING AWAKE FUNCTION OF GLOBALOBJECT.CS");
+		Debug.Log("RUNNING AWAKE FUNCTION OF GLOBALOBJECT.CS");
 		if (GlobalObject.instance == null) {
 			GlobalObject.instance = this;
 			DontDestroyOnLoad(this.gameObject);
@@ -44,10 +56,29 @@ public class GlobalObject : MonoBehaviour {
         path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Cardinal";
         CommanderData cardinal = new CommanderData("The Cardinal", GameConstants.FactionType.Holy, 15, 6, path);
         this.commandersData.Add(cardinal);
+        //Instantiate dictionary for enemy commanders and populate it with commanders corresponding to the encounter IDs
+        this.enemyEncounterCommanders = new Dictionary<int, CommanderData>();
+        for( int i = 0; i < this.numEncounters; i++) {
+            //TODO: Probably should add content ids to commanders, will make this kind of thing easier / quicker
+            //Add Cardinal for all enemy encounters for now
+            this.enemyEncounterCommanders.Add(i, this.commandersData.Find(c => c.CharName == "The Cardinal"));
+        }
 
         if (SceneManager.GetActiveScene().buildIndex == GameConstants.SCENE_INDEX_COMMANDER_SELECT) {
             GlobalObject.instance.LoadCommanderSelectUI();
-        } else if (SceneManager.GetActiveScene().name != "BossSelect" && SceneManager.GetActiveScene().name != "Game") {
+        }else if(SceneManager.GetActiveScene().buildIndex == GameConstants.SCENE_INDEX_GAME_COMMANDERS) {
+            //Assign data to specifiy selected commander  based on story encounter
+            GlobalObject.instance.AssignEnemyCommander();
+            Debug.Log("GLOBAL OBJECT TRYING TO LOAD COMMANDER GAME SCENE!");
+            //Try to find UI manager object for loading commander images
+            GameObject battleUIManagerObj = GameObject.Find("LevelCanvas");
+            GlobalObject.instance.battleUIManagerScript = battleUIManagerObj.GetComponent<BattleUIManager>();
+            //Trigger UI object to load commander images
+            GlobalObject.instance.battleUIManagerScript.SetSelectedCommanderBattleImages();
+
+        //TODO: Need to change the logic for this at some point
+        } else if (SceneManager.GetActiveScene().name != "BossSelect" && SceneManager.GetActiveScene().name != "Game" && SceneManager.GetActiveScene().name != "GameCommanders") {
+            Debug.LogWarning("WARNING! Scene Manger is Loading a non specified scene which it assumes is the card select!!!");
             AssignPlayerCards();
             InstantiatePlayerCards();
         }
@@ -76,7 +107,7 @@ public class GlobalObject : MonoBehaviour {
             //populate data for commander
             Commander commanderListItem = listItem.GetComponent<Commander>();
             GameObject commanderPrefab = Resources.Load<GameObject>(cData.PrefabPath);
-            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize);
+            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize, cData);
             //Add list item to scrollview UI
             listItem.transform.SetParent(GameObject.Find("CommanderSelectUIManager/CommanderSelectionScrollList/Viewport/Content/CommanderContainer").transform, false);
             //Create prefab to use as image on list item
@@ -87,6 +118,38 @@ public class GlobalObject : MonoBehaviour {
             if( nameTransform && nameTransform != null) {
                 nameTransform.GetComponent<Text>().text = cData.CharName;
             }
+        }
+    }
+
+    public void AssignEnemyCommander() {
+        switch (currentlyActiveStory) {
+            case ("boss01"):
+                this.enemyCommanderData = this.enemyEncounterCommanders[0];
+                break;
+            case ("boss02"):
+                this.enemyCommanderData = this.enemyEncounterCommanders[1];
+                break;
+            case ("boss03"):
+                this.enemyCommanderData = this.enemyEncounterCommanders[2];
+                break;
+            case ("boss04"):
+                this.enemyCommanderData = this.enemyEncounterCommanders[3];
+                break;
+            case ("boss05"):
+                this.enemyCommanderData = this.enemyEncounterCommanders[4];
+                break;
+            case ("story01"):
+                this.enemyCommanderData = this.enemyEncounterCommanders[5];
+                break;
+            case ("story02"):
+                this.enemyCommanderData = this.enemyEncounterCommanders[6];
+                break;
+            case ("story03"):
+                this.enemyCommanderData = this.enemyEncounterCommanders[7];
+                break;
+            default:
+                this.enemyCommanderData = this.enemyEncounterCommanders[0];
+                break;
         }
     }
 
@@ -271,6 +334,7 @@ public class GlobalObject : MonoBehaviour {
 	}
 
 	void InstantiatePlayerCards () {
+        Debug.Log("GLOBAL OBJECT INSTANTIATE PLAYER CARDS CALLED");
 		if (currentlyActiveStory == "boss01") {
 			foreach (string cardId in boss01PlayerHeroCards) {
 				SetTemplateHeroCardAttributes(cardId);
@@ -351,5 +415,15 @@ public class GlobalObject : MonoBehaviour {
 			}
 		}
 	}
+
+    /* Commander data code*/
+    public void SetSelectedCommander( CommanderData cData) {
+        this.selectedCommanderData = cData;
+    }
+
+    public void LoadLevel( int levelIndex) {
+        GameObject levelManagerObject = GameObject.Find("LevelManager");
+        levelManagerObject.GetComponent<LevelManager>().LoadLevel(GameConstants.SCENE_INDEX_BOSS_SELECT);
+    }
 }
 //https://www.youtube.com/watch?v=D9_Z4wb7940&ab_channel=MichelKlaasen
