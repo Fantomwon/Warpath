@@ -40,7 +40,7 @@ public class Deck : MonoBehaviour {
 		player2Class = GlobalObject.instance.player2Class;
 		SetPlayerSpells();
         if( GlobalObject.instance.useCommanders) {
-
+            //TODO - may need to load specific assets here - DECK START BATTLE
         }
 	}
 

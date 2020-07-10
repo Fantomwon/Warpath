@@ -47,7 +47,7 @@ public class CommanderSelectUIManager : MonoBehaviour
                 Commander selectedCommanderScript = this.currentlySelectedCommander.GetComponent<Commander>();
                 //Load prefab
                 GameObject selectedCommanderPrefab = Resources.Load<GameObject>(commanderScript.selectedCommanderPrefabPath);
-                selectedCommanderScript.SetCommanderAttributes(commanderScript.commanderName, selectedCommanderPrefab, commanderScript.selectedCommanderPrefabPath, selectedCommanderScript.hp, selectedCommanderScript.handSize, commanderScript.commanderData);
+                selectedCommanderScript.SetCommanderAttributes(commanderScript.commanderName, selectedCommanderPrefab, commanderScript.selectedCommanderPrefabPath, selectedCommanderScript.hp, selectedCommanderScript.handSize, commanderScript.commanderData, commanderScript.playerId);
                 //Parent newly created prefab to UI element for positioning
                 this.currentlySelectedCommander.transform.SetParent( GameObject.Find("CommanderSelectUIManager/PanelSelectedCommander").transform, false );
                 //Create image to use on selected UI element
@@ -64,7 +64,7 @@ public class CommanderSelectUIManager : MonoBehaviour
             GameObject.Destroy(previousCommanderImage);
             this.currentlySelectedCommanderImage = GameObject.Instantiate(selectedCommanderPrefab) as GameObject;
             Commander selectedCommanderScript = this.currentlySelectedCommander.GetComponent<Commander>();
-            selectedCommanderScript.SetCommanderAttributes(commanderScript.commanderName, selectedCommanderPrefab, commanderScript.selectedCommanderPrefabPath, selectedCommanderScript.hp, selectedCommanderScript.handSize, commanderScript.commanderData);
+            selectedCommanderScript.SetCommanderAttributes(commanderScript.commanderName, selectedCommanderPrefab, commanderScript.selectedCommanderPrefabPath, selectedCommanderScript.hp, selectedCommanderScript.handSize, commanderScript.commanderData, commanderScript.playerId);
             this.currentlySelectedCommanderImage.transform.SetParent(this.currentlySelectedCommander.transform.Find("Image").transform, false);
         }
 

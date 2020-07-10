@@ -12,8 +12,11 @@ public static class GameConstants
 
     //In game factions. Certain cards are surfaced during selection process based on the selected Commander's faction
     [Serializable]
-    public enum FactionType {Holy,Undead,Druid }
+    public enum FactionType {Holy, Undead, Druid};
 
+    //Commander ability charge type. Will determine which combat events charge the commander's ability
+    [Serializable]
+    public enum CommanderAbilityChargeType {StartTurn, UnitDeath, UnitReceiveDamage};
 
     //Tags
     public const string TAG_COMMANDER_SELECT_UI_MANAGER = "commanderSelectUIManager";
@@ -21,4 +24,8 @@ public static class GameConstants
     //UI Offsets
     public const float SELECTED_COMMANDER_IMAGE_OFFSET_POS_X = 100;
     public const float SELECTED_COMMANDER_IMAGE_OFFSET_POS_Y = 100;
+
+    //Player Ids
+    public const int HUMAN_PLAYER_ID = 0;
+    public const int ENEMY_PLAYER_ID = 1;
 }

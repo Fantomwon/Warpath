@@ -274,14 +274,19 @@ public class PlayField : MonoBehaviour {
 	}
 
 	IEnumerator SwitchPlayerTurns () {
-		//Debug.Log("RUNNING SwitchPlayerTurns");
+        //TODO: Add event listener!!!
+		Debug.Log("RUNNING SwitchPlayerTurns");
 		yield return new WaitForSeconds(0.5f);
+        int playerId = GameConstants.HUMAN_PLAYER_ID;
 		player1Turn = !player1Turn;
 		if (player1Turn) {
 			Player1TurnStart ();
 		} else if (!player1Turn) {
+            playerId = GameConstants.ENEMY_PLAYER_ID;
 			Player2TurnStart ();
 		}
+        /****** On Turn Start Event - Event notifier sending message to listeners ******/
+        BattleEventManager._instance.NotifyOnTurnStart( playerId );
 	}
 
 	public void MoveHeroes () {

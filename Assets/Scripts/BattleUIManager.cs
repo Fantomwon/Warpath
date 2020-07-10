@@ -17,7 +17,9 @@ public class BattleUIManager : MonoBehaviour {
     }
 
 
-    public void SetSelectedCommanderBattleImages() {
+    public List<Commander> SetSelectedCommanderBattleImages() {
+        List<Commander> commanders = new List<Commander>();
+
         Debug.Log("BATTLE UI MANAGER! ATTEMPTING TO SET COMMANDER IMAGES!!");
         /* Setting commander images for player 1 */
 
@@ -30,6 +32,9 @@ public class BattleUIManager : MonoBehaviour {
         Debug.Log("BATTLE UI MANAGER: Prefab path is= " + playerCommanderData.PrefabPath);
         //Instantiate UI template object for player 1's commander
         GameObject playerCommanderInstance = Instantiate(playerCommanderPrefab) as GameObject;
+        Commander playerCommanderScript = playerCommanderInstance.GetComponent<KnightCommander>();
+        playerCommanderScript.SetCommanderAttributes(playerCommanderData);
+        commanders.Add(playerCommanderScript);
         //Parent newly created prefab to UI element for positioning
         playerCommanderInstance.transform.SetParent(GameObject.Find("PanelCommanderBattleP1/Image").transform, false);
 
@@ -38,10 +43,16 @@ public class BattleUIManager : MonoBehaviour {
         Debug.Log("BATTLE UI MANAGER: Prefab path is= " + enemyCommanderData.PrefabPath);
         //Instantiate UI template object for player 1's commander
         GameObject enemyCommanderInstance = Instantiate(enemyCommanderPrefab) as GameObject;
+        Commander enemyCommanderScript = enemyCommanderInstance.GetComponent<CardinalCommander>();
+        //Set the necessary data
+        enemyCommanderScript.SetCommanderAttributes(enemyCommanderData);
+        commanders.Add(enemyCommanderScript);
         //Parent newly created prefab to UI element for positioning
         enemyCommanderInstance.transform.SetParent(GameObject.Find("PanelCommanderBattleP2/Image").transform, false);
         //flip sprite
         Transform enemyCommanderSprite = enemyCommanderInstance.transform.Find("Hero");
         enemyCommanderSprite.localScale = new Vector3(enemyCommanderSprite.transform.localScale.x * -1, enemyCommanderSprite.transform.localScale.y, enemyCommanderSprite.transform.localScale.z);
+
+        return commanders;
     }
 }

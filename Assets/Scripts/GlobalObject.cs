@@ -51,10 +51,10 @@ public class GlobalObject : MonoBehaviour {
         this.commandersData = new List<CommanderData>();
         //Holy commander Constantine, the Knight Templar
         string path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Templar"; 
-        CommanderData templar = new CommanderData("The Knight Templar", GameConstants.FactionType.Holy, 20, 5, path);
+        CommanderData templar = new CommanderData("The Knight Templar", GameConstants.FactionType.Holy, 20, 5, path, GameConstants.CommanderAbilityChargeType.StartTurn);
         this.commandersData.Add(templar);
         path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Cardinal";
-        CommanderData cardinal = new CommanderData("The Cardinal", GameConstants.FactionType.Holy, 15, 6, path);
+        CommanderData cardinal = new CommanderData("The Cardinal", GameConstants.FactionType.Holy, 15, 6, path, GameConstants.CommanderAbilityChargeType.StartTurn);
         this.commandersData.Add(cardinal);
         //Instantiate dictionary for enemy commanders and populate it with commanders corresponding to the encounter IDs
         this.enemyEncounterCommanders = new Dictionary<int, CommanderData>();
@@ -73,10 +73,34 @@ public class GlobalObject : MonoBehaviour {
             //Try to find UI manager object for loading commander images
             GameObject battleUIManagerObj = GameObject.Find("LevelCanvas");
             GlobalObject.instance.battleUIManagerScript = battleUIManagerObj.GetComponent<BattleUIManager>();
-            //Trigger UI object to load commander images
-            GlobalObject.instance.battleUIManagerScript.SetSelectedCommanderBattleImages();
 
-        //TODO: Need to change the logic for this at some point
+            List<Commander> commanders = new List<Commander>();
+
+            //Trigger UI object to load commander images
+            commanders = GlobalObject.instance.battleUIManagerScript.SetSelectedCommanderBattleImages();
+            //Set data attributes of the commanders
+            CommanderData playerCommanderData = GlobalObject.instance.selectedCommanderData;
+            CommanderData enemyCommanderData = GlobalObject.instance.enemyCommanderData;
+            //Iterate through list of commanders thrown back by the UI manager that set images
+            for( int i = 0; i < commanders.Count; i++) {
+                Commander currCommander = commanders[i];
+                //TODO: need unique conten ids or something better to match on here
+                if( currCommander == null) {
+                    Debug.LogWarning("CURR COMMANDER IS NULL!!! SAAERERERER");
+                }
+                //Set player ids for commanders
+                if (currCommander.commanderData.CharName == playerCommanderData.CharName) { //TODO: Fix bug here - currCommander commanderdata is null?!
+                    currCommander.playerId = GameConstants.HUMAN_PLAYER_ID;
+                } else if (currCommander.commanderData.CharName == enemyCommanderData.CharName) {
+                    currCommander.playerId = GameConstants.ENEMY_PLAYER_ID;
+                }
+                //Set the rest of attributes
+                currCommander.SetCommanderAttributes(currCommander.commanderData);
+                //Fire off notification for Commanders that the battle has started
+                currCommander.OnBattleStart();
+            }
+
+            //TODO: Need to change the logic for this at some point
         } else if (SceneManager.GetActiveScene().name != "BossSelect" && SceneManager.GetActiveScene().name != "Game" && SceneManager.GetActiveScene().name != "GameCommanders") {
             Debug.LogWarning("WARNING! Scene Manger is Loading a non specified scene which it assumes is the card select!!!");
             AssignPlayerCards();
@@ -107,7 +131,7 @@ public class GlobalObject : MonoBehaviour {
             //populate data for commander
             Commander commanderListItem = listItem.GetComponent<Commander>();
             GameObject commanderPrefab = Resources.Load<GameObject>(cData.PrefabPath);
-            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize, cData);
+            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize, cData, -1);
             //Add list item to scrollview UI
             listItem.transform.SetParent(GameObject.Find("CommanderSelectUIManager/CommanderSelectionScrollList/Viewport/Content/CommanderContainer").transform, false);
             //Create prefab to use as image on list item
