@@ -33,19 +33,13 @@ public class Card : MonoBehaviour {
 	void Awake () {
 		//Debug.Log("Running Awake() function for: " + cardName);
 		playField = FindObjectOfType<PlayField>();
-	}
 
-	// Use this for initialization
-	void Start () {
-		deck = FindObjectOfType<Deck>();
-		buffManager = FindObjectOfType<BuffManager>();
-		player1 = GameObject.Find("player1");
-		player2 = GameObject.Find("player2");
-		ManaCost.text = manaCost.ToString();
-		if (type != "Spell") {
-			NameText.text = cardName.ToString();
-		}
-		if (type == "hero" || type == "heroStationary") {
+        //Need to set all of this in Awake() and NOT Start() or else on the NPC's first turn the stats don't get set in time before the NPC spawns their first hero for some reason
+        ManaCost.text = manaCost.ToString();
+        if (type != "Spell") {
+            NameText.text = cardName.ToString();
+        }
+        if (type == "hero" || type == "heroStationary") {
             //Set text values on the card
             PowerText.text = power.ToString();
             HealthText.text = maxHealth.ToString();
@@ -57,7 +51,16 @@ public class Card : MonoBehaviour {
             heroPrefab.GetComponent<Hero>().currentHealth = maxHealth;
             heroPrefab.GetComponent<Hero>().range = range;
             heroPrefab.GetComponent<Hero>().speed = speed;
+            heroPrefab.GetComponent<Hero>().id = cardId;
         }
+    }
+
+	// Use this for initialization
+	void Start () {
+		deck = FindObjectOfType<Deck>();
+		buffManager = FindObjectOfType<BuffManager>();
+		player1 = GameObject.Find("player1");
+		player2 = GameObject.Find("player2");
 	}
 
 	void OnMouseDown () {

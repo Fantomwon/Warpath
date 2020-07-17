@@ -210,6 +210,7 @@ public class Deck : MonoBehaviour {
 					player2Discard.Clear();
 				}
 
+                //Need to change this to just check for a "card type" of type "spell" or something rather than explicitly listing each spell here
 				if (CheckIfAllCardsInHandAreSpellCards() && (player2Deck[0] == "armor" || player2Deck[0] == "might" || player2Deck[0] == "shroud" || player2Deck[0] == "root" || 
 					player2Deck[0] == "fireball" || player2Deck[0] == "heal" || player2Deck[0] == "rockthrow" || player2Deck[0] == "windgust")) {
 					Debug.Log("4 SPELL CARDS IN HAND, NOT LETTING THAT HAPPEN!");
@@ -224,7 +225,7 @@ public class Deck : MonoBehaviour {
 						GameObject newCard = Instantiate (globalObject.templateHeroCard) as GameObject;
 						//Alter card cost if ai is enabled
 						if ( GlobalObject.aiEnabled == true ) {
-							Debug.Log("SETTING NEW MANA COST FOR CARD");
+							//Debug.Log("SETTING NEW MANA COST FOR CARD");
 							newCard.GetComponent<Card>().manaCost = aiManager.AiAlterCardCost(newCard);
 						}
 						newCard.transform.SetParent (GameObject.Find ("Player2 Hand").transform, false);
@@ -234,7 +235,7 @@ public class Deck : MonoBehaviour {
 						GameObject newCard = Instantiate (globalObject.templateSpellCard) as GameObject;
 						//Alter card cost if ai is enabled
 						if ( GlobalObject.aiEnabled == true ) {
-							Debug.Log("SETTING NEW MANA COST FOR CARD");
+							//Debug.Log("SETTING NEW MANA COST FOR CARD");
 							newCard.GetComponent<Card>().manaCost = aiManager.AiAlterCardCost(newCard);
 						}
 						newCard.transform.SetParent (GameObject.Find ("Player2 Hand").transform, false);

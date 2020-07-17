@@ -224,8 +224,16 @@ public class GlobalObject : MonoBehaviour {
             return SetTemplateHeroCardAttributesConstructor("DivinerCard", "diviner", "hero", 5, "Test:diviner", "PrefabsHeroes/Diviner", 1, 5, 1, 3);
         } else if (id == "crossbowman") {
             return SetTemplateHeroCardAttributesConstructor("CrossbowmanCard", "crossbowman", "hero", 3, "Test:crossbowman", "PrefabsHeroes/Crossbowman", 2, 3, 2, 3);
-        }else if (id == "bloodknight") {
+        } else if (id == "bloodknight") {
             return SetTemplateHeroCardAttributesConstructor("BloodknightCard", "bloodknight", "hero", 5, "Test:bloodknight", "PrefabsHeroes/Bloodknight", 2, 6, 1, 1);
+        } else if (id == "cultinitiate") {
+            return SetTemplateHeroCardAttributesConstructor("CultInitiateCard", "cultinitiate", "hero", 2, "Test:cultinitiate", "PrefabsHeroes/CultInitiate", 2, 4, 3, 1);
+        } else if (id == "cultadept") {
+            return SetTemplateHeroCardAttributesConstructor("CultAdeptCard", "cultadept", "hero", 2, "Test:cultadept", "PrefabsHeroes/CultAdept", 2, 3, 2, 3);
+        } else if (id == "cultacolyte") {
+            return SetTemplateHeroCardAttributesConstructor("CultAcolyteCard", "cultacolyte", "hero", 3, "Test:cultacolyte", "PrefabsHeroes/CultAcolyte", 2, 3, 2, 3);
+        } else if (id == "cultsentinel") {
+            return SetTemplateHeroCardAttributesConstructor("CultSentinelCard", "cultsentinel", "hero", 3, "Test:cultacolyte", "PrefabsHeroes/CultAcolyte", 2, 3, 2, 3);
         } else {
 			return null;
 		}
@@ -278,6 +286,7 @@ public class GlobalObject : MonoBehaviour {
 	}
 
 	public void SetTemplateHeroCardImage (string id, GameObject card) {
+        //Not sure what the point of this method is currently. It seems the intent is to set the image for a newly spawned hero, but we are actually spawning a whole hero prefab instead of just setting an image.
 		if (id == "archer") {
 			GameObject newHero = Instantiate (Resources.Load<GameObject>("PrefabsHeroes/Archer")) as GameObject;  
 			newHero.transform.SetParent (card.transform.Find("Image").transform, false);   
@@ -290,8 +299,20 @@ public class GlobalObject : MonoBehaviour {
 		} else if (id == "druid") {
 			GameObject newHero = Instantiate (Resources.Load<GameObject>("PrefabsHeroes/Druid")) as GameObject;  
 			newHero.transform.SetParent (card.transform.Find("Image").transform, false);
-		}
-	}
+        } else if (id == "knight") {
+            GameObject newHero = Instantiate(Resources.Load<GameObject>("PrefabsHeroes/Knight")) as GameObject;
+            newHero.transform.SetParent(card.transform.Find("Image").transform, false);
+        } else if (id == "cultinitiate") {
+            GameObject newHero = Instantiate(Resources.Load<GameObject>("PrefabsHeroes/CultInitiate")) as GameObject;
+            newHero.transform.SetParent(card.transform.Find("Image").transform, false);
+        } else if (id == "cultadept") {
+            GameObject newHero = Instantiate(Resources.Load<GameObject>("PrefabsHeroes/CultAdept")) as GameObject;
+            newHero.transform.SetParent(card.transform.Find("Image").transform, false);
+        } else if (id == "cultacolyte") {
+            GameObject newHero = Instantiate(Resources.Load<GameObject>("PrefabsHeroes/CultAcolyte")) as GameObject;
+            newHero.transform.SetParent(card.transform.Find("Image").transform, false);
+        }
+    }
 
 	private void AssignPlayerCards () {
 		//Full list of all player hero cards for pass and play
@@ -319,6 +340,7 @@ public class GlobalObject : MonoBehaviour {
 		fullPlayerHeroCardList.Add("diviner");
         fullPlayerHeroCardList.Add("crossbowman");
         fullPlayerHeroCardList.Add("bloodknight");
+        fullPlayerHeroCardList.Add("cultinitiate");
 
         //Full list of all player spell cards for pass and play
         fullPlayerSpellCardList.Add("armor");
@@ -332,24 +354,32 @@ public class GlobalObject : MonoBehaviour {
 
 		//boss01 player cards
 		boss01PlayerHeroCards.Add("archer");
+        boss01PlayerHeroCards.Add("knight");
         boss01PlayerHeroCards.Add("footsoldier");
+        boss01PlayerHeroCards.Add("sapper");
         boss01PlayerHeroCards.Add("rogue");
         boss01PlayerSpellCards.Add("rockthrow");
         boss01PlayerSpellCards.Add("heal");
         boss01PlayerSpellCards.Add("might");
 
 		//boss02 player cards
+		boss02PlayerHeroCards.Add("druid");
 		boss02PlayerHeroCards.Add("archer");
-		boss02PlayerHeroCards.Add("footsoldier");
-		boss02PlayerHeroCards.Add("footsoldier");
-		boss02PlayerHeroCards.Add("footsoldier");
+		boss02PlayerHeroCards.Add("archer");
+		boss02PlayerHeroCards.Add("knight");
+        fullPlayerSpellCardList.Add("armor");
+        fullPlayerSpellCardList.Add("rockthrow");
 
-		//boss03 player cards
-		boss03PlayerHeroCards.Add("archer");
-		boss03PlayerHeroCards.Add("footsoldier");
+        //boss03 player cards
+        boss03PlayerHeroCards.Add("druid");
+        boss03PlayerHeroCards.Add("archer");
+        boss03PlayerHeroCards.Add("archer");
+        boss03PlayerHeroCards.Add("knight");
+        fullPlayerSpellCardList.Add("armor");
+        fullPlayerSpellCardList.Add("rockthrow");
 
-		//boss04 player cards
-		boss04PlayerHeroCards.Add("archer");
+        //boss04 player cards
+        boss04PlayerHeroCards.Add("archer");
 		boss04PlayerHeroCards.Add("footsoldier");
 
 		//boss05 player cards

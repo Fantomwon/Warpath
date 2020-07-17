@@ -154,8 +154,8 @@ public class PlayField : MonoBehaviour {
 		//Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
 		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
 
-		//TEMP - SALLY ADD HERO ID'S OF HEROES YOU UPDATE HERE - I LOVE YOU!!!
-		if ( x.GetComponent<Hero>().id == "bloodknight" || x.GetComponent<Hero>().id == "crossbowman" || x.GetComponent<Hero>().id == "druid" || x.GetComponent<Hero>().id == "archer" || x.GetComponent<Hero>().id == "knight" || x.GetComponent<Hero>().id == "rogue" || x.GetComponent<Hero>().id == "footsoldier" ) {
+		//TEMP - SALLY ADD HERO ID'S OF HEROES YOU UPDATE HERE - I LOVE YOU!!! I don't remember why we do this but I think it has something to do with how we 'flip' the heroes with the new art style when they are placed on player 2's side of the board.
+		if ( x.GetComponent<Hero>().id == "bloodknight" || x.GetComponent<Hero>().id == "crossbowman" || x.GetComponent<Hero>().id == "druid" || x.GetComponent<Hero>().id == "archer" || x.GetComponent<Hero>().id == "knight" || x.GetComponent<Hero>().id == "rogue" || x.GetComponent<Hero>().id == "footsoldier" || x.GetComponent<Hero>().id == "cultinitiate" || x.GetComponent<Hero>().id == "cultadept" || x.GetComponent<Hero>().id == "cultacolyte") {
 			//Flip the hero so it faces to the left
 			Vector3 scale = x.transform.Find("Hero").GetComponent<RectTransform>().transform.localScale;
 			(scale.x) = (scale.x *= -1);
@@ -226,14 +226,14 @@ public class PlayField : MonoBehaviour {
         //TEST This is to test drawing a completely new hand at the start of each turn
         if (player1Turn) {
             foreach (Transform leftoverCard in GameObject.Find("LevelCanvas/Player1 Hand").transform) {
-                Debug.Log("FOUND A CARD IN PLAYER 1 HAND~~~~~~~~~~~~~~~~~~~");
+                //Debug.Log("FOUND A CARD IN PLAYER 1 HAND~~~~~~~~~~~~~~~~~~~");
                 deck.player1Discard.Add(leftoverCard.GetComponent<Card>().cardId);
                 Destroy(leftoverCard.gameObject);
             }
             //GameObject.Find("Player1 Hand").transform.DetachChildren();
         } else if (!player1Turn) {
             foreach (Transform leftoverCard in GameObject.Find("LevelCanvas/Player2 Hand").transform) {
-                Debug.Log("FOUND A CARD IN PLAYER 2 HAND~~~~~~~~~~~~~~~~~~~");
+                //Debug.Log("FOUND A CARD IN PLAYER 2 HAND~~~~~~~~~~~~~~~~~~~");
                 deck.player2Discard.Add(leftoverCard.GetComponent<Card>().cardId);
                 Destroy(leftoverCard.gameObject);
             }
@@ -328,7 +328,7 @@ public class PlayField : MonoBehaviour {
 	}
 
 	public void ClearSelectedHeroAndSelectedCard () {
-		Debug.Log("!!!!!!!!!ClearSelectedHeroAndSelectedCard!!!!!!!!!!!!!");
+		//Debug.Log("!!!!!!!!!ClearSelectedHeroAndSelectedCard!!!!!!!!!!!!!");
 		//Debug.Log("RUNNING playField.ClearSelectedHeroAndSelectedCard()");
 		//Reset the 'selectedHero' variable so players can't place another hero before selecting another card
 		Card.selectedHero = default(GameObject);
@@ -474,7 +474,7 @@ public class PlayField : MonoBehaviour {
             AttackEnemiesInList(currentHero, TargetCheckCardinalDirections(currentHero, "enemy"));
         } else if (currentHero.GetComponent<Hero>().id == "tower" && TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
             AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy", null));
-        } else if ((currentHero.GetComponent<Hero>().id == "archer" || currentHero.GetComponent<Hero>().id == "slinger") && TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
+        } else if ((currentHero.GetComponent<Hero>().id == "archer" || currentHero.GetComponent<Hero>().id == "slinger" || currentHero.GetComponent<Hero>().id == "cultadept") && TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
             AttackEnemiesInList(currentHero, TargetCheckAllHeroesInRange(currentHero, "enemy"));
         } else if (currentHero.GetComponent<Hero>().id == "sapper" && TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
             AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy", null));
@@ -730,10 +730,10 @@ public class PlayField : MonoBehaviour {
 	}
 
 	//Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a list of the given herotypes that are currently located in any CARDINAL direction around the currenthero, NOT including diagonals
-	public List<Transform> TargetCheckEntireBoardTwoRandomHeroes (Transform currentHero, string heroTypeToSearchFor) {
+	public List<Transform> TargetCheckEntireBoardRandomHeroes (Transform currentHero, string heroTypeToSearchFor, int numHeroesReturned, string targetType = "default", string heroIdToExclude = "none") {
 		List<Transform> validHeroes = new List<Transform>();
-		BuildFullHeroTransformList();
-
+        int tempListCount = validHeroes.Count;
+        BuildFullHeroTransformList();
 		//Check ALL of the heroes on the game board, then based on which type I'm checking for ("enemy" or "ally") add them to the appropriate list
 		foreach (Transform otherHero in fullHeroTransformList) {
 			if (heroTypeToSearchFor == "enemy") {
@@ -748,17 +748,26 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 
-		int tempListCount = validHeroes.Count;
+        //If the target type is 'heal' remove any heroes that are at or above full health
+        if (targetType == "heal") {
+            for (int i = 0; i < tempListCount; i++) {
+                if (validHeroes[i].GetComponent<Hero>().currentHealth >= validHeroes[i].GetComponent<Hero>().maxHealth || validHeroes[i].GetComponent<Hero>().id == heroIdToExclude) {
+                    validHeroes.RemoveAt(i);
+                }
+            }
+        }
+
+        //Reduce the list of valid heroes down to the desired amount
 		for (int i = 0; i < tempListCount; i++) {
-			if (validHeroes.Count > 2) {
+			if (validHeroes.Count > numHeroesReturned) {
 				int temp = Random.Range(0, validHeroes.Count);
 				validHeroes.RemoveAt(temp);
 			}
 		}
-
-		//We store the enemies that we'll be attacking in a tempTransformList so that we can spawn the red 'attack tell boxes' beneath them, which is called from hero.cs. We have to do this b/c we are picking heroes at random, so running 
-		//the check again in a different part of the code would return possibly two different enemies than the ones that we are actually attacking.
-		tempTransformList.Clear();
+        Debug.Log("TargetCheckEntireBoardRandomHeroes004 " + validHeroes.Count);
+        //We store the heroes that we'll be using in a tempTransformList so that we can spawn the red 'attack tell boxes' beneath them, which is called from hero.cs. We have to do this b/c we are picking heroes at random, so running 
+        //the check again in a different part of the code would return possibly two different enemies than the ones that we are actually attacking.
+        tempTransformList.Clear();
 		tempTransformList = validHeroes;
 
 		return validHeroes;
@@ -1302,16 +1311,19 @@ public class PlayField : MonoBehaviour {
 		List<Transform> druidList = new List<Transform>();
 		List<Transform> blacksmithList = new List<Transform>();
 		List<Transform> paladinList = new List<Transform>();
+        List<Transform> cultAcolyteList = new List<Transform>();
 
-		foreach (Transform hero in fullHeroTransformList) {
+        foreach (Transform hero in fullHeroTransformList) {
 
 			if (hero.GetComponent<Hero>().id == "druid") {
-				druidList.Add(hero);
+                druidList.Add(hero);
 			} else if (hero.GetComponent<Hero>().id == "blacksmith") {
 				blacksmithList.Add(hero);
 			} else if (hero.GetComponent<Hero>().id == "paladin") {
 				paladinList.Add(hero);
-			} else if (hero.GetComponent<Hero>().id == "champion") {
+            } else if (hero.GetComponent<Hero>().id == "cultacolyte") {
+                cultAcolyteList.Add(hero);
+            } else if (hero.GetComponent<Hero>().id == "champion") {
 				if (player1Turn && hero.tag == "player1") {
 					hero.GetComponent<Hero>().AddArmor(1);
 				} else if (!player1Turn && hero.tag == "player2") {
@@ -1344,7 +1356,16 @@ public class PlayField : MonoBehaviour {
 				HealHeroesInList(paladin, TargetCheckAllDirectionsOneRandomHero(paladin, "ally", "ghost"));
 			}
 		}
-	}
+
+        foreach (Transform cultAcolyte in cultAcolyteList) {
+            Debug.LogWarning("FOUND AN ACOLYTE!!! 002");
+            if (player1Turn && cultAcolyte.tag == "player1") {
+                HealHeroesInList(cultAcolyte, TargetCheckEntireBoardRandomHeroes(cultAcolyte, "ally", 1, "heal", "ghost"));
+            } else if (!player1Turn && cultAcolyte.tag == "player2") {
+                HealHeroesInList(cultAcolyte, TargetCheckEntireBoardRandomHeroes(cultAcolyte, "ally", 1, "heal", "ghost"));
+            }
+        }
+    }
 
 	public void SubtractMana () {
 		if (player1Turn) {

@@ -47,7 +47,7 @@ public class AiManager : MonoBehaviour {
 	}
 
 	public int AiAlterCardCost ( GameObject cardToCheck ) {
-		Debug.Log("RUNNING AiAlterCardCost");
+	//	Debug.Log("RUNNING AiAlterCardCost");
 		if (GlobalObject.currentlyActiveStory == "boss01") {
 			switch (cardToCheck.GetComponent<Card>().cardId) {
     //            case "archer":

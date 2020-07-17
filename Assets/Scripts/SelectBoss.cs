@@ -153,24 +153,30 @@ public class SelectBoss : MonoBehaviour {
 		GlobalObject.instance.player2DeckSelect.Clear();
 
 		if (boss01Button.isOn) {
-            GlobalObject.instance.player2DeckSelect.Add("archer");
-            GlobalObject.instance.player2DeckSelect.Add("archer");
-            GlobalObject.instance.player2DeckSelect.Add("archer");
-            GlobalObject.instance.player2DeckSelect.Add("footsoldier");
-            GlobalObject.instance.player2DeckSelect.Add("footsoldier");
-            GlobalObject.instance.player2DeckSelect.Add("druid");
-            GlobalObject.instance.player2DeckSelect.Add("rockthrow");
-            GlobalObject.instance.player2DeckSelect.Add("rockthrow");
-            GlobalObject.instance.player2DeckSelect.Add("armor");
-            GlobalObject.instance.player2DeckSelect.Add("fireball");
+            GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
+            GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
+            GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
+            GlobalObject.instance.player2DeckSelect.Add("cultadept");
+            GlobalObject.instance.player2DeckSelect.Add("cultadept");
+            GlobalObject.instance.player2DeckSelect.Add("cultadept");
+            GlobalObject.instance.player2DeckSelect.Add("cultadept");
+            GlobalObject.instance.player2DeckSelect.Add("cultacolyte");
+            GlobalObject.instance.player2DeckSelect.Add("cultacolyte");
+            GlobalObject.instance.player2DeckSelect.Add("cultacolyte");
         } else if (boss02Button.isOn) {
-			GlobalObject.instance.player2DeckSelect.Add("archer");
-			GlobalObject.instance.player2DeckSelect.Add("rogue");
-			GlobalObject.instance.player2DeckSelect.Add("knight");
-			GlobalObject.instance.player2DeckSelect.Add("heal");
-//			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rogueCard);
-//			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.paladinCard);
-		} else if (boss03Button.isOn) {
+			GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
+			GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
+			GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
+			GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
+            GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
+            GlobalObject.instance.player2DeckSelect.Add("cultadept");
+            GlobalObject.instance.player2DeckSelect.Add("cultadept");
+            GlobalObject.instance.player2DeckSelect.Add("cultadept");
+            GlobalObject.instance.player2DeckSelect.Add("cultadept");
+            GlobalObject.instance.player2DeckSelect.Add("cultadept");
+            //			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.rogueCard);
+            //			GlobalObject.instance.player2DeckSelect.Add(GlobalObject.instance.paladinCard);
+        } else if (boss03Button.isOn) {
 			GlobalObject.instance.player2DeckSelect.Add("archer");
 			GlobalObject.instance.player2DeckSelect.Add("rogue");
 			GlobalObject.instance.player2DeckSelect.Add("knight");

@@ -127,11 +127,11 @@ public class Hero : MonoBehaviour {
             StartCoroutine("PlayAttackAnimation");
         } else if (currentHero.GetComponent<Hero>().id == "tower" && playField.TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
             StartCoroutine("PlayAttackAnimation");
-        } else if (currentHero.GetComponent<Hero>().id == "archer" && playField.TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
+        } else if ((currentHero.GetComponent<Hero>().id == "archer" || currentHero.GetComponent<Hero>().id == "archer") && playField.TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
             StartCoroutine("PlayAttackAnimation");
         } else if (currentHero.GetComponent<Hero>().id == "sapper" && playField.TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
             StartCoroutine("PlayAttackAnimation");
-        } else if (currentHero.GetComponent<Hero>().id == "chaosmage" && playField.TargetCheckEntireBoardTwoRandomHeroes(currentHero, "enemy").Count > 0) {
+        } else if (currentHero.GetComponent<Hero>().id == "chaosmage" && playField.TargetCheckEntireBoardRandomHeroes(currentHero, "enemy", 2).Count > 0) {
             StartCoroutine("PlayAttackAnimation");
         } else if (playField.TargetCheckClosestHeroInRange(currentHero, "enemy").Count > 0) {
             StartCoroutine("PlayAttackAnimation");
@@ -193,7 +193,7 @@ public class Hero : MonoBehaviour {
 				GameObject spawnedAttackTellBox = Instantiate (attackTellBox, enemy.transform.position, Quaternion.identity, FindObjectOfType<AttackTellBoxes>().transform) as GameObject;
 				spawnedAttackTellBox.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y, enemy.transform.position.z);
 			}
-		} else if (hero.id == "archer") {
+		} else if (hero.id == "archer" || hero.id == "cultadept") {
 			foreach (Transform enemy in playField.TargetCheckAllHeroesInRange(hero.transform, "enemy")) {
 				GameObject spawnedAttackTellBox = Instantiate (attackTellBox, enemy.transform.position, Quaternion.identity, FindObjectOfType<AttackTellBoxes>().transform) as GameObject;
 				spawnedAttackTellBox.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y, enemy.transform.position.z);
