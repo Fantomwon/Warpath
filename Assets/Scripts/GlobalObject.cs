@@ -243,21 +243,21 @@ public class GlobalObject : MonoBehaviour {
 
 	public GameObject SetTemplateSpellCardAttributes (string id) {
 		if (id == "armor") {
-			return SetTemplateSpellCardAttributesConstructor("ArmorCard", "armor", "spell", 1, "Test:armor", "Particles/DodgeParticle");
+			return SetTemplateSpellCardAttributesConstructor("ArmorCard", "armor", "spell", 1, "Test:armor", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ArmorIcon");
 		} else if (id == "rockthrow") {
-			return SetTemplateSpellCardAttributesConstructor("RockthrowCard", "rockthrow", "spell", 1, "Test:rock throw", "Particles/RockThrowParticle");
+			return SetTemplateSpellCardAttributesConstructor("RockthrowCard", "rockthrow", "spell", 1, "Test:rock throw", "Particles/RockThrowParticle", "Images/Icons/SpellIcons/RockIcon");
 		} else if (id == "root") {
-			return SetTemplateSpellCardAttributesConstructor("RootCard", "root", "spell", 3, "Test:root", "Particles/DodgeParticle");
+			return SetTemplateSpellCardAttributesConstructor("RootCard", "root", "spell", 3, "Test:root", "Particles/DodgeParticle", "Images/Icons/SpellIcons/RootIcon");
 		} else if (id == "windgust") {
-			return SetTemplateSpellCardAttributesConstructor("WindGustCard", "windgust", "spell", 3, "Test:wind gust", "Particles/WindGustParticle");
+			return SetTemplateSpellCardAttributesConstructor("WindGustCard", "windgust", "spell", 3, "Test:wind gust", "Particles/WindGustParticle", "Images/Icons/SpellIcons/WindgustIcon");
 		} else if (id == "heal") {
-			return SetTemplateSpellCardAttributesConstructor("HealCard", "heal", "spell", 2, "Test:heal", "Particles/HealLightParticle");
+			return SetTemplateSpellCardAttributesConstructor("HealCard", "heal", "spell", 2, "Test:heal", "Particles/HealLightParticle", "Images/Icons/SpellIcons/HealIcon");
 		}  else if (id == "shroud") {
-			return SetTemplateSpellCardAttributesConstructor("ShroudCard", "shroud", "spell", 2, "Test:shroud", "Particles/DodgeParticle");
+			return SetTemplateSpellCardAttributesConstructor("ShroudCard", "shroud", "spell", 2, "Test:shroud", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ShroudIcon");
 		}  else if (id == "might") {
-			return SetTemplateSpellCardAttributesConstructor("MightCard", "might", "spell", 2, "Test:might", "Particles/DodgeParticle");
+			return SetTemplateSpellCardAttributesConstructor("MightCard", "might", "spell", 2, "Test:might", "Particles/DodgeParticle", "Images/Icons/SpellIcons/MightIcon");
 		}  else if (id == "fireball") {
-			return SetTemplateSpellCardAttributesConstructor("FireballCard", "fireball", "spell", 2, "Test:fireball", "Particles/FireballParticle");
+			return SetTemplateSpellCardAttributesConstructor("FireballCard", "fireball", "spell", 2, "Test:fireball", "Particles/FireballParticle", "Images/Icons/SpellIcons/FireballIcon");
 		} else {
 			return null;
 		}
@@ -277,14 +277,15 @@ public class GlobalObject : MonoBehaviour {
         return templateHeroCard;
 	}
 
-	private GameObject SetTemplateSpellCardAttributesConstructor (string name, string cardId, string type, int manaCost, string cardName, string spellParticle) {
+	private GameObject SetTemplateSpellCardAttributesConstructor (string name, string cardId, string type, int manaCost, string cardName, string spellParticle, string spellIcon) {
 		templateSpellCard.GetComponent<Card>().name = name;
 		templateSpellCard.GetComponent<Card>().cardId = cardId;
 		templateSpellCard.GetComponent<Card>().type = type;
 		templateSpellCard.GetComponent<Card>().manaCost = manaCost;
 		templateSpellCard.GetComponent<Card>().cardName = cardName;
 		templateSpellCard.GetComponent<Card>().spellParticle = Resources.Load<GameObject>(spellParticle);
-		return templateSpellCard;
+        templateSpellCard.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(spellIcon);
+        return templateSpellCard;
 	}
 
 	public void SetTemplateHeroCardImage (string id, GameObject card) {
