@@ -127,9 +127,9 @@ public class Hero : MonoBehaviour {
             StartCoroutine("PlayAttackAnimation");
         } else if (currentHero.GetComponent<Hero>().id == "tower" && playField.TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
             StartCoroutine("PlayAttackAnimation");
-        } else if ((currentHero.GetComponent<Hero>().id == "archer" || currentHero.GetComponent<Hero>().id == "archer") && playField.TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
+        } else if ((currentHero.GetComponent<Hero>().id == "archer" || currentHero.GetComponent<Hero>().id == "slinger" || currentHero.GetComponent<Hero>().id == "cultadept") && playField.TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
             StartCoroutine("PlayAttackAnimation");
-        } else if (currentHero.GetComponent<Hero>().id == "sapper" && playField.TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
+        } else if ((currentHero.GetComponent<Hero>().id == "sapper" || currentHero.GetComponent<Hero>().id == "cultfanatic") && playField.TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
             StartCoroutine("PlayAttackAnimation");
         } else if (currentHero.GetComponent<Hero>().id == "chaosmage" && playField.TargetCheckEntireBoardRandomHeroes(currentHero, "enemy", 2).Count > 0) {
             StartCoroutine("PlayAttackAnimation");

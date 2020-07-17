@@ -233,7 +233,9 @@ public class GlobalObject : MonoBehaviour {
         } else if (id == "cultacolyte") {
             return SetTemplateHeroCardAttributesConstructor("CultAcolyteCard", "cultacolyte", "hero", 3, "Test:cultacolyte", "PrefabsHeroes/CultAcolyte", 2, 3, 2, 3);
         } else if (id == "cultsentinel") {
-            return SetTemplateHeroCardAttributesConstructor("CultSentinelCard", "cultsentinel", "hero", 3, "Test:cultacolyte", "PrefabsHeroes/CultAcolyte", 2, 3, 2, 3);
+            return SetTemplateHeroCardAttributesConstructor("CultSentinelCard", "cultsentinel", "hero", 3, "Test:cultsentinel", "PrefabsHeroes/CultSentinel", 4, 10, 1, 1);
+        } else if (id == "cultfanatic") {
+            return SetTemplateHeroCardAttributesConstructor("CultFanaticCard", "cultfanatic", "hero", 2, "Test:cultfanatic", "PrefabsHeroes/CultFanatic", 2, 2, 2, 1);
         } else {
 			return null;
 		}
@@ -311,6 +313,9 @@ public class GlobalObject : MonoBehaviour {
         } else if (id == "cultacolyte") {
             GameObject newHero = Instantiate(Resources.Load<GameObject>("PrefabsHeroes/CultAcolyte")) as GameObject;
             newHero.transform.SetParent(card.transform.Find("Image").transform, false);
+        } else if (id == "cultsentinel") {
+            GameObject newHero = Instantiate(Resources.Load<GameObject>("PrefabsHeroes/CultSentinel")) as GameObject;
+            newHero.transform.SetParent(card.transform.Find("Image").transform, false);
         }
     }
 
@@ -357,7 +362,8 @@ public class GlobalObject : MonoBehaviour {
         boss01PlayerHeroCards.Add("knight");
         boss01PlayerHeroCards.Add("footsoldier");
         boss01PlayerHeroCards.Add("sapper");
-        boss01PlayerHeroCards.Add("rogue");
+        boss01PlayerHeroCards.Add("cultsentinel");
+        boss01PlayerHeroCards.Add("cultfanatic");
         boss01PlayerSpellCards.Add("rockthrow");
         boss01PlayerSpellCards.Add("heal");
         boss01PlayerSpellCards.Add("might");

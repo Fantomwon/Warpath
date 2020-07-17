@@ -155,7 +155,7 @@ public class PlayField : MonoBehaviour {
 		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
 
 		//TEMP - SALLY ADD HERO ID'S OF HEROES YOU UPDATE HERE - I LOVE YOU!!! I don't remember why we do this but I think it has something to do with how we 'flip' the heroes with the new art style when they are placed on player 2's side of the board.
-		if ( x.GetComponent<Hero>().id == "bloodknight" || x.GetComponent<Hero>().id == "crossbowman" || x.GetComponent<Hero>().id == "druid" || x.GetComponent<Hero>().id == "archer" || x.GetComponent<Hero>().id == "knight" || x.GetComponent<Hero>().id == "rogue" || x.GetComponent<Hero>().id == "footsoldier" || x.GetComponent<Hero>().id == "cultinitiate" || x.GetComponent<Hero>().id == "cultadept" || x.GetComponent<Hero>().id == "cultacolyte") {
+		if ( x.GetComponent<Hero>().id == "bloodknight" || x.GetComponent<Hero>().id == "crossbowman" || x.GetComponent<Hero>().id == "druid" || x.GetComponent<Hero>().id == "archer" || x.GetComponent<Hero>().id == "knight" || x.GetComponent<Hero>().id == "rogue" || x.GetComponent<Hero>().id == "footsoldier" || x.GetComponent<Hero>().id == "cultinitiate" || x.GetComponent<Hero>().id == "cultadept" || x.GetComponent<Hero>().id == "cultacolyte" || x.GetComponent<Hero>().id == "cultsentinel") {
 			//Flip the hero so it faces to the left
 			Vector3 scale = x.transform.Find("Hero").GetComponent<RectTransform>().transform.localScale;
 			(scale.x) = (scale.x *= -1);
@@ -476,7 +476,7 @@ public class PlayField : MonoBehaviour {
             AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy", null));
         } else if ((currentHero.GetComponent<Hero>().id == "archer" || currentHero.GetComponent<Hero>().id == "slinger" || currentHero.GetComponent<Hero>().id == "cultadept") && TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
             AttackEnemiesInList(currentHero, TargetCheckAllHeroesInRange(currentHero, "enemy"));
-        } else if (currentHero.GetComponent<Hero>().id == "sapper" && TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
+        } else if ((currentHero.GetComponent<Hero>().id == "sapper" || currentHero.GetComponent<Hero>().id == "cultfanatic") && TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
             AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy", null));
         } else if (currentHero.GetComponent<Hero>().id == "chaosmage" & tempTransformList.Count > 0) {
             AttackEnemiesInList(currentHero, tempTransformList);
@@ -487,7 +487,7 @@ public class PlayField : MonoBehaviour {
         }
 
         //Special check to see if the hero was a Sapper and needs to be removed from the game space
-        if (currentHero.GetComponent<Hero>().id == "sapper") {
+        if (currentHero.GetComponent<Hero>().id == "sapper" || currentHero.GetComponent<Hero>().id == "cultfanatic") {
             currentHero.GetComponent<Hero>().AfterAttackOperations();
             currentHero.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().currentHealth + currentHero.GetComponent<Hero>().currentArmor);
         }
