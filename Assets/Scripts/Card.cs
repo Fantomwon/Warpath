@@ -78,7 +78,6 @@ public class Card : MonoBehaviour {
 	}
 
 	public void CastSpell () { 
-
 		if (cardId == "rockthrow") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
@@ -199,10 +198,12 @@ public class Card : MonoBehaviour {
 					}
 				}
 			} else if (!playField.player1Turn && GlobalObject.aiEnabled) {
-				Transform hero;
-				hero = playField.TargetSpellCheckEntireBoardOneRandomHero("ally","heal")[0];
-				//Instantiate(spellParticle,hero.transform.localPosition, Quaternion.identity);
-				hero.GetComponent<Hero>().HealPartial(2);
+                //Heal a random ally
+                List<Transform> allies = playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal");
+                if (allies.Count() > 0) {
+                    Transform allyToHeal = allies[0];
+                    allyToHeal.GetComponent<Hero>().HealPartial(2);
+                }
 				SpellCleanup ();
 				return;
 			}
@@ -449,8 +450,67 @@ public class Card : MonoBehaviour {
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		}
-	}
+		} else if (cardId == "drainlife") {
+            if (playField.player1Turn) {
+                foreach (Transform hero in playField.player2.transform) {
+                    //Logic for player 1 selecting an enemy hero
+                    if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
+                        //TODO Replace with a new unique particle when we have one for this Spell
+                        ParticleSystem hitParticle = hero.GetComponent<Hero>().hitParticle;
+                        Instantiate(hitParticle, hero.transform.position, Quaternion.identity);
+                        //Do the damage to the enemy
+                        hero.GetComponent<Hero>().TakeDamage(1);
+                        //Heal a random ally
+                        List<Transform> allies = playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal");
+                        if (allies.Count() > 0) {
+                            Transform allyToHeal = allies[0];
+                            allyToHeal.GetComponent<Hero>().HealPartial(1);
+                        }
+                        SpellCleanup();
+                        return;
+                    }
+                }
+            } else if (!playField.player1Turn && !GlobalObject.aiEnabled) {
+                foreach (Transform hero in playField.player1.transform) {
+                    //Logic for player 2 selecting an enemy hero
+                    if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
+                        //Spawn the spell particle
+                        spellParticle.GetComponentInChildren<Spell>().hero = hero;
+                        Instantiate(spellParticle, hero.transform.localPosition, Quaternion.identity, player2.transform);
+                        //Do the damage to the enemy
+                        hero.GetComponent<Hero>().TakeDamage(1);
+                        //Heal a random ally
+                        List<Transform> allies = playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal");
+                        if (allies.Count() > 0) {
+                            Transform allyToHeal = allies[0];
+                            allyToHeal.GetComponent<Hero>().HealPartial(1);
+                        }
+                        SpellCleanup();
+                        return;
+                    }
+                }
+            } else if (!playField.player1Turn && GlobalObject.aiEnabled) {
+                //Logic for the AI selecting an enemy hero
+                //Find a player soldier to attack
+                Transform heroToAttack;
+                heroToAttack = playField.TargetSpellCheckEntireBoardOneRandomHero("enemy")[0];
+                //Spawn the spell particle
+                spellParticle.GetComponentInChildren<Spell>().hero = heroToAttack;
+                Instantiate(spellParticle, heroToAttack.transform.localPosition, Quaternion.identity, player1.transform);
+                //Do the damage to the enemy
+                heroToAttack.GetComponent<Hero>().TakeDamage(1);
+                //Heal a random ally
+                List<Transform> allies = playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal");
+                if (allies.Count() > 0) {
+                    Transform allyToHeal = allies[0];
+                    allyToHeal.GetComponent<Hero>().HealPartial(1);
+                }
+                SpellCleanup();
+                return;
+            }
+            Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
+        }
+    }
 
 	public bool SpellAiConditionCheck () {
 		if (cardId == "fireball" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
@@ -468,8 +528,10 @@ public class Card : MonoBehaviour {
 		} else if (cardId == "shroud" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "shroud").Count > 0) {
 			return true; 
 		} else if (cardId == "root" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy", "root").Count > 0) {
-			return true; 
-		} else {
+			return true;
+        } else if (cardId == "drainlife" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
+            return true;
+        } else {
 			return false;
 		}
 	}

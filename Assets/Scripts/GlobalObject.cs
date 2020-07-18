@@ -252,13 +252,15 @@ public class GlobalObject : MonoBehaviour {
 			return SetTemplateSpellCardAttributesConstructor("WindGustCard", "windgust", "spell", 3, "Test:wind gust", "Particles/WindGustParticle", "Images/Icons/SpellIcons/WindgustIcon");
 		} else if (id == "heal") {
 			return SetTemplateSpellCardAttributesConstructor("HealCard", "heal", "spell", 2, "Test:heal", "Particles/HealLightParticle", "Images/Icons/SpellIcons/HealIcon");
-		}  else if (id == "shroud") {
+		} else if (id == "shroud") {
 			return SetTemplateSpellCardAttributesConstructor("ShroudCard", "shroud", "spell", 2, "Test:shroud", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ShroudIcon");
-		}  else if (id == "might") {
+		} else if (id == "might") {
 			return SetTemplateSpellCardAttributesConstructor("MightCard", "might", "spell", 2, "Test:might", "Particles/DodgeParticle", "Images/Icons/SpellIcons/MightIcon");
-		}  else if (id == "fireball") {
+		} else if (id == "fireball") {
 			return SetTemplateSpellCardAttributesConstructor("FireballCard", "fireball", "spell", 2, "Test:fireball", "Particles/FireballParticle", "Images/Icons/SpellIcons/FireballIcon");
-		} else {
+        } else if (id == "drainlife") {
+            return SetTemplateSpellCardAttributesConstructor("DrainLifeCard", "drainlife", "spell", 1, "Test:drainlife", "Particles/DrainLifeParticle", "Images/Icons/SpellIcons/DrainLifeIcon");
+        } else {
 			return null;
 		}
 	}
@@ -368,9 +370,10 @@ public class GlobalObject : MonoBehaviour {
         boss01PlayerSpellCards.Add("rockthrow");
         boss01PlayerSpellCards.Add("heal");
         boss01PlayerSpellCards.Add("might");
+        boss01PlayerSpellCards.Add("drainlife");
 
-		//boss02 player cards
-		boss02PlayerHeroCards.Add("druid");
+        //boss02 player cards
+        boss02PlayerHeroCards.Add("druid");
 		boss02PlayerHeroCards.Add("archer");
 		boss02PlayerHeroCards.Add("archer");
 		boss02PlayerHeroCards.Add("knight");

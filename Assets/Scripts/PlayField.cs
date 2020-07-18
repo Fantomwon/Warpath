@@ -562,7 +562,7 @@ public class PlayField : MonoBehaviour {
 
 	//Looks at all heroes on the board that are NOT on your team and returns a single random hero.
 	public List<Transform> TargetSpellCheckEntireBoardOneRandomHero (string heroTypeToSearchFor, string optionalFunctionIdentifier = "default") {
-		List<Transform> validHeroes = new List<Transform>();
+        List<Transform> validHeroes = new List<Transform>();
 		BuildFullHeroTransformList();
 
 		//Check ALL of the heroes on the game board, then based on which type I'm checking for ("enemy" or "ally") AND the optionalFunctionIdentifier ("heal", etc...)
@@ -583,27 +583,33 @@ public class PlayField : MonoBehaviour {
 			foreach (Transform hero in player2.transform) {
 				validHeroes.Add(hero);
 			}
-		}
-		//These conditions should only be checked if it is the AI's turn in PvE content
-		  else if (!player1Turn && heroTypeToSearchFor == "ally" && (optionalFunctionIdentifier == "heal") || (optionalFunctionIdentifier == "blessing")) {
-			foreach (Transform hero in player2.transform) {
-				if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
-					validHeroes.Add(hero);	
-				}
-			}
+		} else if (heroTypeToSearchFor == "ally" && (optionalFunctionIdentifier == "heal") || (optionalFunctionIdentifier == "blessing")) { //These conditions should only be checked if it is the AI's turn in PvE content
+            if (player1Turn) {
+                foreach (Transform hero in player1.transform) {
+                    if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
+                        validHeroes.Add(hero);
+                    }
+                }
+            } else {
+                foreach (Transform hero in player2.transform) {
+                    if ((hero.GetComponent<Hero>().currentHealth < hero.GetComponent<Hero>().maxHealth) && (hero.GetComponent<Hero>().id != "ghost")) {
+                        validHeroes.Add(hero);
+                    }
+                }
+            }
 
-			//If there is more than one valid hero, cycle through them and find the one with lowest health and set them as the only valid hero
-			if (validHeroes.Count() > 1 ) {
-				List<Transform> preferredHero = new List<Transform>();
+            //If there is more than one valid hero, cycle through them and find the one with lowest health and set them as the only valid hero
+            if (validHeroes.Count() > 1 ) {
+                List<Transform> preferredHero = new List<Transform>();
 				Transform currentPreferredHero = validHeroes[0];
 				preferredHero.Add(currentPreferredHero);
 				foreach (Transform validHero in validHeroes) {
 					if (validHero.GetComponent<Hero>().currentHealth < currentPreferredHero.GetComponent<Hero>().currentHealth) {
 						preferredHero.Clear();
-						preferredHero.Add(validHero);	
+                        preferredHero.Add(validHero);
 					}
-				}	
-				validHeroes.Clear();
+				}
+                validHeroes.Clear();
 				//preferredHero.CopyTo(List<Transform> validHeroes);
 				validHeroes = preferredHero;
 				//validHeroes = preferredHero;		
@@ -725,8 +731,9 @@ public class PlayField : MonoBehaviour {
 		//the check again in a different part of the code would return possibly two different enemies than the ones that we are actually attacking.
 		tempTransformList.Clear();
 		tempTransformList = validHeroes;
-
-		return validHeroes;
+        Debug.LogWarning("DRAIN LIFE FFF");
+        Debug.LogWarning("DRAIN LIFE GGG" + validHeroes.Count());
+        return validHeroes;
 	}
 
 	//Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a list of the given herotypes that are currently located in any CARDINAL direction around the currenthero, NOT including diagonals

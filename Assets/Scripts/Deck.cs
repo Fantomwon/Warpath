@@ -277,7 +277,7 @@ public class Deck : MonoBehaviour {
 	private bool CheckIfCardIdIsASpellCard (string cardId) {
 		//MAKE SURE YOU UPDATE THIS LIST WHENEVER YOU ADD A NEW SPELL CARD TO ACCOUNT FOR THAT NEW CARD'S ID
 		if ( cardId == "armor" || cardId == "might" || cardId == "shroud" || cardId == "root" || cardId == "fireball" || cardId == "heal" ||
-			 cardId == "rockthrow" || cardId == "windgust") {
+			 cardId == "rockthrow" || cardId == "windgust" || cardId == "drainlife") {
 			return true;
 		} else {
 			return false;
