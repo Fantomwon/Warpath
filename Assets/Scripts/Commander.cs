@@ -10,10 +10,13 @@ public class Commander : MonoBehaviour, IEventListener {
     public Sprite commanderAbilitySprite;
     public int hp;
     public int handSize;
+    public int abilityChargeCost;
+    public int currentAbilityCharge = 0;
     public CommanderData commanderData;
     public GameConstants.FactionType faction;
     public GameConstants.CommanderAbilityChargeType abilityChargeType;
     public int playerId;
+    public CommanderUIPanel commanderUIPanel;
 
     // Start is called before the first frame update
     void Start() {
@@ -27,11 +30,11 @@ public class Commander : MonoBehaviour, IEventListener {
 
     
 
-    public bool ActivateCommanderAbility() {
+    public virtual bool ActivateCommanderAbility( Hero heroTarget ) {
         return true;
     }
 
-    public void SetCommanderAttributes( string name, GameObject prefab, string selectedCommanderPrefabPath, int startingHp, int startingHandSize, CommanderData cData, int playerId) {
+    public void SetCommanderAttributes( string name, GameObject prefab, string selectedCommanderPrefabPath, int startingHp, int startingHandSize, CommanderData cData, int playerId, int abilityChargeCost) {
         //Data members
         this.commanderName = name;
         this.commanderPrefab = prefab;
@@ -40,6 +43,7 @@ public class Commander : MonoBehaviour, IEventListener {
         this.handSize = startingHandSize;
         this.playerId = playerId;
         this.commanderData = cData;
+        this.abilityChargeCost = abilityChargeCost;
     }
 
     public void SetCommanderAttributes( CommanderData data) {
@@ -48,6 +52,8 @@ public class Commander : MonoBehaviour, IEventListener {
         this.selectedCommanderPrefabPath = data.PrefabPath;
         this.hp = data.HP;
         this.handSize = data.CurrentHandSize;
+        this.abilityChargeCost = data.AbilityChargeCost;
+        this.abilityChargeType = data.AbilityChargeType;
         this.commanderData = data;
 
         Debug.Log("(2) SetCommanderAttributes called by " + data.CharName);
@@ -61,7 +67,7 @@ public class Commander : MonoBehaviour, IEventListener {
     /// Commander overrides this with method calls, such as registering for events
     /// </summary>
     public virtual void OnBattleStart() {
-
+        //Get generic references to UI that all commanders will need
     }
 
     /// <summary>

@@ -29,8 +29,9 @@ public class GlobalObject : MonoBehaviour {
     //Using hard coded value for now to quickly populate commandrers for each encounter. Ideally we will be able to later read these in from a file
     public int numEncounters = 8;
 
-    //List for commanders used for UI purposes or any time all commanders are needed to be loaded
+    //List for commanders used for Selection UI purposes or any time all commanders are needed to be loaded
     public List<CommanderData> commandersData;
+    public List<Commander> commanders;
 
     //cached boss commander for npc player updated prior to level load
     public Dictionary<int, CommanderData> enemyEncounterCommanders;
@@ -43,7 +44,10 @@ public class GlobalObject : MonoBehaviour {
 		if (GlobalObject.instance == null) {
 			GlobalObject.instance = this;
 			DontDestroyOnLoad(this.gameObject);
-		} else if (instance != this) {
+            //Register for OnSceneLoaded event
+            SceneManager.sceneLoaded += this.OnSceneLoaded;
+        } else if (instance != this) {
+            Debug.LogError("DUPLICATE GLOBAL OBJECT FOUND! DELETING THIS ONE");
 			Destroy(this.gameObject);
 		}
 
@@ -51,10 +55,10 @@ public class GlobalObject : MonoBehaviour {
         this.commandersData = new List<CommanderData>();
         //Holy commander Constantine, the Knight Templar
         string path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Templar"; 
-        CommanderData templar = new CommanderData("The Knight Templar", GameConstants.FactionType.Holy, 20, 5, path, GameConstants.CommanderAbilityChargeType.StartTurn);
+        CommanderData templar = new CommanderData("The Knight Templar", GameConstants.FactionType.Holy, 20, 5, path, GameConstants.CommanderAbilityChargeType.StartTurn, 3);
         this.commandersData.Add(templar);
         path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Cardinal";
-        CommanderData cardinal = new CommanderData("The Cardinal", GameConstants.FactionType.Holy, 15, 6, path, GameConstants.CommanderAbilityChargeType.StartTurn);
+        CommanderData cardinal = new CommanderData("The Cardinal", GameConstants.FactionType.Holy, 15, 6, path, GameConstants.CommanderAbilityChargeType.StartTurn, 4);
         this.commandersData.Add(cardinal);
         //Instantiate dictionary for enemy commanders and populate it with commanders corresponding to the encounter IDs
         this.enemyEncounterCommanders = new Dictionary<int, CommanderData>();
@@ -74,15 +78,17 @@ public class GlobalObject : MonoBehaviour {
             GameObject battleUIManagerObj = GameObject.Find("LevelCanvas");
             GlobalObject.instance.battleUIManagerScript = battleUIManagerObj.GetComponent<BattleUIManager>();
 
-            List<Commander> commanders = new List<Commander>();
+            this.commanders = new List<Commander>();
 
             //Trigger UI object to load commander images
-            commanders = GlobalObject.instance.battleUIManagerScript.SetSelectedCommanderBattleImages();
+            this.commanders = GlobalObject.instance.battleUIManagerScript.SetSelectedCommanderBattleImages();
+            Debug.LogWarning("Global object! just called SetSelectedCommanderBattleImages from BattleUIScript! Received  list of commanders with length: " + this.commanders.Count);
             //Set data attributes of the commanders
             CommanderData playerCommanderData = GlobalObject.instance.selectedCommanderData;
             CommanderData enemyCommanderData = GlobalObject.instance.enemyCommanderData;
             //Iterate through list of commanders thrown back by the UI manager that set images
             for( int i = 0; i < commanders.Count; i++) {
+                Debug.LogWarning("Global object! commanders index: " + i.ToString());
                 Commander currCommander = commanders[i];
                 //TODO: need unique conten ids or something better to match on here
                 if( currCommander == null) {
@@ -96,6 +102,11 @@ public class GlobalObject : MonoBehaviour {
                 }
                 //Set the rest of attributes
                 currCommander.SetCommanderAttributes(currCommander.commanderData);
+                //Set necessary UI references - not 100% sure why this didn't work when attempting to do so from within the BattleUIManager's SetSelectedCommanderBattleImages but for some reason results in a null ref if not set here
+                GlobalObject.instance.battleUIManagerScript.SetCommanderUIPanel(ref currCommander);
+                //Initialize some UI data to store variables and then set the display text for current charge and total cost
+                currCommander.commanderUIPanel.Initialize();
+                currCommander.commanderUIPanel.SetCommanderResourceText(0, currCommander.abilityChargeCost );
                 //Fire off notification for Commanders that the battle has started
                 currCommander.OnBattleStart();
             }
@@ -113,11 +124,53 @@ public class GlobalObject : MonoBehaviour {
 		
 	}
 
-    void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode) {
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
         Debug.Log("Global object: Scene loaded! => name:" + scene.name + " index: " + scene.buildIndex.ToString() );
-        Debug.Log(mode);
+        Debug.Log(mode.ToString());
         if( scene.buildIndex == GameConstants.SCENE_INDEX_COMMANDER_SELECT) {
             GlobalObject.instance.LoadCommanderSelectUI();
+        }else if (SceneManager.GetActiveScene().buildIndex == GameConstants.SCENE_INDEX_GAME_COMMANDERS) {
+            //Assign data to specifiy selected commander  based on story encounter
+            GlobalObject.instance.AssignEnemyCommander();
+            Debug.Log("GLOBAL OBJECT TRYING TO LOAD COMMANDER GAME SCENE!");
+            //Try to find UI manager object for loading commander images
+            GameObject battleUIManagerObj = GameObject.Find("LevelCanvas");
+            GlobalObject.instance.battleUIManagerScript = battleUIManagerObj.GetComponent<BattleUIManager>();
+
+            this.commanders = new List<Commander>();
+
+            //Trigger UI object to load commander images
+            this.commanders = GlobalObject.instance.battleUIManagerScript.SetSelectedCommanderBattleImages();
+            Debug.LogWarning("Global object! just called SetSelectedCommanderBattleImages from BattleUIScript! Received  list of commanders with length: " + this.commanders.Count);
+            //Set data attributes of the commanders
+            CommanderData playerCommanderData = GlobalObject.instance.selectedCommanderData;
+            CommanderData enemyCommanderData = GlobalObject.instance.enemyCommanderData;
+            //Iterate through list of commanders thrown back by the UI manager that set images
+            for (int i = 0; i < commanders.Count; i++) {
+                Debug.LogWarning("Global object! commanders index: " + i.ToString());
+                Commander currCommander = commanders[i];
+                //TODO: need unique conten ids or something better to match on here
+                if (currCommander == null) {
+                    Debug.LogWarning("CURR COMMANDER IS NULL!!! SAAERERERER");
+                }
+                //Set player ids for commanders
+                if (currCommander.commanderData.CharName == playerCommanderData.CharName) { //TODO: Fix bug here - currCommander commanderdata is null?!
+                    currCommander.playerId = GameConstants.HUMAN_PLAYER_ID;
+                } else if (currCommander.commanderData.CharName == enemyCommanderData.CharName) {
+                    currCommander.playerId = GameConstants.ENEMY_PLAYER_ID;
+                }
+                //Set the rest of attributes
+                currCommander.SetCommanderAttributes(currCommander.commanderData);
+                //Set necessary UI references - not 100% sure why this didn't work when attempting to do so from within the BattleUIManager's SetSelectedCommanderBattleImages but for some reason results in a null ref if not set here
+                GlobalObject.instance.battleUIManagerScript.SetCommanderUIPanel(ref currCommander);
+                //Initialize some UI data to store variables and then set the display text for current charge and total cost
+                currCommander.commanderUIPanel.Initialize();
+                currCommander.commanderUIPanel.SetCommanderResourceText(0, currCommander.abilityChargeCost);
+                //Fire off notification for Commanders that the battle has started
+                currCommander.OnBattleStart();
+            }
+
+            //TODO: Need to change the logic for this at some point
         }
     }
 
@@ -131,7 +184,7 @@ public class GlobalObject : MonoBehaviour {
             //populate data for commander
             Commander commanderListItem = listItem.GetComponent<Commander>();
             GameObject commanderPrefab = Resources.Load<GameObject>(cData.PrefabPath);
-            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize, cData, -1);
+            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize, cData, -1, cData.AbilityChargeCost);
             //Add list item to scrollview UI
             listItem.transform.SetParent(GameObject.Find("CommanderSelectUIManager/CommanderSelectionScrollList/Viewport/Content/CommanderContainer").transform, false);
             //Create prefab to use as image on list item

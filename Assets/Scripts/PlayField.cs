@@ -35,8 +35,22 @@ public class PlayField : MonoBehaviour {
     private int manaPerTurnAi = 3;
 	private int turnsPlayed = 0;
 
-	// Use this for initialization
-	void Start () {
+    public bool commanderAbilityActiveOnMouse = false;
+    public Commander playerCommander;
+    public Commander enemyCommander;
+
+    public static PlayField instance;
+
+    private void Awake() {
+        if(PlayField.instance == null) {
+            PlayField.instance = this;
+        }else if(PlayField.instance != this) {
+            Destroy(this.gameObject);
+        }
+       
+    }
+    // Use this for initialization
+    void Start () {
 		player1 = new GameObject("player1");
 		player2 = new GameObject("player2");
 		Player1TurnStart();
@@ -46,11 +60,57 @@ public class PlayField : MonoBehaviour {
 		deck = FindObjectOfType<Deck>();
 		player2ManaText.text = player2Mana.ToString();
 		buffManager = FindObjectOfType<BuffManager>();
-	}
+
+        //Initialize commanders
+        //Save these newly created scripts with the play field
+        Debug.LogWarning("Playfield Test 1 $$$$");
+        List<Commander> commandersList = GlobalObject.instance.commanders;
+        for (int i = 0; i < commandersList.Count; i++) {
+            Debug.LogWarning("Playfield Test A $$$$");
+            Commander currCommander = commandersList[i];
+            if (currCommander.playerId == GameConstants.HUMAN_PLAYER_ID) {
+                Debug.LogWarning("Playfield Test B $$$$");
+                PlayField.instance.playerCommander = currCommander;
+            } else {
+                Debug.LogWarning("Playfield Test C $$$$");
+                PlayField.instance.enemyCommander = currCommander;
+            }
+        }
+    }
 
 	void OnMouseDown(){
-		//print (Input.mousePosition);
-		//print (SnapToGrid(CalculateWorldPointOfMouseClick()));
+        //Use CalculateWorldPointOfMouseClick method to get the 'raw position' (position in pixels) of where the player clicked in the world -NOTE MOVED THIS FROM DOWN BELOW, SHOULDN'T CAUSE A PROBLEM RIGHT?
+        Vector2 rawPos = CalculateWorldPointOfMouseClick();
+        //Use SnapToGrid method to turn rawPos into rounded integer units in world space coordinates
+        roundedPos = SnapToGrid(rawPos);
+        //Debug.LogWarning("roundedPos is: " + roundedPos);
+
+        //print (Input.mousePosition);
+        //print (SnapToGrid(CalculateWorldPointOfMouseClick()));
+        Debug.LogWarning("mouse down 1~~~");
+        //Commander ability stuff
+        if ( commanderAbilityActiveOnMouse) {
+            Debug.LogWarning("mouse down 2~~~");
+            //Get the commander for this player assuming it's player's commander
+            Commander commanderReference = playerCommander;
+            //If not the players turn then we go with enemy commander for the ability
+            if ( !player1Turn) {
+                Debug.LogWarning("mouse down Z~~~");
+                commanderReference = enemyCommander;
+            }
+            //Check under mouse for target
+            foreach (Transform hero in this.player2.transform) {
+                Debug.LogWarning("mouse down 3~~~");
+                //If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method which is part of Spell.cs and is attached to
+                //the 'Rock' object nested under the 'RockThrowParticle' object)
+                if (Mathf.RoundToInt(hero.transform.position.x) == this.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == this.roundedPos.y) {
+                    Debug.LogWarning("mouse down 4~~~");
+                    commanderReference.ActivateCommanderAbility(hero.GetComponent<Hero>()); //NULL REF??? WHY??
+                    this.commanderAbilityActiveOnMouse = false;
+                    return;
+                }
+            }
+        }
 
 		if (!Card.selectedCard) {
 			Debug.LogWarning("NO CARD SELECTED");
@@ -70,11 +130,7 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 			
-		//Use CalculateWorldPointOfMouseClick method to get the 'raw position' (position in pixels) of where the player clicked in the world
-		Vector2 rawPos = CalculateWorldPointOfMouseClick();
-		//Use SnapToGrid method to turn rawPos into rounded integer units in world space coordinates
-		roundedPos = SnapToGrid(rawPos);
-		//Debug.LogWarning("roundedPos is: " + roundedPos);
+		
 
 		//If the selected card is a 'Class Spell', cast it
 		if (Card.selectedCard.GetComponent<Card>().type == "Spell" && Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
@@ -277,16 +333,12 @@ public class PlayField : MonoBehaviour {
         //TODO: Add event listener!!!
 		Debug.Log("RUNNING SwitchPlayerTurns");
 		yield return new WaitForSeconds(0.5f);
-        int playerId = GameConstants.HUMAN_PLAYER_ID;
 		player1Turn = !player1Turn;
 		if (player1Turn) {
 			Player1TurnStart ();
 		} else if (!player1Turn) {
-            playerId = GameConstants.ENEMY_PLAYER_ID;
 			Player2TurnStart ();
 		}
-        /****** On Turn Start Event - Event notifier sending message to listeners ******/
-        BattleEventManager._instance.NotifyOnTurnStart( playerId );
 	}
 
 	public void MoveHeroes () {
@@ -1100,6 +1152,8 @@ public class PlayField : MonoBehaviour {
 		EnablePlayer1SpellsAndHidePlayer2Spells ();
 
         Player1AddMana(manaPerTurn);
+        //NOTIFY THAT PLAYER 1 HAS STARTED THEIR TURN
+        BattleEventManager._instance.NotifyOnTurnStart(GameConstants.HUMAN_PLAYER_ID);
 		StartOfTurnEffects ();
 		ReduceSpellCooldowns ();
 
@@ -1115,6 +1169,8 @@ public class PlayField : MonoBehaviour {
 		EnablePlayer2SpellsAndHidePlayer1Spells ();
 
         Player2AddMana(manaPerTurn);
+        //NOTIFY THAT PLAYER 1 HAS STARTED THEIR TURN
+        BattleEventManager._instance.NotifyOnTurnStart(GameConstants.ENEMY_PLAYER_ID);
         StartOfTurnEffects ();
 		ReduceSpellCooldowns ();
 

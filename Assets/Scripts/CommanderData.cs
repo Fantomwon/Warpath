@@ -10,7 +10,7 @@ public class CommanderData
 
 	}
 
-    public CommanderData( string characterName, GameConstants.FactionType faction, int commanderHP, int startingHandSize, string prefabResourcePath, GameConstants.CommanderAbilityChargeType abilityChargeType) {
+    public CommanderData( string characterName, GameConstants.FactionType faction, int commanderHP, int startingHandSize, string prefabResourcePath, GameConstants.CommanderAbilityChargeType abilityChargeType, int abilityChargeCost) {
         this._charName = characterName;
         this._faction = faction;
         this._hp = commanderHP;
@@ -20,6 +20,7 @@ public class CommanderData
         this._currentHandSize = this._startingHandSize;
         this._maxHp = this._hp;
         this._abilityChargeType = abilityChargeType;
+        this._abilityChargeCost = abilityChargeCost;
     }
 
     [SerializeField]
@@ -56,7 +57,7 @@ public class CommanderData
     private GameConstants.CommanderAbilityChargeType _abilityChargeType;
 
     /// <summary>
-    /// Gets the commander's faction. Used for determining which cards to supply in certain contexts.
+    /// Gets the commander's charge type. Used for determining which events charge the commander's ability.
     /// </summary>
     public GameConstants.CommanderAbilityChargeType AbilityChargeType {
         get {
@@ -64,6 +65,15 @@ public class CommanderData
         }
     }
 
+
+    [SerializeField]
+    private int _abilityChargeCost;
+
+    public int AbilityChargeCost {
+        get {
+            return this._abilityChargeCost;
+        }
+    }
 
     /// <summary>
     /// The commander's current health. If reduced to 0, the character dies.

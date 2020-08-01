@@ -32,18 +32,19 @@ public class BattleUIManager : MonoBehaviour {
         Debug.Log("BATTLE UI MANAGER: Prefab path is= " + playerCommanderData.PrefabPath);
         //Instantiate UI template object for player 1's commander
         GameObject playerCommanderInstance = Instantiate(playerCommanderPrefab) as GameObject;
-        Commander playerCommanderScript = playerCommanderInstance.GetComponent<KnightCommander>();
+        Commander playerCommanderScript = playerCommanderInstance.GetComponent<Commander>();
         playerCommanderScript.SetCommanderAttributes(playerCommanderData);
         commanders.Add(playerCommanderScript);
         //Parent newly created prefab to UI element for positioning
         playerCommanderInstance.transform.SetParent(GameObject.Find("PanelCommanderBattleP1/Image").transform, false);
+        //NOTE! Had previously attempted to set the Commander UI panel variable reference in here for each commander but for some reason it ends up being null after Global Object gets the list back
 
-        /* Setting commander images for player 2 (Enemy) */
+        /*Setting commander images for player 2 (Enemy)*/
         GameObject enemyCommanderPrefab = Resources.Load<GameObject>(enemyCommanderData.PrefabPath);
         Debug.Log("BATTLE UI MANAGER: Prefab path is= " + enemyCommanderData.PrefabPath);
         //Instantiate UI template object for player 1's commander
         GameObject enemyCommanderInstance = Instantiate(enemyCommanderPrefab) as GameObject;
-        Commander enemyCommanderScript = enemyCommanderInstance.GetComponent<CardinalCommander>();
+        Commander enemyCommanderScript = enemyCommanderInstance.GetComponent<Commander>();
         //Set the necessary data
         enemyCommanderScript.SetCommanderAttributes(enemyCommanderData);
         commanders.Add(enemyCommanderScript);
@@ -52,7 +53,19 @@ public class BattleUIManager : MonoBehaviour {
         //flip sprite
         Transform enemyCommanderSprite = enemyCommanderInstance.transform.Find("Hero");
         enemyCommanderSprite.localScale = new Vector3(enemyCommanderSprite.transform.localScale.x * -1, enemyCommanderSprite.transform.localScale.y, enemyCommanderSprite.transform.localScale.z);
-
+        Debug.LogWarning("BATTLE UI MANAGER! SetSelectedCommanderBattleImages called! passing back list of commanders with length: " + commanders.Count);
         return commanders;
+    }
+
+    public void SetCommanderUIPanel( ref Commander commander) {
+        if( commander.playerId == GameConstants.HUMAN_PLAYER_ID) {
+            //Get component for matching UI script and cache it with the PlayerCommanderInstance for Player 1
+            CommanderUIPanel commanderUIPanelScript = GameObject.Find("PanelCommanderBattleP1").GetComponent<CommanderUIPanel>();
+            commander.commanderUIPanel = commanderUIPanelScript;
+        } else if( commander.playerId == GameConstants.ENEMY_PLAYER_ID) {
+            //Get component for matching UI script and cache it with the PlayerCommanderInstance for Player 1
+            CommanderUIPanel commanderUIPanelScript = GameObject.Find("PanelCommanderBattleP2").GetComponent<CommanderUIPanel>();
+            commander.commanderUIPanel = commanderUIPanelScript;
+        }
     }
 }

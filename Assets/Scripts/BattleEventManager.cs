@@ -32,6 +32,11 @@ public class BattleEventManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Call this method to register for an event
+    /// </summary>
+    /// <param name="eventType">Id for the event type you want</param>
+    /// <param name="listener">The commander or unit that will be notified</param>
     public void RegisterForEvent( BattleEventManager.EventType eventType, IEventListener listener) {
         Debug.Log("BATTLE EVENT MANAGER!! - Register For Event called!");
         switch( eventType) {
