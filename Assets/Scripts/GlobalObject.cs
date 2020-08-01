@@ -68,51 +68,7 @@ public class GlobalObject : MonoBehaviour {
             this.enemyEncounterCommanders.Add(i, this.commandersData.Find(c => c.CharName == "The Cardinal"));
         }
 
-        if (SceneManager.GetActiveScene().buildIndex == GameConstants.SCENE_INDEX_COMMANDER_SELECT) {
-            GlobalObject.instance.LoadCommanderSelectUI();
-        }else if(SceneManager.GetActiveScene().buildIndex == GameConstants.SCENE_INDEX_GAME_COMMANDERS) {
-            //Assign data to specifiy selected commander  based on story encounter
-            GlobalObject.instance.AssignEnemyCommander();
-            Debug.Log("GLOBAL OBJECT TRYING TO LOAD COMMANDER GAME SCENE!");
-            //Try to find UI manager object for loading commander images
-            GameObject battleUIManagerObj = GameObject.Find("LevelCanvas");
-            GlobalObject.instance.battleUIManagerScript = battleUIManagerObj.GetComponent<BattleUIManager>();
-
-            this.commanders = new List<Commander>();
-
-            //Trigger UI object to load commander images
-            this.commanders = GlobalObject.instance.battleUIManagerScript.SetSelectedCommanderBattleImages();
-            Debug.LogWarning("Global object! just called SetSelectedCommanderBattleImages from BattleUIScript! Received  list of commanders with length: " + this.commanders.Count);
-            //Set data attributes of the commanders
-            CommanderData playerCommanderData = GlobalObject.instance.selectedCommanderData;
-            CommanderData enemyCommanderData = GlobalObject.instance.enemyCommanderData;
-            //Iterate through list of commanders thrown back by the UI manager that set images
-            for( int i = 0; i < commanders.Count; i++) {
-                Debug.LogWarning("Global object! commanders index: " + i.ToString());
-                Commander currCommander = commanders[i];
-                //TODO: need unique conten ids or something better to match on here
-                if( currCommander == null) {
-                    Debug.LogWarning("CURR COMMANDER IS NULL!!! SAAERERERER");
-                }
-                //Set player ids for commanders
-                if (currCommander.commanderData.CharName == playerCommanderData.CharName) { //TODO: Fix bug here - currCommander commanderdata is null?!
-                    currCommander.playerId = GameConstants.HUMAN_PLAYER_ID;
-                } else if (currCommander.commanderData.CharName == enemyCommanderData.CharName) {
-                    currCommander.playerId = GameConstants.ENEMY_PLAYER_ID;
-                }
-                //Set the rest of attributes
-                currCommander.SetCommanderAttributes(currCommander.commanderData);
-                //Set necessary UI references - not 100% sure why this didn't work when attempting to do so from within the BattleUIManager's SetSelectedCommanderBattleImages but for some reason results in a null ref if not set here
-                GlobalObject.instance.battleUIManagerScript.SetCommanderUIPanel(ref currCommander);
-                //Initialize some UI data to store variables and then set the display text for current charge and total cost
-                currCommander.commanderUIPanel.Initialize();
-                currCommander.commanderUIPanel.SetCommanderResourceText(0, currCommander.abilityChargeCost );
-                //Fire off notification for Commanders that the battle has started
-                currCommander.OnBattleStart();
-            }
-
-            //TODO: Need to change the logic for this at some point
-        } else if (SceneManager.GetActiveScene().name != "BossSelect" && SceneManager.GetActiveScene().name != "Game" && SceneManager.GetActiveScene().name != "GameCommanders") {
+        if (SceneManager.GetActiveScene().name != "BossSelect" && SceneManager.GetActiveScene().name != "Game" && SceneManager.GetActiveScene().name != "GameCommanders") {
             Debug.LogWarning("WARNING! Scene Manger is Loading a non specified scene which it assumes is the card select!!!");
             AssignPlayerCards();
             InstantiatePlayerCards();
