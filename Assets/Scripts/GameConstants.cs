@@ -18,6 +18,10 @@ public static class GameConstants
     [Serializable]
     public enum CommanderAbilityChargeType {StartTurn, UnitDeath, UnitReceiveDamage};
 
+    //Commander ability target type. Will determine which units are affected by a commander's ability on activation
+    [Serializable]
+    public enum CommanderAbilityTargetType { Enemy, Ally };
+
     //Tags
     public const string TAG_COMMANDER_SELECT_UI_MANAGER = "commanderSelectUIManager";
 

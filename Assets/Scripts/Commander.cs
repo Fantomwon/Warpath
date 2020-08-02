@@ -15,6 +15,7 @@ public class Commander : MonoBehaviour, IEventListener {
     public CommanderData commanderData;
     public GameConstants.FactionType faction;
     public GameConstants.CommanderAbilityChargeType abilityChargeType;
+    public GameConstants.CommanderAbilityTargetType abilityTargetType;
     public int playerId;
     public CommanderUIPanel commanderUIPanel;
 
@@ -34,7 +35,7 @@ public class Commander : MonoBehaviour, IEventListener {
         return true;
     }
 
-    public void SetCommanderAttributes( string name, GameObject prefab, string selectedCommanderPrefabPath, int startingHp, int startingHandSize, CommanderData cData, int playerId, int abilityChargeCost) {
+    public void SetCommanderAttributes( string name, GameObject prefab, string selectedCommanderPrefabPath, int startingHp, int startingHandSize, CommanderData cData, int playerId, int abilityChargeCost, GameConstants.CommanderAbilityTargetType abilityTargetType) {
         //Data members
         this.commanderName = name;
         this.commanderPrefab = prefab;
@@ -44,6 +45,7 @@ public class Commander : MonoBehaviour, IEventListener {
         this.playerId = playerId;
         this.commanderData = cData;
         this.abilityChargeCost = abilityChargeCost;
+        this.abilityTargetType = abilityTargetType;
     }
 
     public void SetCommanderAttributes( CommanderData data) {
@@ -55,6 +57,7 @@ public class Commander : MonoBehaviour, IEventListener {
         this.abilityChargeCost = data.AbilityChargeCost;
         this.abilityChargeType = data.AbilityChargeType;
         this.commanderData = data;
+        this.abilityTargetType = data.AbilityTargetType;
 
         Debug.Log("(2) SetCommanderAttributes called by " + data.CharName);
     }

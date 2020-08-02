@@ -10,7 +10,7 @@ public class CommanderData
 
 	}
 
-    public CommanderData( string characterName, GameConstants.FactionType faction, int commanderHP, int startingHandSize, string prefabResourcePath, GameConstants.CommanderAbilityChargeType abilityChargeType, int abilityChargeCost) {
+    public CommanderData( string characterName, GameConstants.FactionType faction, int commanderHP, int startingHandSize, string prefabResourcePath, GameConstants.CommanderAbilityChargeType abilityChargeType, int abilityChargeCost, GameConstants.CommanderAbilityTargetType abilityTargetType) {
         this._charName = characterName;
         this._faction = faction;
         this._hp = commanderHP;
@@ -21,6 +21,7 @@ public class CommanderData
         this._maxHp = this._hp;
         this._abilityChargeType = abilityChargeType;
         this._abilityChargeCost = abilityChargeCost;
+        this._abilityTargetType = abilityTargetType;
     }
 
     [SerializeField]
@@ -65,6 +66,20 @@ public class CommanderData
         }
     }
 
+    /// <summary>
+    /// The commander's ability charge type. Determines what events charge the commander's ability. 
+    /// </summary>
+    [SerializeField]
+    private GameConstants.CommanderAbilityTargetType _abilityTargetType;
+
+    /// <summary>
+    /// Gets the commander's charge type. Used for determining which events charge the commander's ability.
+    /// </summary>
+    public GameConstants.CommanderAbilityTargetType AbilityTargetType {
+        get {
+            return this._abilityTargetType;
+        }
+    }
 
     [SerializeField]
     private int _abilityChargeCost;

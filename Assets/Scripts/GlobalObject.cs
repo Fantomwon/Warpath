@@ -55,10 +55,10 @@ public class GlobalObject : MonoBehaviour {
         this.commandersData = new List<CommanderData>();
         //Holy commander Constantine, the Knight Templar
         string path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Templar"; 
-        CommanderData templar = new CommanderData("The Knight Templar", GameConstants.FactionType.Holy, 20, 5, path, GameConstants.CommanderAbilityChargeType.StartTurn, 3);
+        CommanderData templar = new CommanderData("The Knight Templar", GameConstants.FactionType.Holy, 20, 5, path, GameConstants.CommanderAbilityChargeType.StartTurn, 3, GameConstants.CommanderAbilityTargetType.Enemy);
         this.commandersData.Add(templar);
         path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Cardinal";
-        CommanderData cardinal = new CommanderData("The Cardinal", GameConstants.FactionType.Holy, 15, 6, path, GameConstants.CommanderAbilityChargeType.StartTurn, 4);
+        CommanderData cardinal = new CommanderData("The Cardinal", GameConstants.FactionType.Holy, 15, 6, path, GameConstants.CommanderAbilityChargeType.StartTurn, 3, GameConstants.CommanderAbilityTargetType.Ally);
         this.commandersData.Add(cardinal);
         //Instantiate dictionary for enemy commanders and populate it with commanders corresponding to the encounter IDs
         this.enemyEncounterCommanders = new Dictionary<int, CommanderData>();
@@ -68,7 +68,10 @@ public class GlobalObject : MonoBehaviour {
             this.enemyEncounterCommanders.Add(i, this.commandersData.Find(c => c.CharName == "The Cardinal"));
         }
 
-        if (SceneManager.GetActiveScene().name != "BossSelect" && SceneManager.GetActiveScene().name != "Game" && SceneManager.GetActiveScene().name != "GameCommanders") {
+        if (SceneManager.GetActiveScene().name != "BossSelect"
+            && SceneManager.GetActiveScene().name != "Game"
+            && SceneManager.GetActiveScene().name != "GameCommanders"
+            && SceneManager.GetActiveScene().name != "CommanderSelect") {
             Debug.LogWarning("WARNING! Scene Manger is Loading a non specified scene which it assumes is the card select!!!");
             AssignPlayerCards();
             InstantiatePlayerCards();
@@ -140,7 +143,7 @@ public class GlobalObject : MonoBehaviour {
             //populate data for commander
             Commander commanderListItem = listItem.GetComponent<Commander>();
             GameObject commanderPrefab = Resources.Load<GameObject>(cData.PrefabPath);
-            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize, cData, -1, cData.AbilityChargeCost);
+            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize, cData, -1, cData.AbilityChargeCost, cData.AbilityTargetType );
             //Add list item to scrollview UI
             listItem.transform.SetParent(GameObject.Find("CommanderSelectUIManager/CommanderSelectionScrollList/Viewport/Content/CommanderContainer").transform, false);
             //Create prefab to use as image on list item

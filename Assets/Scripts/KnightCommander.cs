@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 public class KnightCommander : Commander {
 
-    public readonly int COMMANDER_ABILITY_DAMAGE = 1;
+    public readonly int COMMANDER_ABILITY_DAMAGE = 2;
 
     // Use this for initialization
     void Start() {
@@ -57,6 +57,8 @@ public class KnightCommander : Commander {
         heroTarget.TakeDamage(this.COMMANDER_ABILITY_DAMAGE);
         //Drain resource
         this.currentAbilityCharge = 0;
+        //Update UI 
+        this.commanderUIPanel.SetCommanderResourceText(this.currentAbilityCharge);
         //Reset UI elements
         this.commanderUIPanel.SetCommanderAbilityButtonActive(false);
         return true;

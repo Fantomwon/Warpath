@@ -89,26 +89,39 @@ public class PlayField : MonoBehaviour {
         //print (SnapToGrid(CalculateWorldPointOfMouseClick()));
         Debug.LogWarning("mouse down 1~~~");
         //Commander ability stuff
-        if ( commanderAbilityActiveOnMouse) {
+        if ( commanderAbilityActiveOnMouse && this.player1Turn) {
             Debug.LogWarning("mouse down 2~~~");
             //Get the commander for this player assuming it's player's commander
             Commander commanderReference = playerCommander;
-            //If not the players turn then we go with enemy commander for the ability
-            if ( !player1Turn) {
-                Debug.LogWarning("mouse down Z~~~");
-                commanderReference = enemyCommander;
-            }
-            //Check under mouse for target
-            foreach (Transform hero in this.player2.transform) {
-                Debug.LogWarning("mouse down 3~~~");
-                //If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method which is part of Spell.cs and is attached to
-                //the 'Rock' object nested under the 'RockThrowParticle' object)
-                if (Mathf.RoundToInt(hero.transform.position.x) == this.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == this.roundedPos.y) {
-                    Debug.LogWarning("mouse down 4~~~");
-                    commanderReference.ActivateCommanderAbility(hero.GetComponent<Hero>()); //NULL REF??? WHY??
-                    this.commanderAbilityActiveOnMouse = false;
-                    return;
-                }
+            
+            //Check under mouse for target with logic based on the commander's target type
+            switch( commanderReference.abilityTargetType) {
+                case (GameConstants.CommanderAbilityTargetType.Enemy):
+                    foreach (Transform hero in this.player2.transform) {
+                        Debug.LogWarning("mouse down 3.1~~~");
+                        //If there is an enemy in the square I clicked on then activate commander ability on the unit 
+                        if (Mathf.RoundToInt(hero.transform.position.x) == this.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == this.roundedPos.y) {
+                            Debug.LogWarning("mouse down 4.1~~~");
+                            commanderReference.ActivateCommanderAbility(hero.GetComponent<Hero>());
+                            this.commanderAbilityActiveOnMouse = false;
+                            return;
+                        }
+                    }
+                    break;
+                case (GameConstants.CommanderAbilityTargetType.Ally):
+                    foreach (Transform hero in this.player1.transform) {
+                        Debug.LogWarning("mouse down 3.1~~~");
+                        //If there is an ally in the square I clicked on then activate the commander ability o nthe ally
+                        if (Mathf.RoundToInt(hero.transform.position.x) == this.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == this.roundedPos.y) {
+                            Debug.LogWarning("mouse down 4.1~~~");
+                            commanderReference.ActivateCommanderAbility(hero.GetComponent<Hero>());
+                            this.commanderAbilityActiveOnMouse = false;
+                            return;
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
