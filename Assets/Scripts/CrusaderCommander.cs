@@ -4,14 +4,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+public class CrusaderCommander : Commander{
 
-public class KnightCommander : Commander {
-
-    public readonly int COMMANDER_ABILITY_DAMAGE = 2;
-
+    protected readonly int COMMANDER_ABILITY_ARMOR = 2;
+    
     // Use this for initialization
     void Start() {
-        
+
     }
 
     /// <summary>
@@ -19,23 +18,22 @@ public class KnightCommander : Commander {
     /// </summary>
     public override void OnBattleStart() {
         //Register for turn started event
-        BattleEventManager._instance.RegisterForEvent(BattleEventManager.EventType.StartTurn, this);
+        BattleEventManager._instance.RegisterForEvent(BattleEventManager.EventType.UnitReceiveDamage, this);
     }
 
     /// <summary>
-    /// Actions this commander performs on start of any turn
+    /// Event fired on any unit receiving damage. Crusader commander gains ability charge on an allied soldier taking damage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public override void EventStartTurn(object sender, EventArgs e, int playerId) {
-        Debug.Log("$ Knight Commander Event Start Turn $ and pId: " + playerId);
-        if( playerId == this.playerId) {
-            Debug.Log("Knight Commander! My player is taking turn!");
-            //Try and increase this character's current charge and update UI accordingly
-            if( this.currentAbilityCharge < this.abilityChargeCost) {
-                this.IncreaseCommanderAbilityCharge();
-            }
+    /// <param name="playerId"></param>
+    public override void EventUnitReceiveDamage(object sender, EventArgs e, int playerId, Hero damageReceiver) { 
+        //Crusader only gains charge if allied soldier is damaged
+        if( playerId == this.playerId && this.currentAbilityCharge < this.abilityChargeCost ) {
+            //Increase charge
+            this.IncreaseCommanderAbilityCharge();
         }
+
     }
 
     public void IncreaseCommanderAbilityCharge() {
@@ -47,14 +45,14 @@ public class KnightCommander : Commander {
     public void CheckActivateCommanderButton() {
         if (this.currentAbilityCharge >= this.abilityChargeCost) {
             //Activate UI element - This probably needs to be a prefab or part of this prefab
-            this.commanderUIPanel.SetCommanderAbilityButtonActive( true );
+            this.commanderUIPanel.SetCommanderAbilityButtonActive(true);
         }
     }
 
     public override bool ActivateCommanderAbility(Hero heroTarget) {
-        Debug.LogWarning("KNIGHT COMMANDER USING HEAVENLY HAMMA!!");
-        //Apply damage to target per this ability
-        PlayField.instance.DamageHero(heroTarget, this.COMMANDER_ABILITY_DAMAGE);
+        Debug.LogWarning("CRUSADER COMMANDER USING HEAVENLY HAMMA!!");
+        //Grant ability target shield
+        heroTarget.AddArmor( this.COMMANDER_ABILITY_ARMOR );
         //Drain resource
         this.currentAbilityCharge = 0;
         //Update UI 
@@ -62,5 +60,10 @@ public class KnightCommander : Commander {
         //Reset UI elements
         this.commanderUIPanel.SetCommanderAbilityButtonActive(false);
         return true;
+    }
+
+    // Update is called once per frame
+    void Update(){
+        
     }
 }

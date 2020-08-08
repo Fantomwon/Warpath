@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\CommanderSelectUI.cs" />
     <Compile Include="Assets\Scripts\CommanderSelectUIManager.cs" />
     <Compile Include="Assets\Scripts\CommanderUIPanel.cs" />
+    <Compile Include="Assets\Scripts\CrusaderCommander.cs" />
     <Compile Include="Assets\Scripts\DebugManager.cs" />
     <Compile Include="Assets\Scripts\Deck.cs" />
     <Compile Include="Assets\Scripts\GameConstants.cs" />

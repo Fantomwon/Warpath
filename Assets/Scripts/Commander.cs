@@ -29,13 +29,13 @@ public class Commander : MonoBehaviour, IEventListener {
 
     }
 
-    
 
-    public virtual bool ActivateCommanderAbility( Hero heroTarget ) {
+
+    public virtual bool ActivateCommanderAbility(Hero heroTarget) {
         return true;
     }
 
-    public void SetCommanderAttributes( string name, GameObject prefab, string selectedCommanderPrefabPath, int startingHp, int startingHandSize, CommanderData cData, int playerId, int abilityChargeCost, GameConstants.CommanderAbilityTargetType abilityTargetType) {
+    public void SetCommanderAttributes(string name, GameObject prefab, string selectedCommanderPrefabPath, int startingHp, int startingHandSize, CommanderData cData, int playerId, int abilityChargeCost, GameConstants.CommanderAbilityTargetType abilityTargetType) {
         //Data members
         this.commanderName = name;
         this.commanderPrefab = prefab;
@@ -48,7 +48,7 @@ public class Commander : MonoBehaviour, IEventListener {
         this.abilityTargetType = abilityTargetType;
     }
 
-    public void SetCommanderAttributes( CommanderData data) {
+    public void SetCommanderAttributes(CommanderData data) {
         //Data members
         this.commanderName = data.CharName;
         this.selectedCommanderPrefabPath = data.PrefabPath;
@@ -74,7 +74,7 @@ public class Commander : MonoBehaviour, IEventListener {
     }
 
     /// <summary>
-    /// Override this event in commander or unit when listening to turn star event
+    /// Override this event in commander or unit when listening to turn start event
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -82,5 +82,13 @@ public class Commander : MonoBehaviour, IEventListener {
 
     }
 
+    /// <summary>
+    /// Override this event in commander or unit when listening to event fired when a unit receives damage
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /// <param name="playerId"></param>
+    public virtual void EventUnitReceiveDamage(object sender, EventArgs e, int playerId, Hero damageReceiver) {
 
+    }
 }

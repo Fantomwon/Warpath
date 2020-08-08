@@ -74,7 +74,7 @@ public class Card : MonoBehaviour {
 	}
 
 	public void DoSpellDamage (Transform hero,int spellDamage) {
-		hero.GetComponent<Hero>().TakeDamage(spellDamage);
+        PlayField.instance.DamageHero(hero.GetComponent<Hero>(), spellDamage);
 	}
 
 	public void CastSpell () { 
@@ -459,7 +459,7 @@ public class Card : MonoBehaviour {
                         ParticleSystem hitParticle = hero.GetComponent<Hero>().hitParticle;
                         Instantiate(hitParticle, hero.transform.position, Quaternion.identity);
                         //Do the damage to the enemy
-                        hero.GetComponent<Hero>().TakeDamage(1);
+                        PlayField.instance.DamageHero(hero.GetComponent<Hero>(), 1);
                         //Heal a random ally
                         List<Transform> allies = playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal");
                         if (allies.Count() > 0) {
@@ -478,7 +478,7 @@ public class Card : MonoBehaviour {
                         spellParticle.GetComponentInChildren<Spell>().hero = hero;
                         Instantiate(spellParticle, hero.transform.localPosition, Quaternion.identity, player2.transform);
                         //Do the damage to the enemy
-                        hero.GetComponent<Hero>().TakeDamage(1);
+                        PlayField.instance.DamageHero(hero.GetComponent<Hero>(), 1);
                         //Heal a random ally
                         List<Transform> allies = playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal");
                         if (allies.Count() > 0) {
@@ -498,7 +498,7 @@ public class Card : MonoBehaviour {
                 spellParticle.GetComponentInChildren<Spell>().hero = heroToAttack;
                 Instantiate(spellParticle, heroToAttack.transform.localPosition, Quaternion.identity, player1.transform);
                 //Do the damage to the enemy
-                heroToAttack.GetComponent<Hero>().TakeDamage(1);
+                PlayField.instance.DamageHero( heroToAttack.GetComponent<Hero>(), 1 );
                 //Heal a random ally
                 List<Transform> allies = playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal");
                 if (allies.Count() > 0) {

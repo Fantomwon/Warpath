@@ -57,9 +57,15 @@ public class GlobalObject : MonoBehaviour {
         string path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Templar"; 
         CommanderData templar = new CommanderData("The Knight Templar", GameConstants.FactionType.Holy, 20, 5, path, GameConstants.CommanderAbilityChargeType.StartTurn, 3, GameConstants.CommanderAbilityTargetType.Enemy);
         this.commandersData.Add(templar);
+        //Holy commander, aka The Pious One, Francis the Cardinal
         path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Cardinal";
         CommanderData cardinal = new CommanderData("The Cardinal", GameConstants.FactionType.Holy, 15, 6, path, GameConstants.CommanderAbilityChargeType.StartTurn, 3, GameConstants.CommanderAbilityTargetType.Ally);
         this.commandersData.Add(cardinal);
+        //Holy commander, aka The Eternal Shield, aka The Unbroken,  Joan the Crusader
+        path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Crusader";
+        CommanderData crusader = new CommanderData("The Crusader", GameConstants.FactionType.Holy, 22, 5, path, GameConstants.CommanderAbilityChargeType.UnitReceiveDamage, 2, GameConstants.CommanderAbilityTargetType.Ally);
+        this.commandersData.Add(crusader);
+
         //Instantiate dictionary for enemy commanders and populate it with commanders corresponding to the encounter IDs
         this.enemyEncounterCommanders = new Dictionary<int, CommanderData>();
         for( int i = 0; i < this.numEncounters; i++) {

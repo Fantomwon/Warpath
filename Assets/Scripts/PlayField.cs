@@ -554,7 +554,7 @@ public class PlayField : MonoBehaviour {
         //Special check to see if the hero was a Sapper and needs to be removed from the game space
         if (currentHero.GetComponent<Hero>().id == "sapper" || currentHero.GetComponent<Hero>().id == "cultfanatic") {
             currentHero.GetComponent<Hero>().AfterAttackOperations();
-            currentHero.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().currentHealth + currentHero.GetComponent<Hero>().currentArmor);
+            this.DamageHero(currentHero.GetComponent<Hero>(), currentHero.GetComponent<Hero>().currentHealth + currentHero.GetComponent<Hero>().currentArmor);
         }
     }
 
@@ -575,16 +575,15 @@ public class PlayField : MonoBehaviour {
 				if (enemy.GetComponent<Hero>().currentArmor > 0) {
 					enemy.GetComponent<Hero>().currentArmor = 0;
 				}
-
-				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
+                this.DamageHero(enemy.GetComponent<Hero>(), currentHero.GetComponent<Hero>().power );
 				return;
 			}
 
 			//If the attacker is an assassin and the target is below a specific health threshold, kill the target
 			if (currentHero.GetComponent<Hero>().id == "assassin") {
 				if (enemy.GetComponent<Hero>().currentHealth < 5) {
-					enemy.GetComponent<Hero>().TakeDamage(enemy.GetComponent<Hero>().currentHealth + enemy.GetComponent<Hero>().currentArmor);
-					return;
+                    this.DamageHero( enemy.GetComponent<Hero>(), enemy.GetComponent<Hero>().currentHealth + enemy.GetComponent<Hero>().currentArmor);
+                    return;
 				}
 			}
 
@@ -600,14 +599,14 @@ public class PlayField : MonoBehaviour {
 
 			//If the attacker is a sorcerer add extra damage for each enemy in the sorcerer's row
 			if (currentHero.GetComponent<Hero>().id == "sorcerer") {
-				enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power + (1 * CountEnemiesInMyRow(currentHero)));
+                PlayField.instance.DamageHero(enemy.GetComponent<Hero>(), currentHero.GetComponent<Hero>().power + (1 * CountEnemiesInMyRow(currentHero)) );
 				return;
 			}
 
 			//Do your damage vs. the current target
-			bool wasLethal = enemy.GetComponent<Hero>().TakeDamage(currentHero.GetComponent<Hero>().power);
-			//Do any special attack effects associated with the currentHero that is attacking
-			currentHero.GetComponent<Hero>().HeroAttackEffects( wasLethal );
+            bool wasLethal = this.DamageHero(enemy.GetComponent<Hero>(), currentHero.GetComponent<Hero>().power);
+            //Do any special attack effects associated with the currentHero that is attacking
+            currentHero.GetComponent<Hero>().HeroAttackEffects( wasLethal );
 		}
 	}
 
@@ -1202,6 +1201,22 @@ public class PlayField : MonoBehaviour {
 			Debug.Log("STORY MODE ENABLED");
 		}
 	}
+
+    public bool DamageHero(Hero heroToDamage, int dmgAmt ) {
+        //Make sure correct id is used
+        int playerId = GameConstants.HUMAN_PLAYER_ID;
+        foreach (Transform heroTransform in this.player2.transform) {
+            if( heroTransform == heroToDamage.transform) {
+                playerId = GameConstants.ENEMY_PLAYER_ID;
+            }
+        }
+        //Apply the actual damage
+        bool wasLethal = heroToDamage.TakeDamage(dmgAmt);
+        //Notify that a hero was dealt damage
+        BattleEventManager._instance.NotifyUnitReceiveDamage( playerId, heroToDamage );
+        //Return value indicating lethality
+        return wasLethal;
+    }
 
 	void EnablePlayer1HandAndHidePlayer2Hand () {
 		//Enable collision on player 1 cards

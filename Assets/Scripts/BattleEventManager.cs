@@ -28,7 +28,14 @@ public class BattleEventManager : MonoBehaviour {
     public void NotifyOnTurnStart(int playerId) {
         //Notify all listeners of the on turn start event
         if (OnTurnStart != null) {
-            OnTurnStart(null, null,playerId);
+            OnTurnStart(null, null, playerId);
+        }
+    }
+
+    public void NotifyUnitReceiveDamage( int playerId, Hero damageReceiver) {
+        //Notify all listeners of a unit receiving damage event
+        if( OnUnitReceiveDamage != null) {
+            OnUnitReceiveDamage(null, null, playerId, damageReceiver);
         }
     }
 
@@ -43,6 +50,9 @@ public class BattleEventManager : MonoBehaviour {
             case BattleEventManager.EventType.StartTurn:
                 BattleEventManager._instance.OnTurnStart += listener.EventStartTurn;
                 break;
+            case BattleEventManager.EventType.UnitReceiveDamage:
+                BattleEventManager._instance.OnUnitReceiveDamage += listener.EventUnitReceiveDamage;
+                break;
             default:
                 break;
         }
@@ -50,7 +60,9 @@ public class BattleEventManager : MonoBehaviour {
     }
 
     public delegate void OnTurnStartHandler(object sender, EventArgs e, int playerId);
+    public delegate void OnUnitReceiveDamageHandler(object sender, EventArgs e, int playerId, Hero damageReceiver);
     public event OnTurnStartHandler OnTurnStart;
+    public event OnUnitReceiveDamageHandler OnUnitReceiveDamage;
 
     //Possible Event Types
     public enum EventType { StartTurn, UnitDeath, UnitReceiveDamage };
