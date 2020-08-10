@@ -180,10 +180,8 @@ public class Deck : MonoBehaviour {
 						globalObject.SetTemplateSpellCardAttributes(player1Deck[0]);
 						GameObject newCard = Instantiate (globalObject.templateSpellCard) as GameObject;
 						newCard.transform.SetParent (GameObject.Find ("Player1 Hand").transform, false);
-						//globalObject.SetTemplateCardImage(newCard.GetComponent<Card>().cardId, newCard);
 					}
 					player1Deck.RemoveAt(0);
-
 				}
 			}
 		}
@@ -285,9 +283,9 @@ public class Deck : MonoBehaviour {
 	}
 
 	public void RemoveCardFromHandAndAddToDiscard () {
-		if (Card.selectedCard) {
-			Debug.LogWarning("SELECTED CARD EXISTS****************" + Card.selectedCard.GetComponent<Card>().cardId);
-		}
+		//if (Card.selectedCard) {
+		//	Debug.LogWarning("SELECTED CARD EXISTS****************" + Card.selectedCard.GetComponent<Card>().cardId);
+		//}
 		//If the card is a Tower or Wall card DO NOT add it to my discard as the Tower and Wall cards are used more like spells
 		if (Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card> ().cardName != "Wall") {
 			if (playField.player1Turn) {

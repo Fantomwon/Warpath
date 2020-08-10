@@ -78,8 +78,8 @@ public class AiManager : MonoBehaviour {
 	}
 
 	private void AiSelectCardToPlay () {
-		//Clear the 'validCardsToPlay' list so we can build it so fresh and so clean clean
-		validCardsToPlay.Clear();
+        //Clear the 'validCardsToPlay' list so we can build it so fresh and so clean clean
+        validCardsToPlay.Clear();
 
 		//Add all cards that the player has enough mana to play to the 'validCardsToPlay' list
 		foreach (Transform currentCard in GameObject.Find("Player2 Hand").transform) {
@@ -104,7 +104,8 @@ public class AiManager : MonoBehaviour {
 			int randomIndex = Random.Range(0, validCardsListLength);
 //			Debug.Log("randomIndex is: " + randomIndex);
 			Card.selectedCard = validCardsToPlay[randomIndex];
-			if (validCardsToPlay[randomIndex].GetComponent<Card>().type == "hero") {
+            Debug.Log("Card.selectedCard is: " + Card.selectedCard.GetComponent<Card>().cardId);
+            if (validCardsToPlay[randomIndex].GetComponent<Card>().type == "hero") {
 				Card.selectedHero = validCardsToPlay[randomIndex].GetComponent<Card>().heroPrefab;
 			}
 
@@ -113,7 +114,7 @@ public class AiManager : MonoBehaviour {
 
 	public void AiPlayCard () {
 		if (Card.selectedHero && !CheckIfHomeRowIsFull() && Card.selectedCard && Card.selectedCard.GetComponent<Card>().type != "spell") {
-			if (Card.selectedHero.GetComponent<Hero>().id == "wolf") {
+			if (Card.selectedCard.GetComponent<Card>().cardId == "wolf") {
 				playField.SpawnHeroForPlayer2(ReturnValidHeroSpawnCoords());
 				StartCoroutine("AiTakeTurnAfterDelay");
 			} else {
@@ -213,23 +214,23 @@ public class AiManager : MonoBehaviour {
 		//If hero is a melee hero try to spawn it in a row that doesn't have another melee hero already in it
 		//List<Vector2> openRowCoords = new List<Vector2>();
 
-		if (Card.selectedHero.GetComponent<Hero>().range == 1) {
+		if (Card.selectedCard.GetComponent<Card>().range == 1) {
 			openRowCoords.Clear();
-			Debug.Log("SPAWNCHECK: SPAWNING A HERO WITH RANGE == 1");
+			//Debug.Log("SPAWNCHECK: SPAWNING A HERO WITH RANGE == 1");
 			foreach (Vector2 validCoord in validHeroSpawnCoords) {
 				openRowCoords.Add(validCoord);
 			}
 			foreach (Vector2 validCoord in validHeroSpawnCoords) {
 				foreach (Transform heroCoord in playField.player2.transform) {
 					if (validCoord.y == heroCoord.transform.position.y) {
-						Debug.Log("SPAWNCHECK: FOUND A HERO IN A ROW, REMOVING validCoord: " + validCoord);
+						//Debug.Log("SPAWNCHECK: FOUND A HERO IN A ROW, REMOVING validCoord: " + validCoord);
 						openRowCoords.Remove(validCoord);
 					}
 				}
 			}
-			Debug.Log("SPAWNCHECK: openRowCoords.length is: " + openRowCoords.ToArray().Length);
+			//Debug.Log("SPAWNCHECK: openRowCoords.length is: " + openRowCoords.ToArray().Length);
 			if (openRowCoords.ToArray().Length > 0) {
-				Debug.Log("SPANWCHECK: ATTEMPTING TO RETURN OPENROWCOORDS");
+				//Debug.Log("SPANWCHECK: ATTEMPTING TO RETURN OPENROWCOORDS");
 				return openRowCoords[ReturnRandomValue(openRowCoords.ToArray().Length)];
 			}
 		}
@@ -266,37 +267,37 @@ public class AiManager : MonoBehaviour {
 		Debug.Log("CURRENTLY ACTIVE STORY: " + GlobalObject.currentlyActiveStory);
 		if (GlobalObject.currentlyActiveStory == "story01") {
 			if (aiTurnTracker == 1) {
-				SpawnHero(knight,new Vector2(7,3));
+				SpawnHero("knight",new Vector2(7,3));
 			} else if (aiTurnTracker == 2) {
-				SpawnHero(druid,new Vector2(7,3));
+				SpawnHero("druid",new Vector2(7,3));
 			} else if (aiTurnTracker == 3) {
-				SpawnHero(archer,new Vector2(7,2));
+				SpawnHero("archer",new Vector2(7,2));
 			} else if (aiTurnTracker == 4) {
-				SpawnHero(druid,new Vector2(7,4));
+				SpawnHero("druid",new Vector2(7,4));
 			} else if (aiTurnTracker == 5) {
-				SpawnHero(archer,ReturnValidHeroSpawnCoords());
+				SpawnHero("archer",ReturnValidHeroSpawnCoords());
 			} else if (aiTurnTracker == 6) {
-				SpawnHero(archer,ReturnValidHeroSpawnCoords());
+				SpawnHero("archer",ReturnValidHeroSpawnCoords());
 			} else if (aiTurnTracker == 7) {
-				SpawnHero(archer,ReturnValidHeroSpawnCoords());
+				SpawnHero("archer",ReturnValidHeroSpawnCoords());
 			} else if (aiTurnTracker >= 8) {
 				aiTurnTracker = 0;
 			}
 			playField.EndTurn();
 		} else if (GlobalObject.currentlyActiveStory == "story02") {
 			if (aiTurnTracker == 1) {
-				SpawnHero(archer,new Vector2(7,2));
-				SpawnHero(archer,new Vector2(7,4));
+				SpawnHero("archer",new Vector2(7,2));
+				SpawnHero("archer",new Vector2(7,4));
 			} else if (aiTurnTracker == 2) {
-				SpawnHero(druid,new Vector2(7,3));
+				SpawnHero("druid",new Vector2(7,3));
 			} else if (aiTurnTracker == 3) {
-				SpawnHero(archer,ReturnValidHeroSpawnCoords());
+				SpawnHero("archer",ReturnValidHeroSpawnCoords());
 			} else if (aiTurnTracker == 4) {
-				SpawnHero(archer,ReturnValidHeroSpawnCoords());
+				SpawnHero("archer",ReturnValidHeroSpawnCoords());
 			} else if (aiTurnTracker == 5) {
-				SpawnHero(druid,ReturnValidHeroSpawnCoords());
+				SpawnHero("druid",ReturnValidHeroSpawnCoords());
 			} else if (aiTurnTracker == 6) {
-				SpawnHero(knight,ReturnValidHeroSpawnCoords());
+				SpawnHero("knight",ReturnValidHeroSpawnCoords());
 			} else if (aiTurnTracker >= 7) {
 				aiTurnTracker = 0;
 			}
@@ -305,16 +306,20 @@ public class AiManager : MonoBehaviour {
 	}
 
 	private void AiStoryInitialBoardSetup () {
-		//Debug.Log("currentlyActiveStory is:" + GlobalObject.currentlyActiveStory);
-		if (GlobalObject.currentlyActiveStory == "story01") {
-			//DO NOTHING
-		} else if (GlobalObject.currentlyActiveStory == "story02") {
-			SpawnHero(knight, new Vector2(7,3));
+		Debug.LogWarning("currentlyActiveStory is:" + GlobalObject.currentlyActiveStory);
+		if (GlobalObject.currentlyActiveStory == "boss01") {
+            //SpawnHero("cultacolyte", new Vector2(7, 3));
+        } else if (GlobalObject.currentlyActiveStory == "story02") {
+			SpawnHero("cultacolyte", new Vector2(7, 3));
 		}
 	}
 
-	private void SpawnHero(GameObject hero, Vector2 coords) {
-		Card.selectedHero = hero;
+	private void SpawnHero(string hero, Vector2 coords) {
+        //Set the data on the template hero card according to which hero I want to spawn
+        globalObject.SetTemplateHeroCardAttributes(hero);
+        //Set the 'selectedCard' static var equal to the newly defined template hero card
+        Card.selectedCard = globalObject.templateHeroCard;
+        //Check if the coords we are trying to spawn at are already occupied
 		playField.BuildFullHeroList();
 		Debug.Log("INITIAL COORDS: " + coords);
 		foreach (Vector2 heroCoords in playField.fullHeroCoords) {
@@ -325,6 +330,7 @@ public class AiManager : MonoBehaviour {
 				break;
 			}
 		}
+        //Spawn the hero
 		playField.SpawnHeroForPlayer2(coords);
 	}
 }

@@ -46,12 +46,12 @@ public class Card : MonoBehaviour {
             SpeedText.text = speed.ToString();
             RangeText.text = range.ToString();
             //Set the hero stats on the hero prefab associated with this card
-            heroPrefab.GetComponent<Hero>().power = power;
-            heroPrefab.GetComponent<Hero>().maxHealth = maxHealth;
-            heroPrefab.GetComponent<Hero>().currentHealth = maxHealth;
-            heroPrefab.GetComponent<Hero>().range = range;
-            heroPrefab.GetComponent<Hero>().speed = speed;
-            heroPrefab.GetComponent<Hero>().id = cardId;
+            //heroPrefab.GetComponent<Hero>().power = power;
+            //heroPrefab.GetComponent<Hero>().maxHealth = maxHealth;
+            //heroPrefab.GetComponent<Hero>().currentHealth = maxHealth;
+            //heroPrefab.GetComponent<Hero>().range = range;
+            //heroPrefab.GetComponent<Hero>().speed = speed;
+            //heroPrefab.GetComponent<Hero>().id = cardId;
         }
     }
 
@@ -474,9 +474,9 @@ public class Card : MonoBehaviour {
                 foreach (Transform hero in playField.player1.transform) {
                     //Logic for player 2 selecting an enemy hero
                     if (Mathf.RoundToInt(hero.transform.position.x) == playField.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == playField.roundedPos.y) {
-                        //Spawn the spell particle
-                        spellParticle.GetComponentInChildren<Spell>().hero = hero;
-                        Instantiate(spellParticle, hero.transform.localPosition, Quaternion.identity, player2.transform);
+                        //TODO Replace with a new unique particle when we have one for this Spell
+                        ParticleSystem hitParticle = hero.GetComponent<Hero>().hitParticle;
+                        Instantiate(hitParticle, hero.transform.position, Quaternion.identity);
                         //Do the damage to the enemy
                         PlayField.instance.DamageHero(hero.GetComponent<Hero>(), 1);
                         //Heal a random ally
@@ -494,9 +494,9 @@ public class Card : MonoBehaviour {
                 //Find a player soldier to attack
                 Transform heroToAttack;
                 heroToAttack = playField.TargetSpellCheckEntireBoardOneRandomHero("enemy")[0];
-                //Spawn the spell particle
-                spellParticle.GetComponentInChildren<Spell>().hero = heroToAttack;
-                Instantiate(spellParticle, heroToAttack.transform.localPosition, Quaternion.identity, player1.transform);
+                //TODO Replace with a new unique particle when we have one for this Spell
+                ParticleSystem hitParticle = heroToAttack.GetComponent<Hero>().hitParticle;
+                Instantiate(hitParticle, heroToAttack.transform.position, Quaternion.identity);
                 //Do the damage to the enemy
                 PlayField.instance.DamageHero( heroToAttack.GetComponent<Hero>(), 1 );
                 //Heal a random ally

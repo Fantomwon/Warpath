@@ -15,6 +15,7 @@ public class GlobalObject : MonoBehaviour {
 	public GameObject templateHeroCard;
 	public GameObject templateSpellCard;
     public GameObject templateCommander;
+    public GameObject templateHeroUnit;
     //UI objects
     public BattleUIManager battleUIManagerScript;
 
@@ -259,7 +260,14 @@ public class GlobalObject : MonoBehaviour {
 		}
 	}
 
-	public GameObject SetTemplateSpellCardAttributes (string id) {
+    public GameObject SetTemplateHeroUnitAttributes(string id) {
+         if (id == "archer") {
+            return SetTemplateHeroCardAttributesConstructor("ArcherCard", "archer", "hero", 2, "Test: Archer", "PrefabsHeroes/Archer", 2, 2, 2, 3);
+        }
+        return null;
+    }
+
+    public GameObject SetTemplateSpellCardAttributes (string id) {
 		if (id == "armor") {
 			return SetTemplateSpellCardAttributesConstructor("ArmorCard", "armor", "spell", 1, "Test:armor", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ArmorIcon");
 		} else if (id == "rockthrow") {
@@ -297,7 +305,19 @@ public class GlobalObject : MonoBehaviour {
         return templateHeroCard;
 	}
 
-	private GameObject SetTemplateSpellCardAttributesConstructor (string name, string cardId, string type, int manaCost, string cardName, string spellParticle, string spellIcon) {
+    public GameObject SetTemplateHeroUnitAttributesConstructor() {
+        templateHeroUnit.GetComponent<Hero>().id = Card.selectedCard.GetComponent<Card>().name;
+        templateHeroUnit.GetComponent<Hero>().maxHealth = Card.selectedCard.GetComponent<Card>().maxHealth;
+        templateHeroUnit.GetComponent<Hero>().currentHealth = Card.selectedCard.GetComponent<Card>().maxHealth;
+        templateHeroUnit.GetComponent<Hero>().power = Card.selectedCard.GetComponent<Card>().power;
+        templateHeroUnit.GetComponent<Hero>().speed = Card.selectedCard.GetComponent<Card>().speed;
+        templateHeroUnit.GetComponent<Hero>().range = Card.selectedCard.GetComponent<Card>().range;
+        templateHeroUnit.GetComponent<Hero>().power = Card.selectedCard.GetComponent<Card>().power;
+        templateHeroUnit.GetComponent<Hero>().heroPrefab = Card.selectedCard.GetComponent<Card>().heroPrefab;
+        return templateHeroUnit;
+    }
+
+    private GameObject SetTemplateSpellCardAttributesConstructor (string name, string cardId, string type, int manaCost, string cardName, string spellParticle, string spellIcon) {
 		templateSpellCard.GetComponent<Card>().name = name;
 		templateSpellCard.GetComponent<Card>().cardId = cardId;
 		templateSpellCard.GetComponent<Card>().type = type;
@@ -308,7 +328,12 @@ public class GlobalObject : MonoBehaviour {
         return templateSpellCard;
 	}
 
-	public void SetTemplateHeroCardImage (string id, GameObject card) {
+    public void SetHeroUnitPrefab(GameObject spawnedUnit, GameObject heroPrefab) {
+        GameObject newHeroPrefab = Instantiate(heroPrefab) as GameObject;
+        newHeroPrefab.transform.SetParent(spawnedUnit.transform.Find("HeroPrefab").transform, false);
+    }
+
+    public void SetTemplateHeroCardImage (string id, GameObject card) {
         //Not sure what the point of this method is currently. It seems the intent is to set the image for a newly spawned hero, but we are actually spawning a whole hero prefab instead of just setting an image.
 		if (id == "archer") {
 			GameObject newHero = Instantiate (Resources.Load<GameObject>("PrefabsHeroes/Archer")) as GameObject;  
@@ -367,6 +392,7 @@ public class GlobalObject : MonoBehaviour {
         fullPlayerHeroCardList.Add("crossbowman");
         fullPlayerHeroCardList.Add("bloodknight");
         fullPlayerHeroCardList.Add("cultinitiate");
+        fullPlayerHeroCardList.Add("cultadept");
 
         //Full list of all player spell cards for pass and play
         fullPlayerSpellCardList.Add("armor");
@@ -378,19 +404,18 @@ public class GlobalObject : MonoBehaviour {
 		fullPlayerSpellCardList.Add("might");
 		fullPlayerSpellCardList.Add("fireball");
 
-		//boss01 player cards
-		boss01PlayerHeroCards.Add("archer");
-        boss01PlayerHeroCards.Add("knight");
-        boss01PlayerHeroCards.Add("footsoldier");
-        boss01PlayerHeroCards.Add("sapper");
+        //boss01 player cards
+        boss01PlayerHeroCards.Add("cultadept");
+        boss01PlayerHeroCards.Add("cultinitiate");
         boss01PlayerHeroCards.Add("cultsentinel");
+        boss01PlayerHeroCards.Add("cultacolyte");
         boss01PlayerHeroCards.Add("cultfanatic");
         boss01PlayerSpellCards.Add("rockthrow");
-        boss01PlayerSpellCards.Add("heal");
-        boss01PlayerSpellCards.Add("might");
-        boss01PlayerSpellCards.Add("drainlife");
+        boss01PlayerSpellCards.Add("fireball");
 
         //boss02 player cards
+        boss02PlayerHeroCards.Add("cultadept");
+        boss02PlayerHeroCards.Add("cultinitiate");
         boss02PlayerHeroCards.Add("druid");
 		boss02PlayerHeroCards.Add("archer");
 		boss02PlayerHeroCards.Add("archer");

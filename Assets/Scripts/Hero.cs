@@ -23,7 +23,7 @@ public class Hero : MonoBehaviour {
 	public bool moveRight = false;
 	public bool moveLeft = false;
 	public bool usingHaste = false;
-	public GameObject cardPrefab;
+	public GameObject heroPrefab;
 	public ParticleSystem hitParticle, healParticle;
 	public GameObject dodgeParticleGameObject;
 	public AnimationClip attackRightAnim;

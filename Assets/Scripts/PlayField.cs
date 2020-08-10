@@ -63,16 +63,16 @@ public class PlayField : MonoBehaviour {
 
         //Initialize commanders
         //Save these newly created scripts with the play field
-        Debug.LogWarning("Playfield Test 1 $$$$");
+        //Debug.LogWarning("Playfield Test 1 $$$$");
         List<Commander> commandersList = GlobalObject.instance.commanders;
         for (int i = 0; i < commandersList.Count; i++) {
-            Debug.LogWarning("Playfield Test A $$$$");
+            //Debug.LogWarning("Playfield Test A $$$$");
             Commander currCommander = commandersList[i];
             if (currCommander.playerId == GameConstants.HUMAN_PLAYER_ID) {
-                Debug.LogWarning("Playfield Test B $$$$");
+                //Debug.LogWarning("Playfield Test B $$$$");
                 PlayField.instance.playerCommander = currCommander;
             } else {
-                Debug.LogWarning("Playfield Test C $$$$");
+                //Debug.LogWarning("Playfield Test C $$$$");
                 PlayField.instance.enemyCommander = currCommander;
             }
         }
@@ -83,11 +83,7 @@ public class PlayField : MonoBehaviour {
         Vector2 rawPos = CalculateWorldPointOfMouseClick();
         //Use SnapToGrid method to turn rawPos into rounded integer units in world space coordinates
         roundedPos = SnapToGrid(rawPos);
-        //Debug.LogWarning("roundedPos is: " + roundedPos);
 
-        //print (Input.mousePosition);
-        //print (SnapToGrid(CalculateWorldPointOfMouseClick()));
-        Debug.LogWarning("mouse down 1~~~");
         //Commander ability stuff
         if ( commanderAbilityActiveOnMouse && this.player1Turn) {
             Debug.LogWarning("mouse down 2~~~");
@@ -142,8 +138,6 @@ public class PlayField : MonoBehaviour {
 				return;
 			}
 		}
-			
-		
 
 		//If the selected card is a 'Class Spell', cast it
 		if (Card.selectedCard.GetComponent<Card>().type == "Spell" && Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card>().cardName != "Wall") {
@@ -200,13 +194,14 @@ public class PlayField : MonoBehaviour {
 	}
 
 	public void SpawnHeroForPlayer1 (Vector2 roundedPos) {
-        //		Debug.Log("roundPos is " + roundedPos);
-
-        //For some reason using 'roundedPos' in the instatiate script below will not work and the hero will always spawn at '0,0,0'. So we now update the hero's transform.position after we instantiate it
-        GameObject x = Instantiate (Card.selectedHero, roundedPos, Quaternion.identity) as GameObject;
-
-		//Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
-		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
+        //Set the data of the template hero based on what the currently 'Card.selectedCard' is
+        FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetTemplateHeroUnitAttributesConstructor();
+        //Instantiate the template hero with its newly defined data
+        GameObject x = Instantiate (FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().templateHeroUnit, roundedPos, Quaternion.identity) as GameObject;
+        //Spawn the appropriate visual prefab for the newly spawned hero
+        FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetHeroUnitPrefab(x, Card.selectedCard.GetComponent<Card>().heroPrefab);
+        //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
+        x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
 
 		//Child the newly spawned hero to the appropriate player
 		x.transform.SetParent(player1.transform, false);
@@ -218,36 +213,20 @@ public class PlayField : MonoBehaviour {
 	}
 
 	public void SpawnHeroForPlayer2 (Vector2 roundedPos) {
-		//For some reason using 'roundedPos' in the instatiate script below will not work and the hero will always spawn at '0,0,0'. So we now update the hero's transform.position after we instantiate it
-		GameObject x = Instantiate (Card.selectedHero, roundedPos, Quaternion.identity) as GameObject;
-		//Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
-		x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
+        //Set the data of the template hero based on what the currently 'Card.selectedCard' is
+        FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetTemplateHeroUnitAttributesConstructor();
+        //Instantiate the template hero with its newly defined data
+        GameObject x = Instantiate(FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().templateHeroUnit, roundedPos, Quaternion.identity) as GameObject;
+        //Spawn the appropriate visual prefab for the newly spawned hero
+        FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetHeroUnitPrefab(x, Card.selectedCard.GetComponent<Card>().heroPrefab);
+        //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
+        x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
 
-		//TEMP - SALLY ADD HERO ID'S OF HEROES YOU UPDATE HERE - I LOVE YOU!!! I don't remember why we do this but I think it has something to do with how we 'flip' the heroes with the new art style when they are placed on player 2's side of the board.
-		if ( x.GetComponent<Hero>().id == "bloodknight" || x.GetComponent<Hero>().id == "crossbowman" || x.GetComponent<Hero>().id == "druid" || x.GetComponent<Hero>().id == "archer" || x.GetComponent<Hero>().id == "knight" || x.GetComponent<Hero>().id == "rogue" || x.GetComponent<Hero>().id == "footsoldier" || x.GetComponent<Hero>().id == "cultinitiate" || x.GetComponent<Hero>().id == "cultadept" || x.GetComponent<Hero>().id == "cultacolyte" || x.GetComponent<Hero>().id == "cultsentinel") {
-			//Flip the hero so it faces to the left
-			Vector3 scale = x.transform.Find("Hero").GetComponent<RectTransform>().transform.localScale;
-			(scale.x) = (scale.x *= -1);
-			x.transform.Find("Hero").GetComponent<RectTransform>().transform.localScale = scale;
-        } else {
-            Vector3 scale = x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale;
-            (scale.x) = (scale.x *= -1);
-            x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale = scale;
-        }
+        //Flip the hero so it faces to the left
+        Vector3 scale = x.transform.GetComponent<RectTransform>().transform.localScale;
+        scale.x = (scale.x *= -1);
+        x.transform.GetComponent<RectTransform>().transform.localScale = scale;
 
-		//if (x.GetComponent<Hero>().id != "crossbowman" || x.GetComponent<Hero>().id != "druid" || x.GetComponent<Hero>().id != "archer" || x.GetComponent<Hero>().id != "knight" || x.GetComponent<Hero>().id != "rogue" || x.GetComponent<Hero>().id != "footsolder") {
-		//	//Flip the hero so it faces to the left
-		//	Vector3 scale = x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale;
-		//	(scale.x) = (scale.x *= -1);
-		//	x.transform.Find("Image").GetComponent<SpriteRenderer>().transform.localScale = scale;
-		//}  
-
-		//Move the Armor and Health text so that it sits on the left side of the hero
-		foreach (Transform text in x.transform) {
-			Vector3 newTextPosition = text.transform.localPosition;
-			newTextPosition.x *= -1;
-			text.transform.localPosition = newTextPosition;
-		}
 		//Child the newly spawned hero to the appropriate player
 		x.transform.SetParent (player2.transform, false);
 		x.gameObject.tag = "player2";
@@ -764,7 +743,7 @@ public class PlayField : MonoBehaviour {
 
 			//If there is more than one valid hero, cycle through them and try to find a hero that could potentially score on the next turn
 			if (validHeroes.Count() > 1 ) {
-				Debug.Log("validHeroes.Count() is longer than one. It's: " + validHeroes.Count()); 
+				//Debug.Log("validHeroes.Count() is longer than one. It's: " + validHeroes.Count()); 
 				List<Transform> preferredHero = new List<Transform>();
 				Transform currentPreferredHero = validHeroes[0];
 				preferredHero.Add(currentPreferredHero);
@@ -795,8 +774,6 @@ public class PlayField : MonoBehaviour {
 		//the check again in a different part of the code would return possibly two different enemies than the ones that we are actually attacking.
 		tempTransformList.Clear();
 		tempTransformList = validHeroes;
-        Debug.LogWarning("DRAIN LIFE FFF");
-        Debug.LogWarning("DRAIN LIFE GGG" + validHeroes.Count());
         return validHeroes;
 	}
 

@@ -25,9 +25,9 @@ public class CardinalCommander : Commander {
     /// <param name="sender"></param>
     /// <param name="e"></param>
     public override void EventStartTurn(object sender, EventArgs e, int playerId) {
-        Debug.Log("$ Knight Commander Event Start Turn $ and pId: " + playerId);
+        //Debug.Log("$ Knight Commander Event Start Turn $ and pId: " + playerId);
         if (playerId == this.playerId) {
-            Debug.Log("Knight Commander! My player is taking turn!");
+            //Debug.Log("Knight Commander! My player is taking turn!");
             //Try and increase this character's current charge and update UI accordingly
             if (this.currentAbilityCharge < this.abilityChargeCost) {
                 this.IncreaseCommanderAbilityCharge();

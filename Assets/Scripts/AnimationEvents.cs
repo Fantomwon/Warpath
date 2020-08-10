@@ -10,8 +10,10 @@ public class AnimationEvents : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		playField = FindObjectOfType<PlayField>();
-		myTransform = this.transform.parent.transform;
-	}
+		myTransform = this.transform.parent.parent.parent;
+        //Debug.LogWarning("myTransform exists as: " + myTransform.GetComponent<Hero>().name);
+        //Debug.LogWarning("myTransform exists as: " + myTransform);
+    }
 
 	public void RunHeroTargetCheck () {
 		playField.HeroTargetCheck(myTransform);

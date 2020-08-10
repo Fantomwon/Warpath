@@ -153,16 +153,21 @@ public class SelectBoss : MonoBehaviour {
 		GlobalObject.instance.player2DeckSelect.Clear();
 
 		if (boss01Button.isOn) {
-            GlobalObject.instance.player2DeckSelect.Add("cultsentinel");
-            GlobalObject.instance.player2DeckSelect.Add("cultsentinel");
-            GlobalObject.instance.player2DeckSelect.Add("cultsentinel");
-            GlobalObject.instance.player2DeckSelect.Add("cultsentinel");
-            GlobalObject.instance.player2DeckSelect.Add("cultsentinel");
+            GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
+            GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
+            GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
+            GlobalObject.instance.player2DeckSelect.Add("cultadept");
+            GlobalObject.instance.player2DeckSelect.Add("cultadept");
+            GlobalObject.instance.player2DeckSelect.Add("cultadept");
             GlobalObject.instance.player2DeckSelect.Add("cultfanatic");
             GlobalObject.instance.player2DeckSelect.Add("cultfanatic");
             GlobalObject.instance.player2DeckSelect.Add("cultfanatic");
-            GlobalObject.instance.player2DeckSelect.Add("cultfanatic");
-            GlobalObject.instance.player2DeckSelect.Add("cultfanatic");
+            GlobalObject.instance.player2DeckSelect.Add("cultsentinel");
+            GlobalObject.instance.player2DeckSelect.Add("drainlife");
+            GlobalObject.instance.player2DeckSelect.Add("drainlife");
+            GlobalObject.instance.player2DeckSelect.Add("drainlife");
+            GlobalObject.instance.player2DeckSelect.Add("drainlife");
+            GlobalObject.instance.player2DeckSelect.Add("fireball");
         } else if (boss02Button.isOn) {
 			GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
 			GlobalObject.instance.player2DeckSelect.Add("cultinitiate");
