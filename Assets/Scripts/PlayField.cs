@@ -226,9 +226,13 @@ public class PlayField : MonoBehaviour {
         Vector3 scale = x.transform.GetComponent<RectTransform>().transform.localScale;
         scale.x = (scale.x *= -1);
         x.transform.GetComponent<RectTransform>().transform.localScale = scale;
+        //Flip the health and armor stats so the numbers aren't backwards
+        Vector3 scaleStats = x.transform.Find("StatsCanvas/Stats").GetComponent<RectTransform>().transform.localScale;
+        scaleStats.x = (scaleStats.x *= -1);
+        x.transform.Find("StatsCanvas/Stats").GetComponent<RectTransform>().transform.localScale = scaleStats;
 
-		//Child the newly spawned hero to the appropriate player
-		x.transform.SetParent (player2.transform, false);
+        //Child the newly spawned hero to the appropriate player
+        x.transform.SetParent (player2.transform, false);
 		x.gameObject.tag = "player2";
 		Color xAlpha = x.transform.Find("Player2Indicator").GetComponent<SpriteRenderer>().color;
 		xAlpha.a = 0.5f;

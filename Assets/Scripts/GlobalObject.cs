@@ -314,6 +314,7 @@ public class GlobalObject : MonoBehaviour {
         templateHeroUnit.GetComponent<Hero>().range = Card.selectedCard.GetComponent<Card>().range;
         templateHeroUnit.GetComponent<Hero>().power = Card.selectedCard.GetComponent<Card>().power;
         templateHeroUnit.GetComponent<Hero>().heroPrefab = Card.selectedCard.GetComponent<Card>().heroPrefab;
+        templateHeroUnit.GetComponent<Hero>().currentArmor = 0;
         return templateHeroUnit;
     }
 
