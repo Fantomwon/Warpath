@@ -8,7 +8,6 @@ public class BattleEventManager : MonoBehaviour {
     
     void Awake() {
         //Enforce singleton pattern and only allow one battleEventManager to live at a time
-        Debug.LogError("BattleEventManager BattleEventManager BattleEventManager");
         if (BattleEventManager._instance == null) {
             BattleEventManager._instance = this;
         } else if (BattleEventManager._instance != this) {
