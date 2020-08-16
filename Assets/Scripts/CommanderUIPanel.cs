@@ -9,6 +9,7 @@ public class CommanderUIPanel : MonoBehaviour
     protected GameObject commanderAbilityButton;
     protected Text currentAbilityResourceText;
     protected Text maxResourceText;
+    protected int commanderTeamId = -1;
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +23,7 @@ public class CommanderUIPanel : MonoBehaviour
         
     }
 
-    public void Initialize() {
+    public void Initialize(int teamId) {
         Debug.Log("Commander Panel Initialize called!");
         //if commander ability button UI emphasis is null then find the gameobject in the scene and cache it as a reference
         if( this.commanderAbilityButtonUIEmphasis == null) {
@@ -44,6 +45,9 @@ public class CommanderUIPanel : MonoBehaviour
         if (this.maxResourceText == null) {
             this.maxResourceText = this.transform.Find("CommanderTextPanel/MaxCommanderResourceTxt").GetComponent<Text>();
         }
+
+        //Cache team id. Only the player's team will be able
+        this.commanderTeamId = teamId;
     }
 
     /// <summary>
@@ -75,8 +79,12 @@ public class CommanderUIPanel : MonoBehaviour
     }
 
     public void CommanderAbilityButtonClicked() {
-        Debug.LogWarning("COMMANDER ABILITY BUTTON CLICKED! WOW!");
-        //Set commander ability active on mouse
-        PlayField.instance.commanderAbilityActiveOnMouse = true;
+        Debug.LogWarning("COMMANDER ABILITY BUTTON CLICKED (1)");
+        //Only human player can activate their ability through a click and only on their turn
+        if ( this.commanderTeamId == GameConstants.HUMAN_PLAYER_ID && PlayField.instance.player1Turn) {
+            Debug.LogWarning("COMMANDER ABILITY BUTTON CLICKED (2)");
+            //Set commander ability active on mouse
+            PlayField.instance.commanderAbilityActiveOnMouse = true;
+        }
     }
 }

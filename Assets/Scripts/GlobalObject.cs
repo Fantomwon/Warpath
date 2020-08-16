@@ -130,7 +130,7 @@ public class GlobalObject : MonoBehaviour {
                 //Set necessary UI references - not 100% sure why this didn't work when attempting to do so from within the BattleUIManager's SetSelectedCommanderBattleImages but for some reason results in a null ref if not set here
                 GlobalObject.instance.battleUIManagerScript.SetCommanderUIPanel(ref currCommander);
                 //Initialize some UI data to store variables and then set the display text for current charge and total cost
-                currCommander.commanderUIPanel.Initialize();
+                currCommander.commanderUIPanel.Initialize(currCommander.playerId);
                 currCommander.commanderUIPanel.SetCommanderResourceText(0, currCommander.abilityChargeCost);
                 //Fire off notification for Commanders that the battle has started
                 currCommander.OnBattleStart();
