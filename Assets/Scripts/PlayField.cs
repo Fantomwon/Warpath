@@ -51,15 +51,6 @@ public class PlayField : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-		player1 = new GameObject("player1");
-		player2 = new GameObject("player2");
-		Player1TurnStart();
-		player1HealthText.text = player1Health.ToString();
-		player2HealthText.text = player2Health.ToString();
-		card = FindObjectOfType<Card>();
-		deck = FindObjectOfType<Deck>();
-		player2ManaText.text = player2Mana.ToString();
-		buffManager = FindObjectOfType<BuffManager>();
 
         //Initialize commanders
         //Save these newly created scripts with the play field
@@ -70,12 +61,26 @@ public class PlayField : MonoBehaviour {
             Commander currCommander = commandersList[i];
             if (currCommander.playerId == GameConstants.HUMAN_PLAYER_ID) {
                 //Debug.LogWarning("Playfield Test B $$$$");
-                PlayField.instance.playerCommander = currCommander;
+                this.playerCommander = currCommander;
+                //Initialize HP amount variable for human player
+                this.player1Health = this.playerCommander.hp;
             } else {
                 //Debug.LogWarning("Playfield Test C $$$$");
-                PlayField.instance.enemyCommander = currCommander;
+                this.enemyCommander = currCommander;
+                //Initialize  HP amount variable for npc player
+                this.player2Health = this.enemyCommander.hp;
             }
         }
+        player1 = new GameObject("player1");
+        player2 = new GameObject("player2");
+        Player1TurnStart();
+        
+        player1HealthText.text = player1Health.ToString();
+        player2HealthText.text = player2Health.ToString();
+        card = FindObjectOfType<Card>();
+        deck = FindObjectOfType<Deck>();
+        player2ManaText.text = player2Mana.ToString();
+        buffManager = FindObjectOfType<BuffManager>();
     }
 
 	void OnMouseDown(){
@@ -1329,11 +1334,13 @@ public class PlayField : MonoBehaviour {
 		if (player1Turn) {
 			player2Health -= dmg;
 			player2HealthText.text = player2Health.ToString();
+            //Update player 2's commander UI elements related to health as necessary
 		} else if (!player1Turn) {
 			player1Health -= dmg;
 			player1HealthText.text = player1Health.ToString();
-		}
-	}
+            //Update player 1's commander UI elements related to health as necessary
+        }
+    }
 
 	void StartOfTurnEffects () {
 		//Add mana for each Diviner that the player has on the field
