@@ -33,11 +33,9 @@ public class AiManager : MonoBehaviour {
 	public void AiTakeTurn () {
         //		AiSelectHeroCardToPlay();
         //		AiPlayHeroCard();
-        Debug.LogWarning("RUNNING AiTakeTurn(1)");
 
         //Evaluate if the NPC commander's resource has reached cost
         if(GlobalObject.instance.useCommanders) {
-            Debug.LogWarning("(RUNNING AiTakeTurn(2)");
             this.AiTryUseCommanderAbility();
         }
 
@@ -152,25 +150,20 @@ public class AiManager : MonoBehaviour {
 	}
 
     private bool AiTryUseCommanderAbility() {
-        Debug.LogWarning("RUNNING AiTakeTurn - AiTryUseCommanderAbility (a)");
         bool abilitySuccessfullyCast = false;
         //Cache enemy commander reference
         Commander enemyCommander = PlayField.instance.enemyCommander;
         //Early out as false if commander didn't have enough resource to cast
         if( enemyCommander.currentAbilityCharge < enemyCommander.abilityChargeCost) {
-            Debug.LogWarning("RUNNING AiTakeTurn - AiTryUseCommanderAbility (z)!!! aborting");
             return abilitySuccessfullyCast;
         }
-        Debug.LogWarning("RUNNING AiTakeTurn - AiTryUseCommanderAbility (b)");
         //Evaluate if the necessary condition is met to cast based on the ability type
         switch (enemyCommander.abilityTargetType) {
             case (GameConstants.CommanderAbilityTargetType.Enemy):
-                Debug.LogWarning("RUNNING AiTakeTurn - AiTryUseCommanderAbility (c)");
                 //Verify existence of at least one human player soldier
                 List<Transform> potentialEnemyTargets = new List<Transform>();
                 potentialEnemyTargets = PlayField.instance.TargetSpellCheckEntireBoardOneRandomHero("enemy");
                 if( potentialEnemyTargets.Count > 0) {
-                    Debug.LogWarning("RUNNING AiTakeTurn - AiTryUseCommanderAbility (c-2)");
                     //Get a random target from the list
                     int randomIndex = Random.Range(0, potentialEnemyTargets.Count);
                     Transform target = potentialEnemyTargets[randomIndex];
@@ -179,11 +172,9 @@ public class AiManager : MonoBehaviour {
                 }
                 break;
             case (GameConstants.CommanderAbilityTargetType.Ally):
-                Debug.LogWarning("RUNNING AiTakeTurn - AiTryUseCommanderAbility (d)");
                 List<Transform> potentialAllyTargets = new List<Transform>();
                 potentialAllyTargets = PlayField.instance.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal");
                 if( potentialAllyTargets.Count > 0) {
-                    Debug.LogWarning("RUNNING AiTakeTurn - AiTryUseCommanderAbility (d-2)");
                     //Get a random target from the list
                     int randomIndex = Random.Range(0, potentialAllyTargets.Count);
                     Transform target = potentialAllyTargets[randomIndex];
@@ -195,7 +186,6 @@ public class AiManager : MonoBehaviour {
                 Debug.LogWarning("AiManager attempt to cast commander ability did not find ability type!");
                 break;
         }
-        Debug.LogWarning("RUNNING AiTakeTurn - AiTryUseCommanderAbility (e)");
         return abilitySuccessfullyCast;
     }
 
@@ -339,7 +329,6 @@ public class AiManager : MonoBehaviour {
 			}
             //Evaluate if the NPC commander's resource has reached cost
             if (GlobalObject.instance.useCommanders) {
-                Debug.LogWarning("(RUNNING AiStoryTakeTurn(1)");
                 this.AiTryUseCommanderAbility();
             }
             //End turn call - NOTE, is this structure right? duplicate calls
@@ -363,7 +352,6 @@ public class AiManager : MonoBehaviour {
 			}
             //Evaluate if the NPC commander's resource has reached cost
             if (GlobalObject.instance.useCommanders) {
-                Debug.LogWarning("(RUNNING AiTakeTurn(2)");
                 this.AiTryUseCommanderAbility();
             }
             //End turn call - NOTE, is this structure right? duplicate calls
