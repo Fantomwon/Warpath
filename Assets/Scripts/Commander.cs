@@ -29,7 +29,9 @@ public class Commander : MonoBehaviour, IEventListener {
 
     }
 
-
+    public virtual void TakeDamage(int damageAmount) {
+        this.hp = Math.Max(0, this.hp - damageAmount);
+    }
 
     public virtual bool ActivateCommanderAbility(Hero heroTarget) {
         return true;
@@ -66,12 +68,18 @@ public class Commander : MonoBehaviour, IEventListener {
 
     }
 
+
+
+    /********** Virtual methods for override **********/
+
     /// <summary>
     /// Commander overrides this with method calls, such as registering for events
     /// </summary>
     public virtual void OnBattleStart() {
         //Get generic references to UI that all commanders will need
     }
+
+    /********** Event listening methods for override **********/
 
     /// <summary>
     /// Override this event in commander or unit when listening to turn start event

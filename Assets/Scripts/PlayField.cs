@@ -1332,13 +1332,15 @@ public class PlayField : MonoBehaviour {
 
 	public void LosePlayerHealth (int dmg) {
 		if (player1Turn) {
-			player2Health -= dmg;
-			player2HealthText.text = player2Health.ToString();
-            //Update player 2's commander UI elements related to health as necessary
-		} else if (!player1Turn) {
-			player1Health -= dmg;
-			player1HealthText.text = player1Health.ToString();
-            //Update player 1's commander UI elements related to health as necessary
+            //Update the relevant commmanders health
+            this.enemyCommander.TakeDamage(dmg);
+            //Set display
+            player2HealthText.text = this.enemyCommander.hp.ToString();
+        } else if (!player1Turn) {
+            //Update the relevant commmanders health
+            this.playerCommander.TakeDamage(dmg);
+            //Set display
+			player1HealthText.text = this.playerCommander.hp.ToString();
         }
     }
 
