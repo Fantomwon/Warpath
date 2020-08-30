@@ -50,6 +50,7 @@ public class Deck : MonoBehaviour {
         }
 
         foreach (string cardId in GlobalObject.instance.player2DeckSelect) {
+            Debug.Log("Building deck for player 2! card added is: " + cardId);
             player2Deck.Add(cardId);
         }
 
@@ -218,6 +219,7 @@ public class Deck : MonoBehaviour {
 					Player2DealCards();
 					//player2Deck.Insert(Random.Range(1, player2Deck.Count - 1), nextCardInDeck);
 				} else {
+                    Debug.Log("Player 2 deal cards! player2Deck count:" + player2Deck.Count.ToString());
 					if (!CheckIfCardIdIsASpellCard(player2Deck[0])) {
 						globalObject.SetTemplateHeroCardAttributes(player2Deck[0]);
 						GameObject newCard = Instantiate (globalObject.templateHeroCard) as GameObject;

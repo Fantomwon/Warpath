@@ -31,6 +31,7 @@ public class AiManager : MonoBehaviour {
 	}
 
 	public void AiTakeTurn () {
+        Debug.Log("AI TAKING ITS TURN!!!");
         //		AiSelectHeroCardToPlay();
         //		AiPlayHeroCard();
 

@@ -190,6 +190,9 @@ public class GlobalObject : MonoBehaviour {
             case ("story03"):
                 this.enemyCommanderData = this.enemyEncounterCommanders[7];
                 break;
+            case ("bossA1"):
+                this.enemyCommanderData = this.commandersData.Find(c => c.CharName == "The Crusader");
+                break;
             default:
                 this.enemyCommanderData = this.enemyEncounterCommanders[0];
                 break;
