@@ -38,34 +38,42 @@ public class CommanderSelectUIManager : MonoBehaviour
     }
 
     public void SetSelectedCommanderImages( Commander commanderScript ) {
+        if(commanderScript == null) {
+            Debug.LogWarning("Uh oh! commanderscript parameter is null!");
+        }
         //If commander hasn't been selected yet, instantiate gameobject used for visual representation
         if( this.currentlySelectedCommander == null) {
-            GameObject potentialSelectedCommander = GameObject.Instantiate(this.templateCommanderSelected) as GameObject;
-            if( potentialSelectedCommander != null) {
 
+            GameObject potentialSelectedCommanderPrefab = Resources.Load<GameObject>(commanderScript.selectedCommanderPrefabPath);
+            GameObject potentialSelectedCommander = GameObject.Instantiate(potentialSelectedCommanderPrefab) as GameObject;
+            
+            if ( potentialSelectedCommander != null) {
                 this.currentlySelectedCommander = potentialSelectedCommander;
+                //Parent newly created prefab to UI element for positioning and will also dictate the component find approach
+                this.currentlySelectedCommander.transform.SetParent(GameObject.Find("CommanderSelectUIManager/PanelSelectedCommander/Image").transform, false);
+                //Get commander component from within children objects
                 Commander selectedCommanderScript = this.currentlySelectedCommander.GetComponent<Commander>();
                 //Load prefab
                 GameObject selectedCommanderPrefab = Resources.Load<GameObject>(commanderScript.selectedCommanderPrefabPath);
+                if(selectedCommanderScript == null) {
+                    Debug.LogWarning("Ruh ROhh!! cselected commander scirpt easty null");
+                }
+                //Populate data 
                 selectedCommanderScript.SetCommanderAttributes(commanderScript.commanderName, selectedCommanderPrefab, commanderScript.selectedCommanderPrefabPath, selectedCommanderScript.hp, selectedCommanderScript.handSize, commanderScript.commanderData, commanderScript.playerId, commanderScript.abilityChargeCost, commanderScript.abilityTargetType );
-                //Parent newly created prefab to UI element for positioning
-                this.currentlySelectedCommander.transform.SetParent( GameObject.Find("CommanderSelectUIManager/PanelSelectedCommander").transform, false );
-                //Create image to use on selected UI element
-                this.currentlySelectedCommanderImage = GameObject.Instantiate(selectedCommanderPrefab) as GameObject;
-                this.currentlySelectedCommanderImage.transform.SetParent(this.currentlySelectedCommander.transform.Find("Image").transform, false);
-                //Set commander UI image offset from origin within its panel
-                RectTransform commanderRTrans = this.currentlySelectedCommander.GetComponent<RectTransform>();
-                commanderRTrans.anchoredPosition.Set(GameConstants.SELECTED_COMMANDER_IMAGE_OFFSET_POS_X, GameConstants.SELECTED_COMMANDER_IMAGE_OFFSET_POS_Y);
+                //Scale up so image is visible
+                this.currentlySelectedCommander.transform.localScale = new Vector3(100, 100, 1);
             }
         } else {
             GameObject selectedCommanderPrefab = Resources.Load<GameObject>(commanderScript.selectedCommanderPrefabPath);
-            GameObject previousCommanderImage = this.currentlySelectedCommanderImage;
-            this.currentlySelectedCommanderImage = null;
-            GameObject.Destroy(previousCommanderImage);
-            this.currentlySelectedCommanderImage = GameObject.Instantiate(selectedCommanderPrefab) as GameObject;
+            GameObject previousCommander = this.currentlySelectedCommander;
+            GameObject.Destroy(previousCommander);
+
+            this.currentlySelectedCommander = GameObject.Instantiate(selectedCommanderPrefab) as GameObject;
+            this.currentlySelectedCommander.transform.SetParent(GameObject.Find("CommanderSelectUIManager/PanelSelectedCommander/Image").transform, false);
+            this.currentlySelectedCommander.transform.localScale = new Vector3(100, 100, 1);
             Commander selectedCommanderScript = this.currentlySelectedCommander.GetComponent<Commander>();
+            
             selectedCommanderScript.SetCommanderAttributes(commanderScript.commanderName, selectedCommanderPrefab, commanderScript.selectedCommanderPrefabPath, selectedCommanderScript.hp, selectedCommanderScript.handSize, commanderScript.commanderData, commanderScript.playerId, commanderScript.abilityChargeCost, commanderScript.abilityTargetType);
-            this.currentlySelectedCommanderImage.transform.SetParent(this.currentlySelectedCommander.transform.Find("Image").transform, false);
         }
 
     }

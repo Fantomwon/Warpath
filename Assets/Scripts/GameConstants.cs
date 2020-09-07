@@ -30,6 +30,7 @@ public static class GameConstants
     public const float SELECTED_COMMANDER_IMAGE_OFFSET_POS_Y = 100;
 
     //Player Ids
+    public const int UNSET_PLAYER_ID = -1;
     public const int HUMAN_PLAYER_ID = 0;
     public const int ENEMY_PLAYER_ID = 1;
 }

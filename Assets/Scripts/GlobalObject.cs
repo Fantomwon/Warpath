@@ -113,18 +113,23 @@ public class GlobalObject : MonoBehaviour {
             CommanderData enemyCommanderData = GlobalObject.instance.enemyCommanderData;
             //Iterate through list of commanders thrown back by the UI manager that set images
             for (int i = 0; i < commanders.Count; i++) {
-                Debug.LogWarning("Global object! commanders index: " + i.ToString());
                 Commander currCommander = commanders[i];
+                Debug.LogWarning("Global object! commanders index: " + i.ToString() + " and player id is:" + currCommander.playerId.ToString());
                 //TODO: need unique conten ids or something better to match on here
                 if (currCommander == null) {
                     Debug.LogWarning("CURR COMMANDER IS NULL!!! SAAERERERER");
                 }
-                //Set player ids for commanders
-                if (currCommander.commanderData.CharName == playerCommanderData.CharName) { //TODO: Fix bug here - currCommander commanderdata is null?!
-                    currCommander.playerId = GameConstants.HUMAN_PLAYER_ID;
-                } else if (currCommander.commanderData.CharName == enemyCommanderData.CharName) {
+                //Set player ids for the enemy commmander. We know it's not the player's if the player id is UNSET
+                if(currCommander.playerId == GameConstants.UNSET_PLAYER_ID) {
                     currCommander.playerId = GameConstants.ENEMY_PLAYER_ID;
+                    Debug.LogWarning("CURR COMMANDER HAS UNSET ID! SETTING TO ENEMY ID!");
                 }
+                //TODO: Fix bug here - matching off of commander name 
+                //if (currCommander.commanderData.CharName == playerCommanderData.CharName) { 
+                //    currCommander.playerId = GameConstants.HUMAN_PLAYER_ID;
+                //} else if (currCommander.commanderData.CharName == enemyCommanderData.CharName) {
+                //    currCommander.playerId = GameConstants.ENEMY_PLAYER_ID;
+                //}
                 //Set the rest of attributes
                 currCommander.SetCommanderAttributes(currCommander.commanderData);
                 //Set necessary UI references - not 100% sure why this didn't work when attempting to do so from within the BattleUIManager's SetSelectedCommanderBattleImages but for some reason results in a null ref if not set here
@@ -143,19 +148,27 @@ public class GlobalObject : MonoBehaviour {
     void LoadCommanderSelectUI() {
         //Load commanders
         foreach (CommanderData cData in GlobalObject.instance.commandersData) {
+            /*Commented this out as deprecated*/
             //Rename object so instance name matches current commander
-            this.templateCommander.GetComponent<Commander>().name = cData.CharName+"Commander";
+            //this.templateCommander.GetComponent<Commander>().name = cData.CharName+"Commander";
+
+
+            GameObject commanderPrefab = Resources.Load<GameObject>(cData.PrefabPath);
             //Instantiate empty template commander UI element
             GameObject listItem = GameObject.Instantiate(this.templateCommander) as GameObject;
-            //populate data for commander
-            Commander commanderListItem = listItem.GetComponent<Commander>();
-            GameObject commanderPrefab = Resources.Load<GameObject>(cData.PrefabPath);
-            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize, cData, -1, cData.AbilityChargeCost, cData.AbilityTargetType );
+            
+            //commanderChildListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize, cData, GameConstants.HUMAN_PLAYER_ID, cData.AbilityChargeCost, cData.AbilityTargetType);
             //Add list item to scrollview UI
             listItem.transform.SetParent(GameObject.Find("CommanderSelectUIManager/CommanderSelectionScrollList/Viewport/Content/CommanderContainer").transform, false);
             //Create prefab to use as image on list item
             GameObject commanderGameObject = GameObject.Instantiate(commanderPrefab) as GameObject;
             commanderGameObject.transform.SetParent(listItem.transform.Find("Image").transform, false);
+
+            //populate data for commander
+            Commander commanderListItem = listItem.GetComponentInChildren<Commander>();//listItem.GetComponent<Commander>();
+
+            //Set the value for all of these UI commanders player ID to be human player because any selected commander is used by the player
+            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize, cData, GameConstants.HUMAN_PLAYER_ID, cData.AbilityChargeCost, cData.AbilityTargetType);
             //Set display name
             var nameTransform = listItem.transform.Find("header/Name");
             if( nameTransform && nameTransform != null) {

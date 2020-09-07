@@ -13,11 +13,11 @@ public class CommanderSelectUI : MonoBehaviour
         } else {
             Debug.LogWarning("Commander Select Ui manager not found!");
         }
-        Commander possibleCommander = this.GetComponent<Commander>();
+        Commander possibleCommander = this.GetComponentInChildren<Commander>();
         if( possibleCommander != null) {
             this.commanderScript = possibleCommander;
         } else {
-            Debug.LogWarning("Commander Select Ui: Commander not found!");
+            Debug.LogWarning("Commander Select Ui: Commander Script not found!");
         }
     }
 
@@ -29,7 +29,14 @@ public class CommanderSelectUI : MonoBehaviour
 
     public void SelectClicked() {
         Debug.Log("Commander Select Clicked!");
-        if( this.commanderUiManager != null) {
+        if (this.commanderScript == null) {
+            Debug.Log("Commander Select! No Commander Script found! Trying to set now");
+            Commander possibleCommander = this.GetComponentInChildren<Commander>();
+            this.commanderScript = possibleCommander;
+        } else {
+            Debug.LogWarning("Commander Select Ui: Commander Script not found AGAIN!");
+        }
+        if ( this.commanderUiManager != null) {
             this.commanderUiManager.SetSelectedCommander(this.commanderScript);
         }
     }

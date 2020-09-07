@@ -16,7 +16,11 @@ public class BattleUIManager : MonoBehaviour {
 
     }
 
-
+    /// <summary>
+    /// Creates Commander objects from the cached commander data on the global object.
+    /// Also assigns the player ids to the newly created objects as part of the process and puts the sprites in their respective panels
+    /// </summary>
+    /// <returns></returns>
     public List<Commander> SetSelectedCommanderBattleImages() {
         List<Commander> commanders = new List<Commander>();
 
@@ -34,7 +38,9 @@ public class BattleUIManager : MonoBehaviour {
         GameObject playerCommanderInstance = Instantiate(playerCommanderPrefab) as GameObject;
         Commander playerCommanderScript = playerCommanderInstance.GetComponent<Commander>();
         playerCommanderScript.SetCommanderAttributes(playerCommanderData);
+        playerCommanderScript.playerId = GameConstants.HUMAN_PLAYER_ID;
         commanders.Add(playerCommanderScript);
+        
         //Parent newly created prefab to UI element for positioning
         playerCommanderInstance.transform.SetParent(GameObject.Find("PanelCommanderBattleP1/Image").transform, false);
         //NOTE! Had previously attempted to set the Commander UI panel variable reference in here for each commander but for some reason it ends up being null after Global Object gets the list back
@@ -47,6 +53,7 @@ public class BattleUIManager : MonoBehaviour {
         Commander enemyCommanderScript = enemyCommanderInstance.GetComponent<Commander>();
         //Set the necessary data
         enemyCommanderScript.SetCommanderAttributes(enemyCommanderData);
+        enemyCommanderScript.playerId = GameConstants.ENEMY_PLAYER_ID;
         commanders.Add(enemyCommanderScript);
         //Parent newly created prefab to UI element for positioning
         enemyCommanderInstance.transform.SetParent(GameObject.Find("PanelCommanderBattleP2/Image").transform, false);
@@ -59,10 +66,12 @@ public class BattleUIManager : MonoBehaviour {
 
     public void SetCommanderUIPanel( ref Commander commander) {
         if( commander.playerId == GameConstants.HUMAN_PLAYER_ID) {
+            Debug.LogWarning("BUIM: set commander UI panel 1");
             //Get component for matching UI script and cache it with the PlayerCommanderInstance for Player 1
             CommanderUIPanel commanderUIPanelScript = GameObject.Find("PanelCommanderBattleP1").GetComponent<CommanderUIPanel>();
             commander.commanderUIPanel = commanderUIPanelScript;
         } else if( commander.playerId == GameConstants.ENEMY_PLAYER_ID) {
+            Debug.LogWarning("BUIM: set commander UI panel 2");
             //Get component for matching UI script and cache it with the PlayerCommanderInstance for Player 1
             CommanderUIPanel commanderUIPanelScript = GameObject.Find("PanelCommanderBattleP2").GetComponent<CommanderUIPanel>();
             commander.commanderUIPanel = commanderUIPanelScript;
