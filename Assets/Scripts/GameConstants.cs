@@ -22,6 +22,48 @@ public static class GameConstants
     [Serializable]
     public enum CommanderAbilityTargetType { Enemy, Ally };
 
+    //List of cards for use with creating enemy encounters and nodes, etc.
+    [Serializable]
+    public enum Card {
+    wall,
+    archer,
+    footsoldier,
+    dwarf,
+    ghost,
+    sapper,
+    rogue,
+    druid,
+    monk,
+    slinger,
+    bloodmage,
+    blacksmith,
+    wolf,
+    chaosmage,
+    sorcerer,
+    assassin,
+    knight,
+    paladin,
+    tower,
+    champion,
+    cavalry,
+    diviner,
+    crossbowman,
+    bloodknight,
+    cultinitiate,
+    cultadept,
+    cultacolyte,
+    cultsentinel,
+    cultfanatic,
+    armor, //Start spells
+	rockthrow,
+	root,
+	windgust,
+	heal,
+	shroud,
+	might,
+	fireball
+    }
+
     //Tags
     public const string TAG_COMMANDER_SELECT_UI_MANAGER = "commanderSelectUIManager";
 

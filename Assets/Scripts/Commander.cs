@@ -18,6 +18,7 @@ public class Commander : MonoBehaviour, IEventListener {
     public GameConstants.CommanderAbilityTargetType abilityTargetType;
     public int playerId;
     public CommanderUIPanel commanderUIPanel;
+    public GameConstants.Card[] Deck;
 
     // Start is called before the first frame update
     void Start() {

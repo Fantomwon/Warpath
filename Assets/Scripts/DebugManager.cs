@@ -43,7 +43,10 @@ public class DebugManager : MonoBehaviour {
 	void Update () {
 		if( Input.GetKeyUp( KeyCode.BackQuote ) ) {
             DebugManager._instance.ToggleDebugMenu();
+        }else if( Input.GetKeyUp( KeyCode.Alpha1 )) {//Test loading level with commander and commander deck
+            Debug.LogWarning("DEBUG KEY CODE ALPHA 1 PRESSED!");
         }
+
 	}
 
     public void ToggleDebugMenu() {
