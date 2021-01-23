@@ -79,6 +79,6 @@ public class CommanderSelectUIManager : MonoBehaviour
     }
 
     public void ConfirmCommanderSelection() {
-        GlobalObject.instance.LoadLevel(GameConstants.SCENE_INDEX_BOSS_SELECT);
+        GlobalObject.instance.LoadLevel(GameConstants.SCENE_INDEX_MAP);
     }
 }

@@ -27,7 +27,7 @@ public class GlobalObject : MonoBehaviour {
 	public List<string> boss01PlayerSpellCards, boss02PlayerSpellCards, boss03PlayerSpellCards, boss04PlayerSpellCards, boss05PlayerSpellCards;
 	public List<string> fullPlayerHeroCardList;
 	public List<string> fullPlayerSpellCardList;
-    //Using hard coded value for now to quickly populate commandrers for each encounter. Ideally we will be able to later read these in from a file
+    //Using hard coded value for now to quickly populate commanders for each encounter. Ideally we will be able to later read these in from a file
     public int numEncounters = 8;
 
     //List for commanders used for Selection UI purposes or any time all commanders are needed to be loaded
@@ -78,12 +78,12 @@ public class GlobalObject : MonoBehaviour {
         if (SceneManager.GetActiveScene().name != "BossSelect"
             && SceneManager.GetActiveScene().name != "Game"
             && SceneManager.GetActiveScene().name != "GameCommanders"
-            && SceneManager.GetActiveScene().name != "CommanderSelect") {
+            && SceneManager.GetActiveScene().name != "CommanderSelect"
+            && SceneManager.GetActiveScene().name != "Map") {
             Debug.LogWarning("WARNING! Scene Manger is Loading a non specified scene which it assumes is the card select!!!");
             AssignPlayerCards();
             InstantiatePlayerCards();
         }
-
     }
 
 	void Start () {
@@ -547,7 +547,9 @@ public class GlobalObject : MonoBehaviour {
 
     public void LoadLevel( int levelIndex) {
         GameObject levelManagerObject = GameObject.Find("LevelManager");
-        levelManagerObject.GetComponent<LevelManager>().LoadLevel(GameConstants.SCENE_INDEX_BOSS_SELECT);
+        levelManagerObject.GetComponent<LevelManager>().LoadLevel(levelIndex);
+        //TODO - Figure out when we can remove the commented code below that was forcing the boss select scene to lead
+        //levelManagerObject.GetComponent<LevelManager>().LoadLevel(GameConstants.SCENE_INDEX_BOSS_SELECT);
     }
 }
 //https://www.youtube.com/watch?v=D9_Z4wb7940&ab_channel=MichelKlaasen
