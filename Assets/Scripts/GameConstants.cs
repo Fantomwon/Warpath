@@ -9,6 +9,7 @@ public static class GameConstants
     public const int SCENE_INDEX_CARD_SELECT_SINGLE_PLAYER = 4;
     public const int SCENE_INDEX_COMMANDER_SELECT = 6;
     public const int SCENE_INDEX_GAME_COMMANDERS = 7;
+    public const int SCENE_INDEX_MAP = 8;
 
     //In game factions. Certain cards are surfaced during selection process based on the selected Commander's faction
     [Serializable]

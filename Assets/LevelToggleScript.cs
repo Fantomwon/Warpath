@@ -7,6 +7,7 @@ public class LevelToggleScript : MonoBehaviour
     public string levelIdString = "";
     public bool isAiEnabled = true;
     public bool storyEnabled = false;
+    public Encounter encounter;
 
     // Start is called before the first frame update
     void Start()
