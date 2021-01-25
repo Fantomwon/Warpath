@@ -164,6 +164,24 @@ public class CommanderData
     }
 
     /// <summary>
+    /// The commander's mana gained per turn.
+    /// </summary>
+    [SerializeField]
+    private int _manaPerTurn;
+
+    /// <summary>
+    /// Property for amount of mana this commander generates each turn.
+    /// </summary>
+    public int ManaPerTurn {
+        get {
+            return this._manaPerTurn;
+        }
+        set {
+            this._manaPerTurn = value;
+        }
+    }
+
+    /// <summary>
     /// String to this commander's prefab asset. Used for loading resources at runtime
     /// </summary>
     [SerializeField]

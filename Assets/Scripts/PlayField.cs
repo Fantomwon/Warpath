@@ -31,8 +31,9 @@ public class PlayField : MonoBehaviour {
 	private Card card;
 	private Deck deck;
 	private int player1ManaMax = 10, player2ManaMax = 10;
-	private int manaPerTurn = 4;
-    private int manaPerTurnAi = 3;
+    //Controls rate of mana generation. These values live on the commanders themselves and are sent into this class from them.
+	public int manaPerTurn = 4;
+    public int manaPerTurnAi = 3;
 	private int turnsPlayed = 0;
 
     public bool commanderAbilityActiveOnMouse = false;
@@ -55,7 +56,7 @@ public class PlayField : MonoBehaviour {
         //Initialize commanders
         //Save these newly created scripts with the play field
         //Debug.LogWarning("Playfield Test 1 $$$$");
-        List<Commander> commandersList = GlobalObject.instance.commanders;
+        List<Commander> commandersList = GlobalObject.instance.battleCommanders;
         for (int i = 0; i < commandersList.Count; i++) {
             //Debug.LogWarning("Playfield Test A $$$$");
             Commander currCommander = commandersList[i];

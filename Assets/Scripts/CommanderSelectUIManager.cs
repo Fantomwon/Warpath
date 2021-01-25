@@ -51,15 +51,29 @@ public class CommanderSelectUIManager : MonoBehaviour
                 this.currentlySelectedCommander = potentialSelectedCommander;
                 //Parent newly created prefab to UI element for positioning and will also dictate the component find approach
                 this.currentlySelectedCommander.transform.SetParent(GameObject.Find("CommanderSelectUIManager/PanelSelectedCommander/Image").transform, false);
-                //Get commander component from within children objects
-                Commander selectedCommanderScript = this.currentlySelectedCommander.GetComponent<Commander>();
+                
                 //Load prefab
                 GameObject selectedCommanderPrefab = Resources.Load<GameObject>(commanderScript.selectedCommanderPrefabPath);
-                if(selectedCommanderScript == null) {
+                //Get commander component from within children objects
+                Commander selectedCommanderScript = selectedCommanderPrefab.GetComponent<Commander>();
+
+                if (selectedCommanderScript == null) {
                     Debug.LogWarning("Ruh ROhh!! cselected commander scirpt easty null");
                 }
+
+                Debug.LogWarning("Selected commander Ui manager! SELECTEDCOMMANDERSCRIPT mana is: " + selectedCommanderScript.manaPerTurn.ToString() + " and commanderScript mana is: " + commanderScript.manaPerTurn );
                 //Populate data 
-                selectedCommanderScript.SetCommanderAttributes(commanderScript.commanderName, selectedCommanderPrefab, commanderScript.selectedCommanderPrefabPath, selectedCommanderScript.hp, selectedCommanderScript.handSize, commanderScript.commanderData, commanderScript.playerId, commanderScript.abilityChargeCost, commanderScript.abilityTargetType );
+                selectedCommanderScript.SetCommanderAttributes(
+                    commanderScript.commanderName,
+                    selectedCommanderPrefab,
+                    commanderScript.selectedCommanderPrefabPath,
+                    selectedCommanderScript.hp, selectedCommanderScript.handSize,
+                    commanderScript.commanderData,
+                    commanderScript.playerId,
+                    commanderScript.abilityChargeCost,
+                    commanderScript.abilityTargetType,
+                    commanderScript.manaPerTurn
+                    );
                 //Scale up so image is visible
                 this.currentlySelectedCommander.transform.localScale = new Vector3(100, 100, 1);
             }
@@ -73,7 +87,18 @@ public class CommanderSelectUIManager : MonoBehaviour
             this.currentlySelectedCommander.transform.localScale = new Vector3(100, 100, 1);
             Commander selectedCommanderScript = this.currentlySelectedCommander.GetComponent<Commander>();
             
-            selectedCommanderScript.SetCommanderAttributes(commanderScript.commanderName, selectedCommanderPrefab, commanderScript.selectedCommanderPrefabPath, selectedCommanderScript.hp, selectedCommanderScript.handSize, commanderScript.commanderData, commanderScript.playerId, commanderScript.abilityChargeCost, commanderScript.abilityTargetType);
+            selectedCommanderScript.SetCommanderAttributes(
+                commanderScript.commanderName,
+                selectedCommanderPrefab,
+                commanderScript.selectedCommanderPrefabPath,
+                selectedCommanderScript.hp,
+                selectedCommanderScript.handSize,
+                commanderScript.commanderData,
+                commanderScript.playerId,
+                commanderScript.abilityChargeCost,
+                commanderScript.abilityTargetType,
+                commanderScript.manaPerTurn
+                );
         }
 
     }

@@ -31,8 +31,9 @@ public class GlobalObject : MonoBehaviour {
     public int numEncounters = 8;
 
     //List for commanders used for Selection UI purposes or any time all commanders are needed to be loaded
-    public List<CommanderData> commandersData;
-    public List<Commander> commanders;
+    public List<GameObject> commanderList;
+    public List<Commander> loadedCommanders;
+    public List<Commander> battleCommanders;
 
     //cached boss commander for npc player updated prior to level load
     public Dictionary<int, CommanderData> enemyEncounterCommanders;
@@ -52,27 +53,37 @@ public class GlobalObject : MonoBehaviour {
 			Destroy(this.gameObject);
 		}
 
-        //Hardcoded list of commanders - putting this in code here until it can be generated as json and loaded in later
-        this.commandersData = new List<CommanderData>();
-        //Holy commander Constantine, the Knight Templar
-        string path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Templar"; 
-        CommanderData templar = new CommanderData("The Knight Templar", GameConstants.FactionType.Holy, 20, 5, path, GameConstants.CommanderAbilityChargeType.StartTurn, 3, GameConstants.CommanderAbilityTargetType.Enemy);
-        this.commandersData.Add(templar);
-        //Holy commander, aka The Pious One, Francis the Cardinal
-        path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Cardinal";
-        CommanderData cardinal = new CommanderData("The Cardinal", GameConstants.FactionType.Holy, 15, 6, path, GameConstants.CommanderAbilityChargeType.StartTurn, 3, GameConstants.CommanderAbilityTargetType.Ally);
-        this.commandersData.Add(cardinal);
-        //Holy commander, aka The Eternal Shield, aka The Unbroken,  Joan the Crusader
-        path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Crusader";
-        CommanderData crusader = new CommanderData("The Crusader", GameConstants.FactionType.Holy, 22, 5, path, GameConstants.CommanderAbilityChargeType.UnitReceiveDamage, 2, GameConstants.CommanderAbilityTargetType.Ally);
-        this.commandersData.Add(crusader);
+        //Old Hardcoded list of commanders - replaced this with list of prefabs
+        //this.commandersData = new List<CommanderData>();
+        ////Holy commander Constantine, the Knight Templar
+        //string path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Templar"; 
+        //CommanderData templar = new CommanderData("The Knight Templar", GameConstants.FactionType.Holy, 20, 5, path, GameConstants.CommanderAbilityChargeType.StartTurn, 3, GameConstants.CommanderAbilityTargetType.Enemy);
+        //this.commandersData.Add(templar);
+        ////Holy commander, aka The Pious One, Francis the Cardinal
+        //path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Cardinal";
+        //CommanderData cardinal = new CommanderData("The Cardinal", GameConstants.FactionType.Holy, 15, 6, path, GameConstants.CommanderAbilityChargeType.StartTurn, 3, GameConstants.CommanderAbilityTargetType.Ally);
+        //this.commandersData.Add(cardinal);
+        ////Holy commander, aka The Eternal Shield, aka The Unbroken,  Joan the Crusader
+        //path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Crusader";
+        //CommanderData crusader = new CommanderData("The Crusader", GameConstants.FactionType.Holy, 22, 5, path, GameConstants.CommanderAbilityChargeType.UnitReceiveDamage, 2, GameConstants.CommanderAbilityTargetType.Ally);
+        //this.commandersData.Add(crusader);
+
+        //Build list of commander scripts from prefabs
+        foreach( GameObject commanderPrefab in this.commanderList) {
+            Commander commander = commanderPrefab.GetComponent<Commander>();
+            this.loadedCommanders.Add(commander);
+        }
 
         //Instantiate dictionary for enemy commanders and populate it with commanders corresponding to the encounter IDs
         this.enemyEncounterCommanders = new Dictionary<int, CommanderData>();
         for( int i = 0; i < this.numEncounters; i++) {
             //TODO: Probably should add content ids to commanders, will make this kind of thing easier / quicker
             //Add Cardinal for all enemy encounters for now
-            this.enemyEncounterCommanders.Add(i, this.commandersData.Find(c => c.CharName == "The Cardinal"));
+            List<CommanderData> data = new List<CommanderData>();
+            foreach( Commander c in this.loadedCommanders) {
+                data.Add(c.commanderData);
+            }
+            this.enemyEncounterCommanders.Add(i, data.Find(c => c.CharName == "The Cardinal"));
         }
 
         if (SceneManager.GetActiveScene().name != "BossSelect"
@@ -103,21 +114,25 @@ public class GlobalObject : MonoBehaviour {
             GameObject battleUIManagerObj = GameObject.Find("LevelCanvas");
             GlobalObject.instance.battleUIManagerScript = battleUIManagerObj.GetComponent<BattleUIManager>();
 
-            this.commanders = new List<Commander>();
+            this.battleCommanders = new List<Commander>();
 
             //Trigger UI object to load commander images
-            this.commanders = GlobalObject.instance.battleUIManagerScript.SetSelectedCommanderBattleImages();
-            Debug.LogWarning("Global object! just called SetSelectedCommanderBattleImages from BattleUIScript! Received  list of commanders with length: " + this.commanders.Count);
+            this.battleCommanders = GlobalObject.instance.battleUIManagerScript.SetSelectedCommanderBattleImages();
+            
             //Set data attributes of the commanders
             CommanderData playerCommanderData = GlobalObject.instance.selectedCommanderData;
             CommanderData enemyCommanderData = GlobalObject.instance.enemyCommanderData;
+            //Set mana per turn in the playfield from the commanders
+            PlayField.instance.manaPerTurn = playerCommanderData.ManaPerTurn;
+            PlayField.instance.manaPerTurnAi = enemyCommanderData.ManaPerTurn;
+            Debug.LogWarning("GlobalObject: setting mana per turn: " + PlayField.instance.manaPerTurn.ToString() + " and mana per turn AI is: " + PlayField.instance.manaPerTurnAi.ToString() );
             //Iterate through list of commanders thrown back by the UI manager that set images
-            for (int i = 0; i < commanders.Count; i++) {
-                Commander currCommander = commanders[i];
+            for (int i = 0; i < battleCommanders.Count; i++) {
+                Commander currCommander = battleCommanders[i];
                 Debug.LogWarning("Global object! commanders index: " + i.ToString() + " and player id is:" + currCommander.playerId.ToString());
                 //TODO: need unique conten ids or something better to match on here
                 if (currCommander == null) {
-                    Debug.LogWarning("CURR COMMANDER IS NULL!!! SAAERERERER");
+                    Debug.LogWarning("CURR COMMANDER IS NULL!!!");
                 }
                 //Set player ids for the enemy commmander. We know it's not the player's if the player id is UNSET
                 if(currCommander.playerId == GameConstants.UNSET_PLAYER_ID) {
@@ -147,13 +162,15 @@ public class GlobalObject : MonoBehaviour {
 
     void LoadCommanderSelectUI() {
         //Load commanders
-        foreach (CommanderData cData in GlobalObject.instance.commandersData) {
+        foreach (Commander c in GlobalObject.instance.loadedCommanders) {
+            CommanderData cData = c.commanderData;
             /*Commented this out as deprecated*/
             //Rename object so instance name matches current commander
             //this.templateCommander.GetComponent<Commander>().name = cData.CharName+"Commander";
 
 
-            GameObject commanderPrefab = Resources.Load<GameObject>(cData.PrefabPath);
+            GameObject commanderPrefab = Resources.Load<GameObject>(c.selectedCommanderPrefabPath);
+            Debug.Log("GLOBAL OBJECT cData.PrefabPath is: " + c.selectedCommanderPrefabPath);
             //Instantiate empty template commander UI element
             GameObject listItem = GameObject.Instantiate(this.templateCommander) as GameObject;
             
@@ -168,7 +185,18 @@ public class GlobalObject : MonoBehaviour {
             Commander commanderListItem = listItem.GetComponentInChildren<Commander>();//listItem.GetComponent<Commander>();
 
             //Set the value for all of these UI commanders player ID to be human player because any selected commander is used by the player
-            commanderListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize, cData, GameConstants.HUMAN_PLAYER_ID, cData.AbilityChargeCost, cData.AbilityTargetType);
+            commanderListItem.SetCommanderAttributes(
+                cData.CharName, 
+                commanderPrefab, 
+                c.selectedCommanderPrefabPath,
+                cData.MaxHP,
+                cData.StartingHandSize,
+                cData,
+                GameConstants.HUMAN_PLAYER_ID,
+                cData.AbilityChargeCost,
+                cData.AbilityTargetType,
+                cData.ManaPerTurn
+                );
             //Set display name
             var nameTransform = listItem.transform.Find("header/Name");
             if( nameTransform && nameTransform != null) {
@@ -204,7 +232,7 @@ public class GlobalObject : MonoBehaviour {
                 this.enemyCommanderData = this.enemyEncounterCommanders[7];
                 break;
             case ("bossA1"):
-                this.enemyCommanderData = this.commandersData.Find(c => c.CharName == "The Crusader");
+                this.enemyCommanderData = this.enemyEncounterCommanders[7];
                 break;
             default:
                 this.enemyCommanderData = this.enemyEncounterCommanders[0];
