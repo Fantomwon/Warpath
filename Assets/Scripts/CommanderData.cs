@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class CommanderData
-{
-	public CommanderData()
-	{
+public class CommanderData {
+    public CommanderData() {
 
-	}
+    }
 
-    public CommanderData( string characterName, GameConstants.FactionType faction, int commanderHP, int startingHandSize, string prefabResourcePath, GameConstants.CommanderAbilityChargeType abilityChargeType, int abilityChargeCost, GameConstants.CommanderAbilityTargetType abilityTargetType) {
+    public CommanderData(string characterName, GameConstants.FactionType faction, int commanderHP, int startingHandSize, string prefabResourcePath, GameConstants.CommanderAbilityChargeType abilityChargeType, int abilityChargeCost, GameConstants.CommanderAbilityTargetType abilityTargetType, GameConstants.Card[] deck) {
         this._charName = characterName;
         this._faction = faction;
         this._hp = commanderHP;
@@ -22,7 +20,22 @@ public class CommanderData
         this._abilityChargeType = abilityChargeType;
         this._abilityChargeCost = abilityChargeCost;
         this._abilityTargetType = abilityTargetType;
+        this._deck = deck;
     }
+
+    [SerializeField]
+    public GameConstants.Card[] _deck;
+
+
+    public GameConstants.Card[] Deck {
+        get{
+            return this._deck;
+        }
+        set {
+            this._deck = value;
+        }
+    }
+
 
     [SerializeField]
     private string _charName;

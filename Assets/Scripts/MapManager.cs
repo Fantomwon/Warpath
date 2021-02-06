@@ -35,17 +35,13 @@ public class MapManager : MonoBehaviour {
         GlobalObject.aiEnabled = true;
         //TODO - Need to associate a given Commander with a given encounter
         //GlobalObject.instance.enemyCommanderData = GlobalObject.instance.commandersData.Find(c => c.CharName == "The Cardinal");
-        //TODO - Associate/set initial player decks based on which Commander they choose and remove the cards being added below
-        GlobalObject.instance.player1DeckSelect.Add("archer");
-        GlobalObject.instance.player1DeckSelect.Add("archer");
-        GlobalObject.instance.player1DeckSelect.Add("archer");
-        GlobalObject.instance.player1DeckSelect.Add("archer");
-        GlobalObject.instance.player1DeckSelect.Add("archer");
-        GlobalObject.instance.player1DeckSelect.Add("footsoldier");
-        GlobalObject.instance.player1DeckSelect.Add("footsoldier");
-        GlobalObject.instance.player1DeckSelect.Add("footsoldier");
-        GlobalObject.instance.player1DeckSelect.Add("footsoldier");
-        GlobalObject.instance.player1DeckSelect.Add("footsoldier");
+
+        //Human player's cards come from their selected commander
+        CommanderData playerCommanderData = GlobalObject.instance.humanPlayerCommanderData;
+        foreach( GameConstants.Card card in playerCommanderData.Deck) {
+            GlobalObject.instance.player1DeckSelect.Add( card.ToString() );
+        }
+
         //Assign the enemy AI their cards
         buttonRef.GetComponent<LevelToggleScript>().encounter.SetUnits();
         //Load into combat

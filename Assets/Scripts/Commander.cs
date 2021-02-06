@@ -19,7 +19,6 @@ public class Commander : MonoBehaviour, IEventListener {
     public GameConstants.CommanderAbilityTargetType abilityTargetType;
     public int playerId;
     public CommanderUIPanel commanderUIPanel;
-    public GameConstants.Card[] Deck;
 
     // Start is called before the first frame update
     void Start() {
@@ -64,7 +63,6 @@ public class Commander : MonoBehaviour, IEventListener {
         this.commanderData = data;
         this.abilityTargetType = data.AbilityTargetType;
         this.manaPerTurn = data.ManaPerTurn;
-
         Debug.Log("(2) SetCommanderAttributes called by " + data.CharName);
     }
 

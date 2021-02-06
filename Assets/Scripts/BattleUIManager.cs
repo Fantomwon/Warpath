@@ -28,7 +28,7 @@ public class BattleUIManager : MonoBehaviour {
         /* Setting commander images for player 1 */
 
         //Get reference to player's commander data
-        CommanderData playerCommanderData = GlobalObject.instance.selectedCommanderData;
+        CommanderData playerCommanderData = GlobalObject.instance.humanPlayerCommanderData;
         CommanderData enemyCommanderData = GlobalObject.instance.enemyCommanderData;
 
         //Load corresponding prefab based on path in the player's commander data

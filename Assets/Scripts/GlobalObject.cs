@@ -38,7 +38,7 @@ public class GlobalObject : MonoBehaviour {
     //cached boss commander for npc player updated prior to level load
     public Dictionary<int, CommanderData> enemyEncounterCommanders;
     //Player and npc selected commander
-    public CommanderData selectedCommanderData;
+    public CommanderData humanPlayerCommanderData;
     public CommanderData enemyCommanderData;
 
     void Awake () {
@@ -120,7 +120,7 @@ public class GlobalObject : MonoBehaviour {
             this.battleCommanders = GlobalObject.instance.battleUIManagerScript.SetSelectedCommanderBattleImages();
             
             //Set data attributes of the commanders
-            CommanderData playerCommanderData = GlobalObject.instance.selectedCommanderData;
+            CommanderData playerCommanderData = GlobalObject.instance.humanPlayerCommanderData;
             CommanderData enemyCommanderData = GlobalObject.instance.enemyCommanderData;
             //Set mana per turn in the playfield from the commanders
             PlayField.instance.manaPerTurn = playerCommanderData.ManaPerTurn;
@@ -570,7 +570,7 @@ public class GlobalObject : MonoBehaviour {
 
     /* Commander data code*/
     public void SetSelectedCommander( CommanderData cData) {
-        this.selectedCommanderData = cData;
+        this.humanPlayerCommanderData = cData;
     }
 
     public void LoadLevel( int levelIndex) {
