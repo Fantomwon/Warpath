@@ -29,7 +29,7 @@ public class BattleUIManager : MonoBehaviour {
 
         //Get reference to player's commander data
         CommanderData playerCommanderData = GlobalObject.instance.humanPlayerCommanderData;
-        CommanderData enemyCommanderData = GlobalObject.instance.enemyCommanderData;
+        CommanderData enemyCommanderData = GlobalObject.instance.enemyCommanderData; //TODO: SHOULD this COME FROM THE MAP MANAGER
 
         //Load corresponding prefab based on path in the player's commander data
         GameObject playerCommanderPrefab = Resources.Load<GameObject>(playerCommanderData.PrefabPath);

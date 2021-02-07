@@ -35,8 +35,6 @@ public class GlobalObject : MonoBehaviour {
     public List<Commander> loadedCommanders;
     public List<Commander> battleCommanders;
 
-    //cached boss commander for npc player updated prior to level load
-    public Dictionary<int, CommanderData> enemyEncounterCommanders;
     //Player and npc selected commander
     public CommanderData humanPlayerCommanderData;
     public CommanderData enemyCommanderData;
@@ -53,37 +51,10 @@ public class GlobalObject : MonoBehaviour {
 			Destroy(this.gameObject);
 		}
 
-        //Old Hardcoded list of commanders - replaced this with list of prefabs
-        //this.commandersData = new List<CommanderData>();
-        ////Holy commander Constantine, the Knight Templar
-        //string path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Templar"; 
-        //CommanderData templar = new CommanderData("The Knight Templar", GameConstants.FactionType.Holy, 20, 5, path, GameConstants.CommanderAbilityChargeType.StartTurn, 3, GameConstants.CommanderAbilityTargetType.Enemy);
-        //this.commandersData.Add(templar);
-        ////Holy commander, aka The Pious One, Francis the Cardinal
-        //path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Cardinal";
-        //CommanderData cardinal = new CommanderData("The Cardinal", GameConstants.FactionType.Holy, 15, 6, path, GameConstants.CommanderAbilityChargeType.StartTurn, 3, GameConstants.CommanderAbilityTargetType.Ally);
-        //this.commandersData.Add(cardinal);
-        ////Holy commander, aka The Eternal Shield, aka The Unbroken,  Joan the Crusader
-        //path = GameConstants.RESOURCE_PATH_PREFIX_COMMANDERS + "Crusader";
-        //CommanderData crusader = new CommanderData("The Crusader", GameConstants.FactionType.Holy, 22, 5, path, GameConstants.CommanderAbilityChargeType.UnitReceiveDamage, 2, GameConstants.CommanderAbilityTargetType.Ally);
-        //this.commandersData.Add(crusader);
-
         //Build list of commander scripts from prefabs
         foreach( GameObject commanderPrefab in this.commanderList) {
             Commander commander = commanderPrefab.GetComponent<Commander>();
             this.loadedCommanders.Add(commander);
-        }
-
-        //Instantiate dictionary for enemy commanders and populate it with commanders corresponding to the encounter IDs
-        this.enemyEncounterCommanders = new Dictionary<int, CommanderData>();
-        for( int i = 0; i < this.numEncounters; i++) {
-            //TODO: Probably should add content ids to commanders, will make this kind of thing easier / quicker
-            //Add Cardinal for all enemy encounters for now
-            List<CommanderData> data = new List<CommanderData>();
-            foreach( Commander c in this.loadedCommanders) {
-                data.Add(c.commanderData);
-            }
-            this.enemyEncounterCommanders.Add(i, data.Find(c => c.CharName == "The Cardinal"));
         }
 
         if (SceneManager.GetActiveScene().name != "BossSelect"
@@ -107,8 +78,7 @@ public class GlobalObject : MonoBehaviour {
         if( scene.buildIndex == GameConstants.SCENE_INDEX_COMMANDER_SELECT) {
             GlobalObject.instance.LoadCommanderSelectUI();
         }else if (SceneManager.GetActiveScene().buildIndex == GameConstants.SCENE_INDEX_GAME_COMMANDERS) {
-            //Assign data to specifiy selected commander  based on story encounter
-            GlobalObject.instance.AssignEnemyCommander();
+
             Debug.Log("GLOBAL OBJECT TRYING TO LOAD COMMANDER GAME SCENE!");
             //Try to find UI manager object for loading commander images
             GameObject battleUIManagerObj = GameObject.Find("LevelCanvas");
@@ -205,6 +175,8 @@ public class GlobalObject : MonoBehaviour {
         }
     }
 
+    //TODO: Delete this safely!
+    /*
     public void AssignEnemyCommander() {
         switch (currentlyActiveStory) {
             case ("boss01"):
@@ -239,6 +211,7 @@ public class GlobalObject : MonoBehaviour {
                 break;
         }
     }
+    */
 
     public GameObject SetTemplateHeroCardAttributes (string id) {
         if (id == "wall") {

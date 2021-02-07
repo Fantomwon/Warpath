@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Encounter : MonoBehaviour 
 {
+    public CommanderData enemyCommanderData;
     public List<string> units = new List<string>();
 
     public void AddUnits(string unit, int amount) {
@@ -17,4 +18,5 @@ public class Encounter : MonoBehaviour
             GlobalObject.instance.player2DeckSelect.Add(unit);
         }
     }
+
 }

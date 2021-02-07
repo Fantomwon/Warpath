@@ -9,8 +9,28 @@ public class MapManager : MonoBehaviour {
     public GameObject buttonPrefab;
     public RectTransform ParentPanel;
     private List<Encounter> encounters = new List<Encounter>();
+    public List<GameObject> commanderList;
+    //public List<Commander> loadedCommanders;
+    public Dictionary<int, CommanderData> enemyEncounterCommanders;
+
+    public static MapManager instance;
 
     void Awake() {
+        if (MapManager.instance == null) {
+            MapManager.instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        } else if (instance != this) {
+            Destroy(this.gameObject);
+        }
+        //Instantiate dictionary for enemy commanders and populate it with commanders corresponding to the encounter IDs
+        this.enemyEncounterCommanders = new Dictionary<int, CommanderData>();
+        //Build list of commander scripts from prefabs
+        int i = 0;
+        foreach (GameObject commanderPrefab in this.commanderList) {
+            Commander commander = commanderPrefab.GetComponent<Commander>();
+            this.enemyEncounterCommanders.Add(i, commander.commanderData);
+            i++;
+        }
         //Build the full list of encounters
         BuildEncounters();
     }
@@ -33,9 +53,7 @@ public class MapManager : MonoBehaviour {
     void ButtonClicked(Button buttonRef) {
         //Turn the AI on (there may be a better place to do this than here)
         GlobalObject.aiEnabled = true;
-        //TODO - Need to associate a given Commander with a given encounter
-        //GlobalObject.instance.enemyCommanderData = GlobalObject.instance.commandersData.Find(c => c.CharName == "The Cardinal");
-
+        
         //Human player's cards come from their selected commander
         CommanderData playerCommanderData = GlobalObject.instance.humanPlayerCommanderData;
         foreach( GameConstants.Card card in playerCommanderData.Deck) {
@@ -44,33 +62,48 @@ public class MapManager : MonoBehaviour {
 
         //Assign the enemy AI their cards
         buttonRef.GetComponent<LevelToggleScript>().encounter.SetUnits();
+
+        //Get enemy commander for the selected encounter and cache with global object for level load
+        GlobalObject.instance.enemyCommanderData = buttonRef.GetComponent<LevelToggleScript>().encounter.enemyCommanderData;
+
         //Load into combat
         GlobalObject.instance.LoadLevel(GameConstants.SCENE_INDEX_GAME_COMMANDERS);
     }
 
     void BuildEncounters() {
-        //encounter01
+        /*encounter01*/
         Encounter encounter01 = new Encounter();
-        encounter01.AddUnits("archer", 5);
-        encounter01.AddUnits("footsoldier", 5);
-        encounter01.AddUnits("cultinitiate", 3);
-        encounter01.AddUnits("cultadept", 3);
-        encounter01.AddUnits("cultfanatic", 3);
-        encounter01.AddUnits("cultsentinel", 1);
-        encounter01.AddUnits("drainlife", 4);
-        encounter01.AddUnits("fireball", 1);
-        //encounter02
+        //Set commander
+        encounter01.enemyCommanderData = this.enemyEncounterCommanders[0];
+        //Cards
+        foreach( GameConstants.Card card in encounter01.enemyCommanderData.Deck) {
+            encounter01.AddUnits(card.ToString(), 1); //TODO => should deck's somehow be structs of cards + count for ease of editing/ sanity?
+        }
+
+        /*encounter02*/
         Encounter encounter02 = new Encounter();
-        encounter02.AddUnits("archer", 5);
-        encounter02.AddUnits("footsoldier", 5);
+        //Set commander
+        encounter02.enemyCommanderData = this.enemyEncounterCommanders[1];
+        //Cards
+        foreach (GameConstants.Card card in encounter02.enemyCommanderData.Deck) {
+            encounter02.AddUnits(card.ToString(), 1);
+        }
+
         //encounter03
         Encounter encounter03 = new Encounter();
-        encounter03.AddUnits("cultadept", 5);
-        encounter03.AddUnits("cultfanatic", 5);
+        encounter03.enemyCommanderData = this.enemyEncounterCommanders[2];
+        //Cards
+        foreach (GameConstants.Card card in encounter03.enemyCommanderData.Deck) {
+            encounter03.AddUnits(card.ToString(), 1);
+        }
+
         //encounter04
         Encounter encounter04 = new Encounter();
-        encounter04.AddUnits("archer", 5);
-        encounter04.AddUnits("cultinitiate", 10);
+        encounter04.enemyCommanderData = this.enemyEncounterCommanders[0];
+        //Cards
+        foreach (GameConstants.Card card in encounter04.enemyCommanderData.Deck) {
+            encounter04.AddUnits(card.ToString(), 1);
+        }
 
         //Add all encounters to the list of encounters
         encounters.Add(encounter01);
