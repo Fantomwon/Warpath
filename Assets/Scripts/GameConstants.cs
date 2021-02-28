@@ -10,6 +10,7 @@ public static class GameConstants
     public const int SCENE_INDEX_COMMANDER_SELECT = 6;
     public const int SCENE_INDEX_GAME_COMMANDERS = 7;
     public const int SCENE_INDEX_MAP = 8;
+    public const int SCENE_INDEX_POST_BATTLE_CARD_SELECT = 9;
 
     //In game factions. Certain cards are surfaced during selection process based on the selected Commander's faction
     [Serializable]
@@ -62,7 +63,9 @@ public static class GameConstants
 	heal,
 	shroud,
 	might,
-	fireball
+	fireball,
+    spellcardforced,
+    drainlife
     }
 
     //Tags

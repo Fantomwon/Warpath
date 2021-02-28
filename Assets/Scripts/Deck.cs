@@ -176,7 +176,7 @@ public class Deck : MonoBehaviour {
 						globalObject.SetTemplateHeroCardAttributes(player1Deck[0]);
 						GameObject newCard = Instantiate (globalObject.templateHeroCard) as GameObject;
 						newCard.transform.SetParent (GameObject.Find ("Player1 Hand").transform, false);
-						globalObject.SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId, newCard);
+						globalObject.SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
 					} else if (CheckIfCardIdIsASpellCard(player1Deck[0])) {
 						globalObject.SetTemplateSpellCardAttributes(player1Deck[0]);
 						GameObject newCard = Instantiate (globalObject.templateSpellCard) as GameObject;
@@ -229,7 +229,7 @@ public class Deck : MonoBehaviour {
 							newCard.GetComponent<Card>().manaCost = aiManager.AiAlterCardCost(newCard);
 						}
 						newCard.transform.SetParent (GameObject.Find ("Player2 Hand").transform, false);
-						globalObject.SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId, newCard);
+						globalObject.SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
 					} else if (CheckIfCardIdIsASpellCard(player2Deck[0])) {
 						globalObject.SetTemplateSpellCardAttributes(player2Deck[0]);
 						GameObject newCard = Instantiate (globalObject.templateSpellCard) as GameObject;
@@ -291,9 +291,9 @@ public class Deck : MonoBehaviour {
 		//If the card is a Tower or Wall card DO NOT add it to my discard as the Tower and Wall cards are used more like spells
 		if (Card.selectedCard.GetComponent<Card>().cardName != "Tower" && Card.selectedCard.GetComponent<Card> ().cardName != "Wall") {
 			if (playField.player1Turn) {
-				player1Discard.Add(Card.selectedCard.GetComponent<Card>().cardId);
+				player1Discard.Add(Card.selectedCard.GetComponent<Card>().cardId.ToString());
 			} else if (!playField.player1Turn) {
-				player2Discard.Add(Card.selectedCard.GetComponent<Card>().cardId);
+				player2Discard.Add(Card.selectedCard.GetComponent<Card>().cardId.ToString());
 				//Debug.Log("Adding card to player2 discard pile: " + Card.selectedCard.GetComponent<Card>().cardName);
 			}
 			//Get rid of the card from my hand that I just used so I can't use it again

@@ -285,14 +285,14 @@ public class PlayField : MonoBehaviour {
         if (player1Turn) {
             foreach (Transform leftoverCard in GameObject.Find("LevelCanvas/Player1 Hand").transform) {
                 //Debug.Log("FOUND A CARD IN PLAYER 1 HAND~~~~~~~~~~~~~~~~~~~");
-                deck.player1Discard.Add(leftoverCard.GetComponent<Card>().cardId);
+                deck.player1Discard.Add(leftoverCard.GetComponent<Card>().cardId.ToString());
                 Destroy(leftoverCard.gameObject);
             }
             //GameObject.Find("Player1 Hand").transform.DetachChildren();
         } else if (!player1Turn) {
             foreach (Transform leftoverCard in GameObject.Find("LevelCanvas/Player2 Hand").transform) {
                 //Debug.Log("FOUND A CARD IN PLAYER 2 HAND~~~~~~~~~~~~~~~~~~~");
-                deck.player2Discard.Add(leftoverCard.GetComponent<Card>().cardId);
+                deck.player2Discard.Add(leftoverCard.GetComponent<Card>().cardId.ToString());
                 Destroy(leftoverCard.gameObject);
             }
             //GameObject.Find("Player2 Hand").transform.DetachChildren();

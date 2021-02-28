@@ -61,7 +61,8 @@ public class GlobalObject : MonoBehaviour {
             && SceneManager.GetActiveScene().name != "Game"
             && SceneManager.GetActiveScene().name != "GameCommanders"
             && SceneManager.GetActiveScene().name != "CommanderSelect"
-            && SceneManager.GetActiveScene().name != "Map") {
+            && SceneManager.GetActiveScene().name != "Map"
+            && SceneManager.GetActiveScene().buildIndex != GameConstants.SCENE_INDEX_POST_BATTLE_CARD_SELECT) {
             Debug.LogWarning("WARNING! Scene Manger is Loading a non specified scene which it assumes is the card select!!!");
             AssignPlayerCards();
             InstantiatePlayerCards();
@@ -215,63 +216,63 @@ public class GlobalObject : MonoBehaviour {
 
     public GameObject SetTemplateHeroCardAttributes (string id) {
         if (id == "wall") {
-            return SetTemplateHeroCardAttributesConstructor("WallCard", "wall", "heroStationary", 2, "Test: Wall", "PrefabsHeroes/Wall", 0, 4, 0, 0);
+            return SetTemplateHeroCardAttributesConstructor("WallCard", GameConstants.Card.wall, "heroStationary", 2, "Test: Wall", "PrefabsHeroes/Wall", 0, 4, 0, 0);
         } else if (id == "archer") {
-            return SetTemplateHeroCardAttributesConstructor("ArcherCard", "archer", "hero", 2, "Test: Archer", "PrefabsHeroes/Archer", 2, 2, 2, 3);
+            return SetTemplateHeroCardAttributesConstructor("ArcherCard", GameConstants.Card.archer, "hero", 2, "Test: Archer", "PrefabsHeroes/Archer", 2, 2, 2, 3);
         } else if (id == "footsoldier") {
-            return SetTemplateHeroCardAttributesConstructor("FootSoldierCard", "footsoldier", "hero", 2, "Test:Foot Soldier", "PrefabsHeroes/FootSoldier", 2, 3, 3, 1);
+            return SetTemplateHeroCardAttributesConstructor("FootSoldierCard", GameConstants.Card.footsoldier, "hero", 2, "Test:Foot Soldier", "PrefabsHeroes/FootSoldier", 2, 3, 3, 1);
         } else if (id == "dwarf") {
-            return SetTemplateHeroCardAttributesConstructor("DwarfCard", "dwarf", "hero", 3, "Test:Dwarf", "PrefabsHeroes/Dwarf", 3, 1, 5, 2);
+            return SetTemplateHeroCardAttributesConstructor("DwarfCard", GameConstants.Card.dwarf, "hero", 3, "Test:Dwarf", "PrefabsHeroes/Dwarf", 3, 1, 5, 2);
         } else if (id == "ghost") {
-            return SetTemplateHeroCardAttributesConstructor("GhostCard", "ghost", "hero", 3, "Test:Ghost", "PrefabsHeroes/Ghost", 1, 3, 2, 1);
+            return SetTemplateHeroCardAttributesConstructor("GhostCard", GameConstants.Card.ghost, "hero", 3, "Test:Ghost", "PrefabsHeroes/Ghost", 1, 3, 2, 1);
         } else if (id == "sapper") {
-            return SetTemplateHeroCardAttributesConstructor("SapperCard", "sapper", "hero", 2, "Test:Sapper", "PrefabsHeroes/Sapper", 2, 2, 2, 1);
+            return SetTemplateHeroCardAttributesConstructor("SapperCard", GameConstants.Card.sapper, "hero", 2, "Test:Sapper", "PrefabsHeroes/Sapper", 2, 2, 2, 1);
         } else if (id == "rogue") {
-            return SetTemplateHeroCardAttributesConstructor("RogueCard", "rogue", "hero", 3, "Test:Rogue", "PrefabsHeroes/Rogue", 2, 4, 2, 1);
+            return SetTemplateHeroCardAttributesConstructor("RogueCard", GameConstants.Card.rogue, "hero", 3, "Test:Rogue", "PrefabsHeroes/Rogue", 2, 4, 2, 1);
         } else if (id == "druid") {
-            return SetTemplateHeroCardAttributesConstructor("DruidCard", "druid", "hero", 3, "Test:Druid", "PrefabsHeroes/Druid", 1, 4, 2, 2);
+            return SetTemplateHeroCardAttributesConstructor("DruidCard", GameConstants.Card.druid, "hero", 3, "Test:Druid", "PrefabsHeroes/Druid", 1, 4, 2, 2);
         } else if (id == "monk") {
-            return SetTemplateHeroCardAttributesConstructor("MonkCard", "monk", "hero", 4, "Test:monk", "PrefabsHeroes/Monk", 2, 5, 2, 1);
+            return SetTemplateHeroCardAttributesConstructor("MonkCard", GameConstants.Card.monk, "hero", 4, "Test:monk", "PrefabsHeroes/Monk", 2, 5, 2, 1);
         } else if (id == "slinger") {
-            return SetTemplateHeroCardAttributesConstructor("SlingerCard", "slinger", "hero", 4, "Test:slinger", "PrefabsHeroes/Slinger", 2, 4, 2, 2);
+            return SetTemplateHeroCardAttributesConstructor("SlingerCard", GameConstants.Card.slinger, "hero", 4, "Test:slinger", "PrefabsHeroes/Slinger", 2, 4, 2, 2);
         } else if (id == "bloodmage") {
-            return SetTemplateHeroCardAttributesConstructor("BloodmageCard", "bloodmage", "hero", 4, "Test:bloodmage", "PrefabsHeroes/Bloodmage", 2, 4, 2, 2);
+            return SetTemplateHeroCardAttributesConstructor("BloodmageCard", GameConstants.Card.bloodmage, "hero", 4, "Test:bloodmage", "PrefabsHeroes/Bloodmage", 2, 4, 2, 2);
         } else if (id == "blacksmith") {
-            return SetTemplateHeroCardAttributesConstructor("BlacksmithCard", "blacksmith", "hero", 4, "Test:blacksmith", "PrefabsHeroes/Blacksmith", 1, 5, 2, 1);
+            return SetTemplateHeroCardAttributesConstructor("BlacksmithCard", GameConstants.Card.blacksmith, "hero", 4, "Test:blacksmith", "PrefabsHeroes/Blacksmith", 1, 5, 2, 1);
         } else if (id == "wolf") {
-            return SetTemplateHeroCardAttributesConstructor("WolfCard", "wolf", "hero", 4, "Test:wolf", "PrefabsHeroes/Wolf", 2, 3, 2, 1);
+            return SetTemplateHeroCardAttributesConstructor("WolfCard", GameConstants.Card.wolf, "hero", 4, "Test:wolf", "PrefabsHeroes/Wolf", 2, 3, 2, 1);
         } else if (id == "chaosmage") {
-            return SetTemplateHeroCardAttributesConstructor("ChaosMageCard", "chaosmage", "hero", 4, "Test:chaosmage", "PrefabsHeroes/ChaosMage", 1, 4, 1, 10);
+            return SetTemplateHeroCardAttributesConstructor("ChaosMageCard", GameConstants.Card.chaosmage, "hero", 4, "Test:chaosmage", "PrefabsHeroes/ChaosMage", 1, 4, 1, 10);
         } else if (id == "sorcerer") {
-            return SetTemplateHeroCardAttributesConstructor("SorcererCard", "sorcerer", "hero", 4, "Test:sorcerer", "PrefabsHeroes/Sorcerer", 1, 5, 1, 3);
+            return SetTemplateHeroCardAttributesConstructor("SorcererCard", GameConstants.Card.sorcerer, "hero", 4, "Test:sorcerer", "PrefabsHeroes/Sorcerer", 1, 5, 1, 3);
         } else if (id == "assassin") {
-            return SetTemplateHeroCardAttributesConstructor("AssassinCard", "assassin", "hero", 4, "Test:assassin", "PrefabsHeroes/Assassin", 2, 5, 2, 1);
+            return SetTemplateHeroCardAttributesConstructor("AssassinCard", GameConstants.Card.assassin, "hero", 4, "Test:assassin", "PrefabsHeroes/Assassin", 2, 5, 2, 1);
         } else if (id == "knight") {
-            return SetTemplateHeroCardAttributesConstructor("KnightCard", "knight", "hero", 4, "Test:knight", "PrefabsHeroes/Knight", 3, 7, 1, 1);
+            return SetTemplateHeroCardAttributesConstructor("KnightCard", GameConstants.Card.knight, "hero", 4, "Test:knight", "PrefabsHeroes/Knight", 3, 7, 1, 1);
         } else if (id == "paladin") {
-            return SetTemplateHeroCardAttributesConstructor("PaladinCard", "paladin", "hero", 5, "Test:paladin", "PrefabsHeroes/Paladin", 2, 5, 1, 1);
+            return SetTemplateHeroCardAttributesConstructor("PaladinCard", GameConstants.Card.paladin, "hero", 5, "Test:paladin", "PrefabsHeroes/Paladin", 2, 5, 1, 1);
         } else if (id == "tower") {
-            return SetTemplateHeroCardAttributesConstructor("TowerCard", "tower", "heroStationary", 5, "Test:tower", "PrefabsHeroes/Tower", 1, 8, 0, 1);
+            return SetTemplateHeroCardAttributesConstructor("TowerCard", GameConstants.Card.tower, "heroStationary", 5, "Test:tower", "PrefabsHeroes/Tower", 1, 8, 0, 1);
         } else if (id == "champion") {
-            return SetTemplateHeroCardAttributesConstructor("ChampionCard", "champion", "hero", 5, "Test:champion", "PrefabsHeroes/Champion", 2, 5, 1, 1);
+            return SetTemplateHeroCardAttributesConstructor("ChampionCard", GameConstants.Card.champion, "hero", 5, "Test:champion", "PrefabsHeroes/Champion", 2, 5, 1, 1);
         } else if (id == "cavalry") {
-            return SetTemplateHeroCardAttributesConstructor("CavalryCard", "cavalry", "hero", 5, "Test:cavalry", "PrefabsHeroes/Cavalry", 2, 7, 3, 1);
+            return SetTemplateHeroCardAttributesConstructor("CavalryCard", GameConstants.Card.cavalry, "hero", 5, "Test:cavalry", "PrefabsHeroes/Cavalry", 2, 7, 3, 1);
         } else if (id == "diviner") {
-            return SetTemplateHeroCardAttributesConstructor("DivinerCard", "diviner", "hero", 5, "Test:diviner", "PrefabsHeroes/Diviner", 1, 5, 1, 3);
+            return SetTemplateHeroCardAttributesConstructor("DivinerCard", GameConstants.Card.diviner, "hero", 5, "Test:diviner", "PrefabsHeroes/Diviner", 1, 5, 1, 3);
         } else if (id == "crossbowman") {
-            return SetTemplateHeroCardAttributesConstructor("CrossbowmanCard", "crossbowman", "hero", 3, "Test:crossbowman", "PrefabsHeroes/Crossbowman", 2, 3, 2, 3);
+            return SetTemplateHeroCardAttributesConstructor("CrossbowmanCard", GameConstants.Card.crossbowman, "hero", 3, "Test:crossbowman", "PrefabsHeroes/Crossbowman", 2, 3, 2, 3);
         } else if (id == "bloodknight") {
-            return SetTemplateHeroCardAttributesConstructor("BloodknightCard", "bloodknight", "hero", 5, "Test:bloodknight", "PrefabsHeroes/Bloodknight", 2, 6, 1, 1);
+            return SetTemplateHeroCardAttributesConstructor("BloodknightCard", GameConstants.Card.bloodknight, "hero", 5, "Test:bloodknight", "PrefabsHeroes/Bloodknight", 2, 6, 1, 1);
         } else if (id == "cultinitiate") {
-            return SetTemplateHeroCardAttributesConstructor("CultInitiateCard", "cultinitiate", "hero", 2, "Test:cultinitiate", "PrefabsHeroes/CultInitiate", 2, 4, 3, 1);
+            return SetTemplateHeroCardAttributesConstructor("CultInitiateCard", GameConstants.Card.cultinitiate, "hero", 2, "Test:cultinitiate", "PrefabsHeroes/CultInitiate", 2, 4, 3, 1);
         } else if (id == "cultadept") {
-            return SetTemplateHeroCardAttributesConstructor("CultAdeptCard", "cultadept", "hero", 2, "Test:cultadept", "PrefabsHeroes/CultAdept", 2, 3, 2, 3);
+            return SetTemplateHeroCardAttributesConstructor("CultAdeptCard", GameConstants.Card.cultadept, "hero", 2, "Test:cultadept", "PrefabsHeroes/CultAdept", 2, 3, 2, 3);
         } else if (id == "cultacolyte") {
-            return SetTemplateHeroCardAttributesConstructor("CultAcolyteCard", "cultacolyte", "hero", 3, "Test:cultacolyte", "PrefabsHeroes/CultAcolyte", 2, 3, 2, 3);
+            return SetTemplateHeroCardAttributesConstructor("CultAcolyteCard", GameConstants.Card.cultacolyte, "hero", 3, "Test:cultacolyte", "PrefabsHeroes/CultAcolyte", 2, 3, 2, 3);
         } else if (id == "cultsentinel") {
-            return SetTemplateHeroCardAttributesConstructor("CultSentinelCard", "cultsentinel", "hero", 3, "Test:cultsentinel", "PrefabsHeroes/CultSentinel", 4, 10, 1, 1);
+            return SetTemplateHeroCardAttributesConstructor("CultSentinelCard", GameConstants.Card.cultsentinel, "hero", 3, "Test:cultsentinel", "PrefabsHeroes/CultSentinel", 4, 10, 1, 1);
         } else if (id == "cultfanatic") {
-            return SetTemplateHeroCardAttributesConstructor("CultFanaticCard", "cultfanatic", "hero", 2, "Test:cultfanatic", "PrefabsHeroes/CultFanatic", 2, 2, 2, 1);
+            return SetTemplateHeroCardAttributesConstructor("CultFanaticCard", GameConstants.Card.cultfanatic, "hero", 2, "Test:cultfanatic", "PrefabsHeroes/CultFanatic", 2, 2, 2, 1);
         } else {
 			return null;
 		}
@@ -279,36 +280,36 @@ public class GlobalObject : MonoBehaviour {
 
     public GameObject SetTemplateHeroUnitAttributes(string id) {
          if (id == "archer") {
-            return SetTemplateHeroCardAttributesConstructor("ArcherCard", "archer", "hero", 2, "Test: Archer", "PrefabsHeroes/Archer", 2, 2, 2, 3);
+            return SetTemplateHeroCardAttributesConstructor("ArcherCard", GameConstants.Card.archer, "hero", 2, "Test: Archer", "PrefabsHeroes/Archer", 2, 2, 2, 3);
         }
         return null;
     }
 
     public GameObject SetTemplateSpellCardAttributes (string id) {
 		if (id == "armor") {
-			return SetTemplateSpellCardAttributesConstructor("ArmorCard", "armor", "spell", 1, "Test:armor", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ArmorIcon");
+			return SetTemplateSpellCardAttributesConstructor("ArmorCard", GameConstants.Card.armor, "spell", 1, "Test:armor", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ArmorIcon");
 		} else if (id == "rockthrow") {
-			return SetTemplateSpellCardAttributesConstructor("RockthrowCard", "rockthrow", "spell", 1, "Test:rock throw", "Particles/RockThrowParticle", "Images/Icons/SpellIcons/RockIcon");
+			return SetTemplateSpellCardAttributesConstructor("RockthrowCard", GameConstants.Card.rockthrow, "spell", 1, "Test:rock throw", "Particles/RockThrowParticle", "Images/Icons/SpellIcons/RockIcon");
 		} else if (id == "root") {
-			return SetTemplateSpellCardAttributesConstructor("RootCard", "root", "spell", 3, "Test:root", "Particles/DodgeParticle", "Images/Icons/SpellIcons/RootIcon");
+			return SetTemplateSpellCardAttributesConstructor("RootCard", GameConstants.Card.root, "spell", 3, "Test:root", "Particles/DodgeParticle", "Images/Icons/SpellIcons/RootIcon");
 		} else if (id == "windgust") {
-			return SetTemplateSpellCardAttributesConstructor("WindGustCard", "windgust", "spell", 3, "Test:wind gust", "Particles/WindGustParticle", "Images/Icons/SpellIcons/WindgustIcon");
+			return SetTemplateSpellCardAttributesConstructor("WindGustCard", GameConstants.Card.windgust, "spell", 3, "Test:wind gust", "Particles/WindGustParticle", "Images/Icons/SpellIcons/WindgustIcon");
 		} else if (id == "heal") {
-			return SetTemplateSpellCardAttributesConstructor("HealCard", "heal", "spell", 2, "Test:heal", "Particles/HealLightParticle", "Images/Icons/SpellIcons/HealIcon");
+			return SetTemplateSpellCardAttributesConstructor("HealCard", GameConstants.Card.heal, "spell", 2, "Test:heal", "Particles/HealLightParticle", "Images/Icons/SpellIcons/HealIcon");
 		} else if (id == "shroud") {
-			return SetTemplateSpellCardAttributesConstructor("ShroudCard", "shroud", "spell", 2, "Test:shroud", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ShroudIcon");
+			return SetTemplateSpellCardAttributesConstructor("ShroudCard", GameConstants.Card.shroud, "spell", 2, "Test:shroud", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ShroudIcon");
 		} else if (id == "might") {
-			return SetTemplateSpellCardAttributesConstructor("MightCard", "might", "spell", 2, "Test:might", "Particles/DodgeParticle", "Images/Icons/SpellIcons/MightIcon");
+			return SetTemplateSpellCardAttributesConstructor("MightCard", GameConstants.Card.might, "spell", 2, "Test:might", "Particles/DodgeParticle", "Images/Icons/SpellIcons/MightIcon");
 		} else if (id == "fireball") {
-			return SetTemplateSpellCardAttributesConstructor("FireballCard", "fireball", "spell", 2, "Test:fireball", "Particles/FireballParticle", "Images/Icons/SpellIcons/FireballIcon");
+			return SetTemplateSpellCardAttributesConstructor("FireballCard", GameConstants.Card.fireball, "spell", 2, "Test:fireball", "Particles/FireballParticle", "Images/Icons/SpellIcons/FireballIcon");
         } else if (id == "drainlife") {
-            return SetTemplateSpellCardAttributesConstructor("DrainLifeCard", "drainlife", "spell", 1, "Test:drainlife", "Particles/DrainLifeParticle", "Images/Icons/SpellIcons/DrainLifeIcon");
+            return SetTemplateSpellCardAttributesConstructor("DrainLifeCard", GameConstants.Card.drainlife, "spell", 1, "Test:drainlife", "Particles/DrainLifeParticle", "Images/Icons/SpellIcons/DrainLifeIcon");
         } else {
 			return null;
 		}
 	}
 
-	private GameObject SetTemplateHeroCardAttributesConstructor (string name, string cardId, string type, int manaCost, string cardName, string heroPrefab, int power, int maxHealth, int speed, int range) {
+	private GameObject SetTemplateHeroCardAttributesConstructor (string name, GameConstants.Card cardId, string type, int manaCost, string cardName, string heroPrefab, int power, int maxHealth, int speed, int range) {
 		templateHeroCard.GetComponent<Card>().name = name;
 		templateHeroCard.GetComponent<Card>().cardId = cardId;
 		templateHeroCard.GetComponent<Card>().type = type;
@@ -335,7 +336,7 @@ public class GlobalObject : MonoBehaviour {
         return templateHeroUnit;
     }
 
-    private GameObject SetTemplateSpellCardAttributesConstructor (string name, string cardId, string type, int manaCost, string cardName, string spellParticle, string spellIcon) {
+    private GameObject SetTemplateSpellCardAttributesConstructor (string name, GameConstants.Card cardId, string type, int manaCost, string cardName, string spellParticle, string spellIcon) {
 		templateSpellCard.GetComponent<Card>().name = name;
 		templateSpellCard.GetComponent<Card>().cardId = cardId;
 		templateSpellCard.GetComponent<Card>().type = type;
@@ -465,7 +466,7 @@ public class GlobalObject : MonoBehaviour {
 				SetTemplateHeroCardAttributes(cardId);
 				GameObject newCard = Instantiate (templateHeroCard) as GameObject;
 				newCard.transform.SetParent (GameObject.Find ("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId, newCard);
+				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
 			}
 			foreach (string cardId in boss01PlayerSpellCards) {
 				SetTemplateSpellCardAttributes(cardId);
@@ -478,7 +479,7 @@ public class GlobalObject : MonoBehaviour {
 				SetTemplateHeroCardAttributes(cardId);
 				GameObject newCard = Instantiate (templateHeroCard) as GameObject;
 				newCard.transform.SetParent (GameObject.Find ("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId, newCard);
+				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
 			}
 			foreach (string cardId in boss02PlayerSpellCards) {
 				SetTemplateSpellCardAttributes(cardId);
@@ -491,7 +492,7 @@ public class GlobalObject : MonoBehaviour {
 				SetTemplateHeroCardAttributes(cardId);
 				GameObject newCard = Instantiate (templateHeroCard) as GameObject;
 				newCard.transform.SetParent (GameObject.Find ("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId, newCard);
+				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
 			}
 			foreach (string cardId in boss03PlayerSpellCards) {
 				SetTemplateSpellCardAttributes(cardId);
@@ -504,7 +505,7 @@ public class GlobalObject : MonoBehaviour {
 				SetTemplateHeroCardAttributes(cardId);
 				GameObject newCard = Instantiate (templateHeroCard) as GameObject;
 				newCard.transform.SetParent (GameObject.Find ("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId, newCard);
+				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
 			}
 			foreach (string cardId in boss04PlayerSpellCards) {
 				SetTemplateSpellCardAttributes(cardId);
@@ -517,7 +518,7 @@ public class GlobalObject : MonoBehaviour {
 				SetTemplateHeroCardAttributes(cardId);
 				GameObject newCard = Instantiate (templateHeroCard) as GameObject;
 				newCard.transform.SetParent (GameObject.Find ("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId, newCard);
+				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
 			}
 			foreach (string cardId in boss05PlayerSpellCards) {
 				SetTemplateSpellCardAttributes(cardId);
@@ -530,7 +531,7 @@ public class GlobalObject : MonoBehaviour {
 				SetTemplateHeroCardAttributes(cardId);
 				GameObject newCard = Instantiate (templateHeroCard) as GameObject;
 				newCard.transform.SetParent (GameObject.Find("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId, newCard);
+				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
 			}
 			foreach (string cardId in fullPlayerSpellCardList) {
 				SetTemplateSpellCardAttributes(cardId);

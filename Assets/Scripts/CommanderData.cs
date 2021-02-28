@@ -8,7 +8,7 @@ public class CommanderData {
 
     }
 
-    public CommanderData(string characterName, GameConstants.FactionType faction, int commanderHP, int startingHandSize, string prefabResourcePath, GameConstants.CommanderAbilityChargeType abilityChargeType, int abilityChargeCost, GameConstants.CommanderAbilityTargetType abilityTargetType, GameConstants.Card[] deck) {
+    public CommanderData(string characterName, GameConstants.FactionType faction, int commanderHP, int startingHandSize, string prefabResourcePath, GameConstants.CommanderAbilityChargeType abilityChargeType, int abilityChargeCost, GameConstants.CommanderAbilityTargetType abilityTargetType, List<GameConstants.Card> deck) {
         this._charName = characterName;
         this._faction = faction;
         this._hp = commanderHP;
@@ -24,10 +24,10 @@ public class CommanderData {
     }
 
     [SerializeField]
-    public GameConstants.Card[] _deck;
+    public List<GameConstants.Card> _deck;
 
 
-    public GameConstants.Card[] Deck {
+    public List<GameConstants.Card> Deck {
         get{
             return this._deck;
         }

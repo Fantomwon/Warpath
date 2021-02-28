@@ -71,7 +71,7 @@ public class AiManager : MonoBehaviour {
 					return cardToCheck.GetComponent<Card>().manaCost;
 			}
 		} else if (GlobalObject.currentlyActiveStory == "boss02") {
-			switch (cardToCheck.GetComponent<Card>().cardId) {
+			switch (cardToCheck.GetComponent<Card>().cardId.ToString()) {
 				case "archer":
 					return 0;
 				default:
@@ -109,7 +109,7 @@ public class AiManager : MonoBehaviour {
 			int randomIndex = Random.Range(0, validCardsListLength);
 //			Debug.Log("randomIndex is: " + randomIndex);
 			Card.selectedCard = validCardsToPlay[randomIndex];
-            Debug.Log("Card.selectedCard is: " + Card.selectedCard.GetComponent<Card>().cardId);
+            Debug.Log("Card.selectedCard is: " + Card.selectedCard.GetComponent<Card>().cardId.ToString());
             if (validCardsToPlay[randomIndex].GetComponent<Card>().type == "hero") {
 				Card.selectedHero = validCardsToPlay[randomIndex].GetComponent<Card>().heroPrefab;
 			}
@@ -119,7 +119,7 @@ public class AiManager : MonoBehaviour {
 
 	public void AiPlayCard () {
 		if (Card.selectedHero && !CheckIfHomeRowIsFull() && Card.selectedCard && Card.selectedCard.GetComponent<Card>().type != "spell") {
-			if (Card.selectedCard.GetComponent<Card>().cardId == "wolf") {
+			if (Card.selectedCard.GetComponent<Card>().cardId.ToString() == "wolf") {
 				playField.SpawnHeroForPlayer2(ReturnValidHeroSpawnCoords());
 				StartCoroutine("AiTakeTurnAfterDelay");
 			} else {
@@ -139,7 +139,7 @@ public class AiManager : MonoBehaviour {
 			globalObject.SetTemplateSpellCardAttributes(spellCardId);
 			GameObject spawnedSpellCard = Instantiate (globalObject.templateHeroCard, player2Hand.transform) as GameObject;
 			spawnedSpellCard.GetComponent<Card>().manaCost = AiAlterCardCost(spawnedSpellCard);
-			spawnedSpellCard.GetComponent<Card>().cardId = "SpellCardForced";
+            spawnedSpellCard.GetComponent<Card>().cardId = GameConstants.Card.spellcardforced;
 			Card.selectedCard = spawnedSpellCard.gameObject;
 		}
 

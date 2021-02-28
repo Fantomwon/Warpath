@@ -43,8 +43,13 @@ public class DebugManager : MonoBehaviour {
 	void Update () {
 		if( Input.GetKeyUp( KeyCode.BackQuote ) ) {
             DebugManager._instance.ToggleDebugMenu();
-        }else if( Input.GetKeyUp( KeyCode.Alpha1 )) {//Test loading level with commander and commander deck
+        }else if( Input.GetKeyUp( KeyCode.Alpha1 )) {//Test loading scene of post battle with card select
             Debug.LogWarning("DEBUG KEY CODE ALPHA 1 PRESSED!");
+            //Set necessary data for the Card Select Manager
+            //List<string> testSelectCardsList = new List<string>() {"cultadept", "cultinitiate", "cultsentinel", "cultacolyte", "cultfanatic", "rockthrow", "fireball" };
+            List<string> testSelectCardsList = new List<string>() { "cultadept","cultsentinel", "cultacolyte" };
+            CardSelectManager.instance.SetCardsForSelect( testSelectCardsList );
+            SceneManager.LoadScene(GameConstants.SCENE_INDEX_POST_BATTLE_CARD_SELECT);
         }
 
 	}

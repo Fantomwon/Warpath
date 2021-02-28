@@ -11,7 +11,7 @@ public class Card : MonoBehaviour {
 	public static GameObject selectedCard;
 	public GameObject heroPrefab;
 	public Text ManaCost, NameText, PowerText, HealthText, SpeedText, RangeText;
-	public string cardId;
+	public GameConstants.Card cardId;
 	public string cardName;
 	public string type;
 	public GameObject image;
@@ -78,7 +78,7 @@ public class Card : MonoBehaviour {
 	}
 
 	public void CastSpell () { 
-		if (cardId == "rockthrow") {
+		if (cardId.ToString() == "rockthrow") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If there is an enemy in the square I clicked on then do spell damage to them (spell damage is applied through 'EndOfSpellEffects' method which is part of Spell.cs and is attached to
@@ -110,7 +110,7 @@ public class Card : MonoBehaviour {
 				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardId == "fireball") {
+		} else if (cardId.ToString() == "fireball") {
 			Debug.Log("FIREBALL MARKER # 1");
 			if (playField.player1Turn) {
 				Debug.Log("FIREBALL MARKER # 2");
@@ -148,7 +148,7 @@ public class Card : MonoBehaviour {
 				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardId == "flamestrike") {
+		} else if (cardId.ToString() == "flamestrike") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If there are any enemies in the COLUMN that I clicked on then do spell damage to all of them (spell damage is applied through 'EndOfSpellEffects' method)
@@ -172,7 +172,7 @@ public class Card : MonoBehaviour {
 				SpellCleanup ();
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardId == "heal") {
+		} else if (cardId.ToString() == "heal") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on AND they are below max health AND they are not a 'Ghost' then heal them for the proper amount
@@ -208,7 +208,7 @@ public class Card : MonoBehaviour {
 				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardId == "haste") {
+		} else if (cardId.ToString() == "haste") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on set 'movingRight' variable in Hero.cs to true
@@ -233,7 +233,7 @@ public class Card : MonoBehaviour {
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardId == "might") {
+		} else if (cardId.ToString() == "might") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on then give them the 'Might' buff for the appropriate duration
@@ -263,7 +263,7 @@ public class Card : MonoBehaviour {
 				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardId == "shroud") {
+		} else if (cardId.ToString() == "shroud") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on then give them the 'Shroud' buff for the appropriate duration
@@ -293,7 +293,7 @@ public class Card : MonoBehaviour {
 				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardId == "armor") {
+		} else if (cardId.ToString() == "armor") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on AND they are not a 'Ghost' then add to their armor value by the appropriate amount
@@ -325,7 +325,7 @@ public class Card : MonoBehaviour {
 				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardId == "blessing") {
+		} else if (cardId.ToString() == "blessing") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player1.transform) {
 					//If one of my heroes is in the square I clicked on AND they are not a 'Ghost' then add to their armor value by the appropriate amount
@@ -360,7 +360,7 @@ public class Card : MonoBehaviour {
 				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardId == "root") {
+		} else if (cardId.ToString() == "root") {
 			if (playField.player1Turn) {
 				foreach (Transform hero in playField.player2.transform) {
 					//If there is an enemy in the square I clicked on then cast the 'Root' debuff on them
@@ -393,7 +393,7 @@ public class Card : MonoBehaviour {
 				return;
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardId == "windgust") {
+		} else if (cardId.ToString() == "windgust") {
 			float maxDistToMove = 3f;
 			float currentDistToMove;
 			if (playField.player1Turn) {
@@ -450,7 +450,7 @@ public class Card : MonoBehaviour {
 				}
 			}
 			Debug.LogWarning("NOT A VALID TARGET FOR SPELL");
-		} else if (cardId == "drainlife") {
+		} else if (cardId.ToString() == "drainlife") {
             if (playField.player1Turn) {
                 foreach (Transform hero in playField.player2.transform) {
                     //Logic for player 1 selecting an enemy hero
@@ -513,23 +513,23 @@ public class Card : MonoBehaviour {
     }
 
 	public bool SpellAiConditionCheck () {
-		if (cardId == "fireball" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
+		if (cardId.ToString() == "fireball" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
 			return true;
-		} else if (cardId == "rockthrow" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
+		} else if (cardId.ToString() == "rockthrow" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
 			return true;
-		} else if (cardId == "blessing" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "blessing").Count > 0) {
+		} else if (cardId.ToString() == "blessing" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "blessing").Count > 0) {
 			return true;
-		} else if (cardId == "heal" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal").Count > 0) {
+		} else if (cardId.ToString() == "heal" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "heal").Count > 0) {
 			return true;
-		} else if (cardId == "armor" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "armor").Count > 0) {
+		} else if (cardId.ToString() == "armor" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "armor").Count > 0) {
 			return true; 
-		} else if (cardId == "might" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "might").Count > 0) {
+		} else if (cardId.ToString() == "might" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "might").Count > 0) {
 			return true; 
-		} else if (cardId == "shroud" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "shroud").Count > 0) {
+		} else if (cardId.ToString() == "shroud" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally", "shroud").Count > 0) {
 			return true; 
-		} else if (cardId == "root" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy", "root").Count > 0) {
+		} else if (cardId.ToString() == "root" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy", "root").Count > 0) {
 			return true;
-        } else if (cardId == "drainlife" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
+        } else if (cardId.ToString() == "drainlife" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
             return true;
         } else {
 			return false;

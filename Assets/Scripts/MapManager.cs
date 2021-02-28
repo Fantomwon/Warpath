@@ -15,10 +15,14 @@ public class MapManager : MonoBehaviour {
 
     public static MapManager instance;
 
+    bool isInitialLoad = true;
+
     void Awake() {
         if (MapManager.instance == null) {
             MapManager.instance = this;
             DontDestroyOnLoad(this.gameObject);
+            //register for scene loaded event
+            SceneManager.sceneLoaded += this.OnSceneLoaded;
         } else if (instance != this) {
             Destroy(this.gameObject);
         }
@@ -36,17 +40,26 @@ public class MapManager : MonoBehaviour {
     }
 
     void Start() {
-        for (int i = 0; i < encounters.Count; i++) {
-            buttonPrefab = Instantiate(buttonPrefab);
-            buttonPrefab.transform.SetParent(ParentPanel);
-            buttonPrefab.transform.localScale = new Vector3(1, 1, 1);
 
-            Button tempButton = buttonPrefab.GetComponent<Button>();
+    }
 
-            tempButton.onClick.AddListener(() => ButtonClicked(tempButton));
-            tempButton.transform.Find("Text").GetComponent<Text>().text = "Level " + (i + 1);
-            //Assign the proper encounter to the button
-            tempButton.GetComponent<LevelToggleScript>().encounter = encounters[i];
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+        if( scene.buildIndex == GameConstants.SCENE_INDEX_MAP) {
+            //Get reference to rect transform in scene for UI stuff
+            this.ParentPanel = GameObject.Find("ToggleGroup").GetComponent<RectTransform>();
+            //Create buttons
+            for (int i = 0; i < encounters.Count; i++) {
+                GameObject btnFromPrefab = Instantiate(buttonPrefab);
+                btnFromPrefab.transform.SetParent(ParentPanel);
+                btnFromPrefab.transform.localScale = new Vector3(1, 1, 1);
+
+                Button tempButton = btnFromPrefab.GetComponent<Button>();
+
+                tempButton.onClick.AddListener(() => ButtonClicked(tempButton));
+                tempButton.transform.Find("Text").GetComponent<Text>().text = "Level " + (i + 1);
+                //Assign the proper encounter to the button
+                tempButton.GetComponent<LevelToggleScript>().encounter = encounters[i];
+            }
         }
     }
 
