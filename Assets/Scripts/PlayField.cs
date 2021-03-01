@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class PlayField : MonoBehaviour {
 
@@ -52,7 +53,6 @@ public class PlayField : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-
         //Initialize commanders
         //Save these newly created scripts with the play field
         //Debug.LogWarning("Playfield Test 1 $$$$");
@@ -1337,11 +1337,20 @@ public class PlayField : MonoBehaviour {
             this.enemyCommander.TakeDamage(dmg);
             //Set display
             player2HealthText.text = this.enemyCommander.hp.ToString();
+            //Check if the ai commander has been defeated. If so load the Victory scene.
+            if (this.enemyCommander.hp <= 0) {
+                SceneManager.LoadScene(9);
+            }
         } else if (!player1Turn) {
             //Update the relevant commmanders health
             this.playerCommander.TakeDamage(dmg);
             //Set display
 			player1HealthText.text = this.playerCommander.hp.ToString();
+            //Check if the player commander has been defeated. If so load the Defeated scene.
+            if (this.playerCommander.hp <= 0) {
+                Debug.Log("PLAYER COMMANDER DEFEATED");
+                SceneManager.LoadScene(10);
+            }
         }
     }
 
