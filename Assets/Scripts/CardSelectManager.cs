@@ -25,7 +25,6 @@ public class CardSelectManager : MonoBehaviour
             this.InstantiatePlayerCards();
         }
     }
-    
 
     // Update is called once per frame
     void Update()

@@ -66,12 +66,6 @@ public class MapManager : MonoBehaviour {
     void ButtonClicked(Button buttonRef) {
         //Turn the AI on (there may be a better place to do this than here)
         GlobalObject.aiEnabled = true;
-        
-        //Human player's cards come from their selected commander
-        CommanderData playerCommanderData = GlobalObject.instance.humanPlayerCommanderData;
-        foreach( GameConstants.Card card in playerCommanderData.Deck) {
-            GlobalObject.instance.player1DeckSelect.Add( card.ToString() );
-        }
 
         //Assign the enemy AI their cards
         buttonRef.GetComponent<LevelToggleScript>().encounter.SetUnits();

@@ -11,95 +11,45 @@ public class Deck : MonoBehaviour {
 	public List<string> player2Deck;
 	public List<string> player1Discard;
 	public List<string> player2Discard;
-//	public GameObject player1Card1, player1Card2, player1Card3, player1Card4, player1Card5, player2Card1, player2Card2, player2Card3, player2Card4, player2Card5;
-	public GameObject blacksmithSpell1, blacksmithSpell2, blacksmithSpell3, druidSpell1, druidSpell2, druidSpell3, mageSpell1, mageSpell2, mageSpell3, rogueSpell1, rogueSpell2, rogueSpell3;
 	public Text cardsRemaining;
 
 	private GlobalObject globalObject;
 	private AiManager aiManager;
 	private string player1Class, player2Class;
 	private int maxHandSize = 5;
-	private int quantityPerCard = 5;
 	private PlayField playField;
 
     public Commander player1Commander;
     public Commander player2Commander;
 
-	// Use this for initialization
-	void Start () {
-//		Debug.Log("RUNNING START FUNCTION OF DECK.CS");
-		BuildDeck ();
-		ShuffleDeck (player1Deck);
-		if (!GlobalObject.storyEnabled) {
-			ShuffleDeck (player2Deck);
-		}
-		globalObject = GameObject.FindObjectOfType<GlobalObject>();
-		playField = GameObject.FindObjectOfType<PlayField>();
-		aiManager = GameObject.FindObjectOfType<AiManager>();
-		player1Class = GlobalObject.instance.player1Class;
-		player2Class = GlobalObject.instance.player2Class;
-		SetPlayerSpells();
-        if( GlobalObject.instance.useCommanders) {
-            //TODO - may need to load specific assets here - DECK START BATTLE
+    void Awake() {
+        SceneManager.sceneLoaded += this.OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+        if (scene.buildIndex == GameConstants.SCENE_INDEX_GAME_COMMANDERS) {
+            BuildDeck();
+            ShuffleDeck(player1Deck);
+            if (!GlobalObject.storyEnabled) {
+                ShuffleDeck(player2Deck);
+            }
+            globalObject = GameObject.FindObjectOfType<GlobalObject>();
+            playField = GameObject.FindObjectOfType<PlayField>();
+            aiManager = GameObject.FindObjectOfType<AiManager>();
+            if (GlobalObject.instance.useCommanders) {
+                //TODO - may need to load specific assets here - DECK START BATTLE
+            }
         }
-	}
+    }
 
 	void BuildDeck () {
-        foreach (string cardId in GlobalObject.instance.player1DeckSelect) {
-            player1Deck.Add(cardId);
+        foreach (GameConstants.Card card in GlobalObject.instance.humanPlayerCommanderData.Deck) {
+            player1Deck.Add(card.ToString());
         }
 
         foreach (string cardId in GlobalObject.instance.player2DeckSelect) {
-            Debug.Log("Building deck for player 2! card added is: " + cardId);
-            player2Deck.Add(cardId);
+            player2Deck.Add(cardId.ToString());
         }
-
-        //TEMP: We used to add the same number of 
-        //foreach (string cardId in GlobalObject.instance.player1DeckSelect) {
-        //	for (int i=0; i<quantityPerCard; i++) {
-        //		player1Deck.Add(cardId);
-        //	}
-        //}
-
-        //foreach (string cardId in GlobalObject.instance.player2DeckSelect) {
-        //	for (int i=0; i<quantityPerCard; i++) {
-        //		player2Deck.Add(cardId);
-        //	}
-        //}
-
-        //TEMP: Just manually adding cards to the deck for now. Eventually will need to hook up deck loadouts.
-        //		for (int i=0; i < player1Card1.GetComponent<Card>().quantity; i++) {
-        //			player1Deck.Add (player1Card1);
-        //		}
-        //		for (int i=0; i < player1Card2.GetComponent<Card>().quantity; i++) {
-        //			player1Deck.Add (player1Card2);
-        //		}
-        //		for (int i=0; i < player1Card3.GetComponent<Card>().quantity; i++) {
-        //			player1Deck.Add (player1Card3);
-        //		}
-        //		for (int i=0; i < player1Card4.GetComponent<Card>().quantity; i++) {
-        //			player1Deck.Add (player1Card4);
-        //		}
-        //		for (int i=0; i < player1Card5.GetComponent<Card>().quantity; i++) {
-        //			player1Deck.Add (player1Card5);
-        //		}
-
-        //TEMP: Just manually adding cards to the deck for now. Eventually will need to hook up deck loadouts.
-        //		for (int i=0; i < player2Card1.GetComponent<Card>().quantity; i++) {
-        //			player2Deck.Add (player2Card1);
-        //		}
-        //		for (int i=0; i < player2Card2.GetComponent<Card>().quantity; i++) {
-        //			player2Deck.Add (player2Card2);
-        //		}
-        //		for (int i=0; i < player2Card3.GetComponent<Card>().quantity; i++) {
-        //			player2Deck.Add (player2Card3);
-        //		}
-        //		for (int i=0; i < player2Card4.GetComponent<Card>().quantity; i++) {
-        //			player2Deck.Add (player2Card4);
-        //		}
-        //		for (int i=0; i < player2Card5.GetComponent<Card>().quantity; i++) {
-        //			player2Deck.Add (player2Card5);
-        //		}
     }
 
 	public void RedealHand () {
@@ -298,68 +248,6 @@ public class Deck : MonoBehaviour {
 			}
 			//Get rid of the card from my hand that I just used so I can't use it again
 			DestroyImmediate (Card.selectedCard.gameObject);
-		}
-	}
-
-	void SetPlayerSpells () {
-		if (player1Class == "Mage") {
-			GameObject newCard1 = Instantiate (mageSpell1) as GameObject;
-			newCard1.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
-			GameObject newCard2 = Instantiate (mageSpell2) as GameObject;
-			newCard2.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
-			GameObject newCard3 = Instantiate (mageSpell3) as GameObject;
-			newCard3.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
-		} else if (player1Class == "Rogue") {
-			GameObject newCard1 = Instantiate (rogueSpell1) as GameObject;
-			newCard1.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
-			GameObject newCard2 = Instantiate (rogueSpell2) as GameObject;
-			newCard2.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
-			GameObject newCard3 = Instantiate (rogueSpell3) as GameObject;
-			newCard3.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
-		} else if (player1Class == "Druid") {
-			GameObject newCard1 = Instantiate (druidSpell1) as GameObject;
-			newCard1.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
-			GameObject newCard2 = Instantiate (druidSpell2) as GameObject;
-			newCard2.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
-			GameObject newCard3 = Instantiate (druidSpell3) as GameObject;
-			newCard3.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
-		} else if (player1Class == "Blacksmith") {
-			GameObject newCard1 = Instantiate (blacksmithSpell1) as GameObject;
-			newCard1.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
-			GameObject newCard2 = Instantiate (blacksmithSpell2) as GameObject;
-			newCard2.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
-			GameObject newCard3 = Instantiate (blacksmithSpell3) as GameObject;
-			newCard3.transform.SetParent (GameObject.Find ("Player1 Spells").transform, false);
-		}
-
-		if (player2Class == "Mage") {
-			GameObject newCard1 = Instantiate (mageSpell1) as GameObject;
-			newCard1.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
-			GameObject newCard2 = Instantiate (mageSpell2) as GameObject;
-			newCard2.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
-			GameObject newCard3 = Instantiate (mageSpell3) as GameObject;
-			newCard3.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
-		} else if (player2Class == "Rogue") {
-			GameObject newCard1 = Instantiate (rogueSpell1) as GameObject;
-			newCard1.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
-			GameObject newCard2 = Instantiate (rogueSpell2) as GameObject;
-			newCard2.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
-			GameObject newCard3 = Instantiate (rogueSpell3) as GameObject;
-			newCard3.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
-		} else if (player2Class == "Druid") {
-			GameObject newCard1 = Instantiate (druidSpell1) as GameObject;
-			newCard1.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
-			GameObject newCard2 = Instantiate (druidSpell2) as GameObject;
-			newCard2.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
-			GameObject newCard3 = Instantiate (druidSpell3) as GameObject;
-			newCard3.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
-		} else if (player2Class == "Blacksmith") {
-			GameObject newCard1 = Instantiate (blacksmithSpell1) as GameObject;
-			newCard1.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
-			GameObject newCard2 = Instantiate (blacksmithSpell2) as GameObject;
-			newCard2.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
-			GameObject newCard3 = Instantiate (blacksmithSpell3) as GameObject;
-			newCard3.transform.SetParent (GameObject.Find ("Player2 Spells").transform, false);
 		}
 	}
 }

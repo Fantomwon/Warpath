@@ -10,7 +10,6 @@ public class GlobalObject : MonoBehaviour {
 	public static bool aiEnabled = false;
 	public static bool storyEnabled = false;
 	public static string currentlyActiveStory;
-	public List<string> player1DeckSelect;
 	public List<string> player2DeckSelect;
 	public GameObject templateHeroCard;
 	public GameObject templateSpellCard;
@@ -22,11 +21,6 @@ public class GlobalObject : MonoBehaviour {
 	public string player1Class, player2Class;
     //Flag for whether battles should try to use commanders to make testing easier
     public bool useCommanders = true;
-	//Idk know why these variables need to be public... but every time I set them to 'private' ZERO cards will show up in the various 'deckSelect' screens. Maybe one day I'll figure this out, or perhaps I never will...
-	public List<string> boss01PlayerHeroCards, boss02PlayerHeroCards, boss03PlayerHeroCards, boss04PlayerHeroCards, boss05PlayerHeroCards;
-	public List<string> boss01PlayerSpellCards, boss02PlayerSpellCards, boss03PlayerSpellCards, boss04PlayerSpellCards, boss05PlayerSpellCards;
-	public List<string> fullPlayerHeroCardList;
-	public List<string> fullPlayerSpellCardList;
     //Using hard coded value for now to quickly populate commanders for each encounter. Ideally we will be able to later read these in from a file
     public int numEncounters = 8;
 
@@ -64,8 +58,6 @@ public class GlobalObject : MonoBehaviour {
             && SceneManager.GetActiveScene().name != "Map"
             && SceneManager.GetActiveScene().buildIndex != GameConstants.SCENE_INDEX_POST_BATTLE_CARD_SELECT) {
             Debug.LogWarning("WARNING! Scene Manger is Loading a non specified scene which it assumes is the card select!!!");
-            AssignPlayerCards();
-            InstantiatePlayerCards();
         }
     }
 
@@ -383,164 +375,6 @@ public class GlobalObject : MonoBehaviour {
             newHero.transform.SetParent(card.transform.Find("Image").transform, false);
         }
     }
-
-	private void AssignPlayerCards () {
-		//Full list of all player hero cards for pass and play
-		fullPlayerHeroCardList.Add("wall");
-		fullPlayerHeroCardList.Add("archer");
-		fullPlayerHeroCardList.Add("footsoldier");
-		fullPlayerHeroCardList.Add("dwarf");
-		fullPlayerHeroCardList.Add("ghost");
-		fullPlayerHeroCardList.Add("sapper");
-		fullPlayerHeroCardList.Add("rogue");
-		fullPlayerHeroCardList.Add("druid");
-		fullPlayerHeroCardList.Add("monk");
-		fullPlayerHeroCardList.Add("slinger");
-		fullPlayerHeroCardList.Add("bloodmage");
-		fullPlayerHeroCardList.Add("blacksmith");
-		fullPlayerHeroCardList.Add("wolf");
-		fullPlayerHeroCardList.Add("chaosmage");
-		fullPlayerHeroCardList.Add("sorcerer");
-		fullPlayerHeroCardList.Add("assassin");
-		fullPlayerHeroCardList.Add("paladin");
-		fullPlayerHeroCardList.Add("tower");
-		fullPlayerHeroCardList.Add("knight");
-		fullPlayerHeroCardList.Add("champion");
-		fullPlayerHeroCardList.Add("cavalry");
-		fullPlayerHeroCardList.Add("diviner");
-        fullPlayerHeroCardList.Add("crossbowman");
-        fullPlayerHeroCardList.Add("bloodknight");
-        fullPlayerHeroCardList.Add("cultinitiate");
-        fullPlayerHeroCardList.Add("cultadept");
-
-        //Full list of all player spell cards for pass and play
-        fullPlayerSpellCardList.Add("armor");
-		fullPlayerSpellCardList.Add("rockthrow");
-		fullPlayerSpellCardList.Add("root");
-		fullPlayerSpellCardList.Add("windgust");
-		fullPlayerSpellCardList.Add("heal");
-		fullPlayerSpellCardList.Add("shroud");
-		fullPlayerSpellCardList.Add("might");
-		fullPlayerSpellCardList.Add("fireball");
-
-        //boss01 player cards
-        boss01PlayerHeroCards.Add("cultadept");
-        boss01PlayerHeroCards.Add("cultinitiate");
-        boss01PlayerHeroCards.Add("cultsentinel");
-        boss01PlayerHeroCards.Add("cultacolyte");
-        boss01PlayerHeroCards.Add("cultfanatic");
-        boss01PlayerSpellCards.Add("rockthrow");
-        boss01PlayerSpellCards.Add("fireball");
-
-        //boss02 player cards
-        boss02PlayerHeroCards.Add("cultadept");
-        boss02PlayerHeroCards.Add("cultinitiate");
-        boss02PlayerHeroCards.Add("druid");
-		boss02PlayerHeroCards.Add("archer");
-		boss02PlayerHeroCards.Add("archer");
-		boss02PlayerHeroCards.Add("knight");
-        fullPlayerSpellCardList.Add("armor");
-        fullPlayerSpellCardList.Add("rockthrow");
-
-        //boss03 player cards
-        boss03PlayerHeroCards.Add("druid");
-        boss03PlayerHeroCards.Add("archer");
-        boss03PlayerHeroCards.Add("archer");
-        boss03PlayerHeroCards.Add("knight");
-        fullPlayerSpellCardList.Add("armor");
-        fullPlayerSpellCardList.Add("rockthrow");
-
-        //boss04 player cards
-        boss04PlayerHeroCards.Add("archer");
-		boss04PlayerHeroCards.Add("footsoldier");
-
-		//boss05 player cards
-		boss05PlayerHeroCards.Add("archer");
-		boss05PlayerHeroCards.Add("footsoldier");
-	}
-
-	void InstantiatePlayerCards () {
-        Debug.Log("GLOBAL OBJECT INSTANTIATE PLAYER CARDS CALLED");
-		if (currentlyActiveStory == "boss01") {
-			foreach (string cardId in boss01PlayerHeroCards) {
-				SetTemplateHeroCardAttributes(cardId);
-				GameObject newCard = Instantiate (templateHeroCard) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
-			}
-			foreach (string cardId in boss01PlayerSpellCards) {
-				SetTemplateSpellCardAttributes(cardId);
-				GameObject newCard = Instantiate (templateSpellCard) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("SpellSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				//SetTemplateCardImage(newCard.GetComponent<Card>().cardId, newCard);
-			}
-		} else if (currentlyActiveStory == "boss02") {
-			foreach (string cardId in boss02PlayerHeroCards) {
-				SetTemplateHeroCardAttributes(cardId);
-				GameObject newCard = Instantiate (templateHeroCard) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
-			}
-			foreach (string cardId in boss02PlayerSpellCards) {
-				SetTemplateSpellCardAttributes(cardId);
-				GameObject newCard = Instantiate (templateSpellCard) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("SpellSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				//SetTemplateCardImage(newCard.GetComponent<Card>().cardId, newCard);
-			}
-		} else if (currentlyActiveStory == "boss03") {
-			foreach (string cardId in boss03PlayerHeroCards) {
-				SetTemplateHeroCardAttributes(cardId);
-				GameObject newCard = Instantiate (templateHeroCard) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
-			}
-			foreach (string cardId in boss03PlayerSpellCards) {
-				SetTemplateSpellCardAttributes(cardId);
-				GameObject newCard = Instantiate (templateSpellCard) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("SpellSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				//SetTemplateCardImage(newCard.GetComponent<Card>().cardId, newCard);
-			}
-		} else if (currentlyActiveStory == "boss04") {
-			foreach (string cardId in boss04PlayerHeroCards) {
-				SetTemplateHeroCardAttributes(cardId);
-				GameObject newCard = Instantiate (templateHeroCard) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
-			}
-			foreach (string cardId in boss04PlayerSpellCards) {
-				SetTemplateSpellCardAttributes(cardId);
-				GameObject newCard = Instantiate (templateSpellCard) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("SpellSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				//SetTemplateCardImage(newCard.GetComponent<Card>().cardId, newCard);
-			}
-		} else if (currentlyActiveStory == "boss05") {
-			foreach (string cardId in boss05PlayerHeroCards) {
-				SetTemplateHeroCardAttributes(cardId);
-				GameObject newCard = Instantiate (templateHeroCard) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
-			}
-			foreach (string cardId in boss05PlayerSpellCards) {
-				SetTemplateSpellCardAttributes(cardId);
-				GameObject newCard = Instantiate (templateSpellCard) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("SpellSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				//SetTemplateCardImage(newCard.GetComponent<Card>().cardId, newCard);
-			}
-		} else {
-			foreach (string cardId in fullPlayerHeroCardList) {
-				SetTemplateHeroCardAttributes(cardId);
-				GameObject newCard = Instantiate (templateHeroCard) as GameObject;
-				newCard.transform.SetParent (GameObject.Find("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
-			}
-			foreach (string cardId in fullPlayerSpellCardList) {
-				SetTemplateSpellCardAttributes(cardId);
-				GameObject newCard = Instantiate (templateSpellCard) as GameObject;
-				newCard.transform.SetParent (GameObject.Find ("SpellSelectionScrollList/Viewport/Content/Card Container").transform, false);
-				//SetTemplateCardImage(newCard.GetComponent<Card>().cardId, newCard);
-			}
-		}
-	}
 
     /* Commander data code*/
     public void SetSelectedCommander( CommanderData cData) {

@@ -14,6 +14,7 @@ public class Encounter : MonoBehaviour
     }
 
     public void SetUnits() {
+        GlobalObject.instance.player2DeckSelect.Clear();
         foreach (string unit in units) {
             GlobalObject.instance.player2DeckSelect.Add(unit);
         }

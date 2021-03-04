@@ -29,16 +29,6 @@ public class TestObject : MonoBehaviour {
 		}
 	}
 
-	public void BuildDeck () {
-		Debug.Log("RUNNING BUILDDECK()");
-		foreach (string card in GlobalObject.instance.player1DeckSelect) {
-			for (int i=0; i<quantityPerCard; i++) {
-				Debug.Log("FOUND A CARD IN PLAYER1DECKSELECTLIST");
-				FindObjectOfType<Deck>().player1Deck.Add(card);
-			}
-		}
-	}
-
 	public void ReturnRandomNumber () {
 		//Choose a random index
 		int randomIndex = Random.Range(0, 2);

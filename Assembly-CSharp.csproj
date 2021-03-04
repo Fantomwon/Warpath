@@ -61,7 +61,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\CardSelectManager.cs" />
     <Compile Include="Assets\Scripts\AiManager.cs" />
     <Compile Include="Assets\Scripts\AnimationEvents.cs" />
     <Compile Include="Assets\Scripts\AttackTellBoxes.cs" />
@@ -72,6 +71,7 @@
     <Compile Include="Assets\Scripts\Card.cs" />
     <Compile Include="Assets\Scripts\CardinalCommander.cs" />
     <Compile Include="Assets\Scripts\CardReference.cs" />
+    <Compile Include="Assets\Scripts\CardSelectManager.cs" />
     <Compile Include="Assets\Scripts\CardsSelected.cs" />
     <Compile Include="Assets\Scripts\CombatText.cs" />
     <Compile Include="Assets\Scripts\Commander.cs" />
