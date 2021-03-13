@@ -35,19 +35,6 @@ public class CardinalCommander : Commander {
         }
     }
 
-    public void IncreaseCommanderAbilityCharge() {
-        this.currentAbilityCharge++;
-        this.commanderUIPanel.SetCommanderResourceText(this.currentAbilityCharge);
-        this.CheckActivateCommanderButton();
-    }
-
-    public void CheckActivateCommanderButton() {
-        if (this.currentAbilityCharge >= this.abilityChargeCost) {
-            //Activate UI element - This probably needs to be a prefab or part of this prefab
-            this.commanderUIPanel.SetCommanderAbilityButtonActive(true);
-        }
-    }
-
     public override bool ActivateCommanderAbility(Hero heroTarget) {
         Debug.LogWarning("CARDINAL COMMANDER USING HEAVENLY HEALIN'!!");
         //Apply damage to target per this ability

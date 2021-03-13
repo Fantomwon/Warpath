@@ -102,6 +102,7 @@
     <Compile Include="Assets\Scripts\TestObject.cs" />
     <Compile Include="Assets\Scripts\TooltipHeroes.cs" />
     <Compile Include="Assets\Scripts\TooltipSpells.cs" />
+    <Compile Include="Assets\Scripts\WarlockCommander.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Christian/Documents/Development/Warpath/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

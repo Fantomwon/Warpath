@@ -38,6 +38,26 @@ public class Commander : MonoBehaviour, IEventListener {
         return true;
     }
 
+    /// <summary>
+    /// Override this method for custom behavior that charges the commander's ability
+    /// </summary>
+    public virtual void IncreaseCommanderAbilityCharge() {
+        this.currentAbilityCharge++;
+        this.commanderUIPanel.SetCommanderResourceText(this.currentAbilityCharge);
+        this.CheckActivateCommanderButton();
+    }
+
+    /// <summary>
+    /// Method that checks if charge threshold has been hit for commander ability and then sets ui element active.
+    /// Override for custom behavior
+    /// </summary>
+    public virtual void CheckActivateCommanderButton() {
+        if (this.currentAbilityCharge >= this.abilityChargeCost) {
+            //Activate UI element - This probably needs to be a prefab or part of this prefab
+            this.commanderUIPanel.SetCommanderAbilityButtonActive(true);
+        }
+    }
+
     public void SetCommanderAttributes(string name, GameObject prefab, string selectedCommanderPrefabPath, int startingHp, int startingHandSize, CommanderData cData, int playerId, int abilityChargeCost, GameConstants.CommanderAbilityTargetType abilityTargetType, int manaPerTurn) {
         //Data members
         this.commanderName = name;
@@ -101,4 +121,5 @@ public class Commander : MonoBehaviour, IEventListener {
     public virtual void EventUnitReceiveDamage(object sender, EventArgs e, int playerId, Hero damageReceiver) {
 
     }
+
 }
