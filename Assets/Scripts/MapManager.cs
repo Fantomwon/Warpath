@@ -83,8 +83,8 @@ public class MapManager : MonoBehaviour {
         //Set commander
         encounter01.enemyCommanderData = this.enemyEncounterCommanders[0];
         //Cards
-        foreach( GameConstants.Card card in encounter01.enemyCommanderData.Deck) {
-            encounter01.AddUnits(card.ToString(), 1); //TODO => should deck's somehow be structs of cards + count for ease of editing/ sanity?
+        foreach( CardEntry cardEntry in encounter01.enemyCommanderData.Deck) {
+            encounter01.AddUnits(cardEntry.Card.ToString(), cardEntry.CardAmount); //TODO => should deck's somehow be structs of cards + count for ease of editing/ sanity?
         }
 
         /*encounter02*/
@@ -92,24 +92,24 @@ public class MapManager : MonoBehaviour {
         //Set commander
         encounter02.enemyCommanderData = this.enemyEncounterCommanders[1];
         //Cards
-        foreach (GameConstants.Card card in encounter02.enemyCommanderData.Deck) {
-            encounter02.AddUnits(card.ToString(), 1);
+        foreach (CardEntry cardEntry in encounter02.enemyCommanderData.Deck) {
+            encounter02.AddUnits(cardEntry.Card.ToString(), cardEntry.CardAmount);
         }
 
         //encounter03
         Encounter encounter03 = new Encounter();
         encounter03.enemyCommanderData = this.enemyEncounterCommanders[2];
         //Cards
-        foreach (GameConstants.Card card in encounter03.enemyCommanderData.Deck) {
-            encounter03.AddUnits(card.ToString(), 1);
+        foreach (CardEntry cardEntry in encounter03.enemyCommanderData.Deck) {
+            encounter03.AddUnits(cardEntry.Card.ToString(), cardEntry.CardAmount);
         }
 
         //encounter04
         Encounter encounter04 = new Encounter();
         encounter04.enemyCommanderData = this.enemyEncounterCommanders[0];
         //Cards
-        foreach (GameConstants.Card card in encounter04.enemyCommanderData.Deck) {
-            encounter04.AddUnits(card.ToString(), 1);
+        foreach (CardEntry cardEntry in encounter04.enemyCommanderData.Deck) {
+            encounter04.AddUnits(cardEntry.ToString(), cardEntry.CardAmount);
         }
 
         //Add all encounters to the list of encounters

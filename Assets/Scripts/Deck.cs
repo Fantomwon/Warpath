@@ -43,8 +43,10 @@ public class Deck : MonoBehaviour {
     }
 
 	void BuildDeck () {
-        foreach (GameConstants.Card card in GlobalObject.instance.humanPlayerCommanderData.Deck) {
-            player1Deck.Add(card.ToString());
+        foreach (CardEntry cardEntry in GlobalObject.instance.humanPlayerCommanderData.Deck) {
+            for( int i = 0; i <cardEntry.CardAmount; i++) {
+                player1Deck.Add(cardEntry.Card.ToString());
+            }
         }
 
         foreach (string cardId in GlobalObject.instance.player2DeckSelect) {
