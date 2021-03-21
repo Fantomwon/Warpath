@@ -1339,7 +1339,7 @@ public class PlayField : MonoBehaviour {
             player2HealthText.text = this.enemyCommander.hp.ToString();
             //Check if the ai commander has been defeated. If so load the Victory scene.
             if (this.enemyCommander.hp <= 0) {
-                SceneManager.LoadScene(9);
+                SceneManager.LoadScene(GameConstants.SCENE_INDEX_VICTORY);
             }
         } else if (!player1Turn) {
             //Update the relevant commmanders health
@@ -1349,7 +1349,7 @@ public class PlayField : MonoBehaviour {
             //Check if the player commander has been defeated. If so load the Defeated scene.
             if (this.playerCommander.hp <= 0) {
                 Debug.Log("PLAYER COMMANDER DEFEATED");
-                SceneManager.LoadScene(10);
+                SceneManager.LoadScene(GameConstants.SCENE_INDEX_DEFEAT);
             }
         }
     }

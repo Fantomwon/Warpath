@@ -6,19 +6,19 @@ using UnityEngine.UI;
 
 public class GlobalObject : MonoBehaviour {
 
-	public static GlobalObject instance;
-	public static bool aiEnabled = false;
-	public static bool storyEnabled = false;
-	public static string currentlyActiveStory;
-	public List<string> player2DeckSelect;
-	public GameObject templateHeroCard;
-	public GameObject templateSpellCard;
+    public static GlobalObject instance;
+    public static bool aiEnabled = false;
+    public static bool storyEnabled = false;
+    public static string currentlyActiveStory;
+    public List<string> player2DeckSelect;
+    public GameObject templateHeroCard;
+    public GameObject templateSpellCard;
     public GameObject templateCommander;
     public GameObject templateHeroUnit;
     //UI objects
     public BattleUIManager battleUIManagerScript;
 
-	public string player1Class, player2Class;
+    public string player1Class, player2Class;
     //Flag for whether battles should try to use commanders to make testing easier
     public bool useCommanders = true;
     //Using hard coded value for now to quickly populate commanders for each encounter. Ideally we will be able to later read these in from a file
@@ -33,24 +33,31 @@ public class GlobalObject : MonoBehaviour {
     public CommanderData humanPlayerCommanderData;
     public CommanderData enemyCommanderData;
 
-    void Awake () {
-		Debug.Log("RUNNING AWAKE FUNCTION OF GLOBALOBJECT.CS");
-		if (GlobalObject.instance == null) {
-			GlobalObject.instance = this;
-			DontDestroyOnLoad(this.gameObject);
+    //List of all card entries which is utilized for card selection scenes by LevelManager => CardSelectManager
+    public List<CardEntry> allCardEntries = new List<CardEntry>();
+
+    void Awake() {
+        Debug.Log("RUNNING AWAKE FUNCTION OF GLOBALOBJECT.CS");
+        if (GlobalObject.instance == null) {
+            GlobalObject.instance = this;
+            DontDestroyOnLoad(this.gameObject);
             //Register for OnSceneLoaded event
             SceneManager.sceneLoaded += this.OnSceneLoaded;
         } else if (instance != this) {
             Debug.LogError("DUPLICATE GLOBAL OBJECT FOUND! DELETING THIS ONE");
-			Destroy(this.gameObject);
-		}
+            Destroy(this.gameObject);
+        }
 
         //Build list of commander scripts from prefabs
-        foreach( GameObject commanderPrefab in this.commanderList) {
+        foreach (GameObject commanderPrefab in this.commanderList) {
             Commander commander = commanderPrefab.GetComponent<Commander>();
             this.loadedCommanders.Add(commander);
         }
 
+        //Build list of all cards for use with card selection manager or wherever else it is needed
+        this.CreateCardEntryList();
+
+        //Do something based on loaded scene
         if (SceneManager.GetActiveScene().name != "BossSelect"
             && SceneManager.GetActiveScene().name != "Game"
             && SceneManager.GetActiveScene().name != "GameCommanders"
@@ -61,16 +68,16 @@ public class GlobalObject : MonoBehaviour {
         }
     }
 
-	void Start () {
-		
-	}
+    void Start() {
+
+    }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-        Debug.Log("Global object: Scene loaded! => name:" + scene.name + " index: " + scene.buildIndex.ToString() );
+        Debug.Log("Global object: Scene loaded! => name:" + scene.name + " index: " + scene.buildIndex.ToString());
         Debug.Log(mode.ToString());
-        if( scene.buildIndex == GameConstants.SCENE_INDEX_COMMANDER_SELECT) {
+        if (scene.buildIndex == GameConstants.SCENE_INDEX_COMMANDER_SELECT) {
             GlobalObject.instance.LoadCommanderSelectUI();
-        }else if (SceneManager.GetActiveScene().buildIndex == GameConstants.SCENE_INDEX_GAME_COMMANDERS) {
+        } else if (SceneManager.GetActiveScene().buildIndex == GameConstants.SCENE_INDEX_GAME_COMMANDERS) {
 
             Debug.Log("GLOBAL OBJECT TRYING TO LOAD COMMANDER GAME SCENE!");
             //Try to find UI manager object for loading commander images
@@ -81,14 +88,14 @@ public class GlobalObject : MonoBehaviour {
 
             //Trigger UI object to load commander images
             this.battleCommanders = GlobalObject.instance.battleUIManagerScript.SetSelectedCommanderBattleImages();
-            
+
             //Set data attributes of the commanders
             CommanderData playerCommanderData = GlobalObject.instance.humanPlayerCommanderData;
             CommanderData enemyCommanderData = GlobalObject.instance.enemyCommanderData;
             //Set mana per turn in the playfield from the commanders
             PlayField.instance.manaPerTurn = playerCommanderData.ManaPerTurn;
             PlayField.instance.manaPerTurnAi = enemyCommanderData.ManaPerTurn;
-            Debug.LogWarning("GlobalObject: setting mana per turn: " + PlayField.instance.manaPerTurn.ToString() + " and mana per turn AI is: " + PlayField.instance.manaPerTurnAi.ToString() );
+            Debug.LogWarning("GlobalObject: setting mana per turn: " + PlayField.instance.manaPerTurn.ToString() + " and mana per turn AI is: " + PlayField.instance.manaPerTurnAi.ToString());
             //Iterate through list of commanders thrown back by the UI manager that set images
             for (int i = 0; i < battleCommanders.Count; i++) {
                 Commander currCommander = battleCommanders[i];
@@ -98,7 +105,7 @@ public class GlobalObject : MonoBehaviour {
                     Debug.LogWarning("CURR COMMANDER IS NULL!!!");
                 }
                 //Set player ids for the enemy commmander. We know it's not the player's if the player id is UNSET
-                if(currCommander.playerId == GameConstants.UNSET_PLAYER_ID) {
+                if (currCommander.playerId == GameConstants.UNSET_PLAYER_ID) {
                     currCommander.playerId = GameConstants.ENEMY_PLAYER_ID;
                     Debug.LogWarning("CURR COMMANDER HAS UNSET ID! SETTING TO ENEMY ID!");
                 }
@@ -136,7 +143,7 @@ public class GlobalObject : MonoBehaviour {
             Debug.Log("GLOBAL OBJECT cData.PrefabPath is: " + c.selectedCommanderPrefabPath);
             //Instantiate empty template commander UI element
             GameObject listItem = GameObject.Instantiate(this.templateCommander) as GameObject;
-            
+
             //commanderChildListItem.SetCommanderAttributes(cData.CharName, commanderPrefab, cData.PrefabPath, cData.MaxHP, cData.StartingHandSize, cData, GameConstants.HUMAN_PLAYER_ID, cData.AbilityChargeCost, cData.AbilityTargetType);
             //Add list item to scrollview UI
             listItem.transform.SetParent(GameObject.Find("CommanderSelectUIManager/CommanderSelectionScrollList/Viewport/Content/CommanderContainer").transform, false);
@@ -149,8 +156,8 @@ public class GlobalObject : MonoBehaviour {
 
             //Set the value for all of these UI commanders player ID to be human player because any selected commander is used by the player
             commanderListItem.SetCommanderAttributes(
-                cData.CharName, 
-                commanderPrefab, 
+                cData.CharName,
+                commanderPrefab,
                 c.selectedCommanderPrefabPath,
                 cData.MaxHP,
                 cData.StartingHandSize,
@@ -162,7 +169,7 @@ public class GlobalObject : MonoBehaviour {
                 );
             //Set display name
             var nameTransform = listItem.transform.Find("header/Name");
-            if( nameTransform && nameTransform != null) {
+            if (nameTransform && nameTransform != null) {
                 nameTransform.GetComponent<Text>().text = cData.CharName;
             }
         }
@@ -206,7 +213,7 @@ public class GlobalObject : MonoBehaviour {
     }
     */
 
-    public GameObject SetTemplateHeroCardAttributes (string id) {
+    public GameObject SetTemplateHeroCardAttributes(string id) {
         if (id == "wall") {
             return SetTemplateHeroCardAttributesConstructor("WallCard", GameConstants.Card.wall, "heroStationary", 2, "Test: Wall", "PrefabsHeroes/Wall", 0, 4, 0, 0);
         } else if (id == "archer") {
@@ -266,54 +273,54 @@ public class GlobalObject : MonoBehaviour {
         } else if (id == "cultfanatic") {
             return SetTemplateHeroCardAttributesConstructor("CultFanaticCard", GameConstants.Card.cultfanatic, "hero", 2, "Test:cultfanatic", "PrefabsHeroes/CultFanatic", 2, 2, 2, 1);
         } else {
-			return null;
-		}
-	}
+            return null;
+        }
+    }
 
     public GameObject SetTemplateHeroUnitAttributes(string id) {
-         if (id == "archer") {
+        if (id == "archer") {
             return SetTemplateHeroCardAttributesConstructor("ArcherCard", GameConstants.Card.archer, "hero", 2, "Test: Archer", "PrefabsHeroes/Archer", 2, 2, 2, 3);
         }
         return null;
     }
 
-    public GameObject SetTemplateSpellCardAttributes (string id) {
-		if (id == "armor") {
-			return SetTemplateSpellCardAttributesConstructor("ArmorCard", GameConstants.Card.armor, "spell", 1, "Test:armor", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ArmorIcon");
-		} else if (id == "rockthrow") {
-			return SetTemplateSpellCardAttributesConstructor("RockthrowCard", GameConstants.Card.rockthrow, "spell", 1, "Test:rock throw", "Particles/RockThrowParticle", "Images/Icons/SpellIcons/RockIcon");
-		} else if (id == "root") {
-			return SetTemplateSpellCardAttributesConstructor("RootCard", GameConstants.Card.root, "spell", 3, "Test:root", "Particles/DodgeParticle", "Images/Icons/SpellIcons/RootIcon");
-		} else if (id == "windgust") {
-			return SetTemplateSpellCardAttributesConstructor("WindGustCard", GameConstants.Card.windgust, "spell", 3, "Test:wind gust", "Particles/WindGustParticle", "Images/Icons/SpellIcons/WindgustIcon");
-		} else if (id == "heal") {
-			return SetTemplateSpellCardAttributesConstructor("HealCard", GameConstants.Card.heal, "spell", 2, "Test:heal", "Particles/HealLightParticle", "Images/Icons/SpellIcons/HealIcon");
-		} else if (id == "shroud") {
-			return SetTemplateSpellCardAttributesConstructor("ShroudCard", GameConstants.Card.shroud, "spell", 2, "Test:shroud", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ShroudIcon");
-		} else if (id == "might") {
-			return SetTemplateSpellCardAttributesConstructor("MightCard", GameConstants.Card.might, "spell", 2, "Test:might", "Particles/DodgeParticle", "Images/Icons/SpellIcons/MightIcon");
-		} else if (id == "fireball") {
-			return SetTemplateSpellCardAttributesConstructor("FireballCard", GameConstants.Card.fireball, "spell", 2, "Test:fireball", "Particles/FireballParticle", "Images/Icons/SpellIcons/FireballIcon");
+    public GameObject SetTemplateSpellCardAttributes(string id) {
+        if (id == "armor") {
+            return SetTemplateSpellCardAttributesConstructor("ArmorCard", GameConstants.Card.armor, "spell", 1, "Test:armor", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ArmorIcon");
+        } else if (id == "rockthrow") {
+            return SetTemplateSpellCardAttributesConstructor("RockthrowCard", GameConstants.Card.rockthrow, "spell", 1, "Test:rock throw", "Particles/RockThrowParticle", "Images/Icons/SpellIcons/RockIcon");
+        } else if (id == "root") {
+            return SetTemplateSpellCardAttributesConstructor("RootCard", GameConstants.Card.root, "spell", 3, "Test:root", "Particles/DodgeParticle", "Images/Icons/SpellIcons/RootIcon");
+        } else if (id == "windgust") {
+            return SetTemplateSpellCardAttributesConstructor("WindGustCard", GameConstants.Card.windgust, "spell", 3, "Test:wind gust", "Particles/WindGustParticle", "Images/Icons/SpellIcons/WindgustIcon");
+        } else if (id == "heal") {
+            return SetTemplateSpellCardAttributesConstructor("HealCard", GameConstants.Card.heal, "spell", 2, "Test:heal", "Particles/HealLightParticle", "Images/Icons/SpellIcons/HealIcon");
+        } else if (id == "shroud") {
+            return SetTemplateSpellCardAttributesConstructor("ShroudCard", GameConstants.Card.shroud, "spell", 2, "Test:shroud", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ShroudIcon");
+        } else if (id == "might") {
+            return SetTemplateSpellCardAttributesConstructor("MightCard", GameConstants.Card.might, "spell", 2, "Test:might", "Particles/DodgeParticle", "Images/Icons/SpellIcons/MightIcon");
+        } else if (id == "fireball") {
+            return SetTemplateSpellCardAttributesConstructor("FireballCard", GameConstants.Card.fireball, "spell", 2, "Test:fireball", "Particles/FireballParticle", "Images/Icons/SpellIcons/FireballIcon");
         } else if (id == "drainlife") {
             return SetTemplateSpellCardAttributesConstructor("DrainLifeCard", GameConstants.Card.drainlife, "spell", 1, "Test:drainlife", "Particles/DrainLifeParticle", "Images/Icons/SpellIcons/DrainLifeIcon");
         } else {
-			return null;
-		}
-	}
+            return null;
+        }
+    }
 
-	private GameObject SetTemplateHeroCardAttributesConstructor (string name, GameConstants.Card cardId, string type, int manaCost, string cardName, string heroPrefab, int power, int maxHealth, int speed, int range) {
-		templateHeroCard.GetComponent<Card>().name = name;
-		templateHeroCard.GetComponent<Card>().cardId = cardId;
-		templateHeroCard.GetComponent<Card>().type = type;
-		templateHeroCard.GetComponent<Card>().manaCost = manaCost;
-		templateHeroCard.GetComponent<Card>().cardName = cardName;
-		templateHeroCard.GetComponent<Card>().heroPrefab = Resources.Load<GameObject>(heroPrefab);
+    private GameObject SetTemplateHeroCardAttributesConstructor(string name, GameConstants.Card cardId, string type, int manaCost, string cardName, string heroPrefab, int power, int maxHealth, int speed, int range) {
+        templateHeroCard.GetComponent<Card>().name = name;
+        templateHeroCard.GetComponent<Card>().cardId = cardId;
+        templateHeroCard.GetComponent<Card>().type = type;
+        templateHeroCard.GetComponent<Card>().manaCost = manaCost;
+        templateHeroCard.GetComponent<Card>().cardName = cardName;
+        templateHeroCard.GetComponent<Card>().heroPrefab = Resources.Load<GameObject>(heroPrefab);
         templateHeroCard.GetComponent<Card>().power = power;
         templateHeroCard.GetComponent<Card>().maxHealth = maxHealth;
         templateHeroCard.GetComponent<Card>().speed = speed;
         templateHeroCard.GetComponent<Card>().range = range;
         return templateHeroCard;
-	}
+    }
 
     public GameObject SetTemplateHeroUnitAttributesConstructor() {
         templateHeroUnit.GetComponent<Hero>().id = Card.selectedCard.GetComponent<Card>().name;
@@ -328,36 +335,36 @@ public class GlobalObject : MonoBehaviour {
         return templateHeroUnit;
     }
 
-    private GameObject SetTemplateSpellCardAttributesConstructor (string name, GameConstants.Card cardId, string type, int manaCost, string cardName, string spellParticle, string spellIcon) {
-		templateSpellCard.GetComponent<Card>().name = name;
-		templateSpellCard.GetComponent<Card>().cardId = cardId;
-		templateSpellCard.GetComponent<Card>().type = type;
-		templateSpellCard.GetComponent<Card>().manaCost = manaCost;
-		templateSpellCard.GetComponent<Card>().cardName = cardName;
-		templateSpellCard.GetComponent<Card>().spellParticle = Resources.Load<GameObject>(spellParticle);
+    private GameObject SetTemplateSpellCardAttributesConstructor(string name, GameConstants.Card cardId, string type, int manaCost, string cardName, string spellParticle, string spellIcon) {
+        templateSpellCard.GetComponent<Card>().name = name;
+        templateSpellCard.GetComponent<Card>().cardId = cardId;
+        templateSpellCard.GetComponent<Card>().type = type;
+        templateSpellCard.GetComponent<Card>().manaCost = manaCost;
+        templateSpellCard.GetComponent<Card>().cardName = cardName;
+        templateSpellCard.GetComponent<Card>().spellParticle = Resources.Load<GameObject>(spellParticle);
         templateSpellCard.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>(spellIcon);
         return templateSpellCard;
-	}
+    }
 
     public void SetHeroUnitPrefab(GameObject spawnedUnit, GameObject heroPrefab) {
         GameObject newHeroPrefab = Instantiate(heroPrefab) as GameObject;
         newHeroPrefab.transform.SetParent(spawnedUnit.transform.Find("HeroPrefab").transform, false);
     }
 
-    public void SetTemplateHeroCardImage (string id, GameObject card) {
+    public void SetTemplateHeroCardImage(string id, GameObject card) {
         //Not sure what the point of this method is currently. It seems the intent is to set the image for a newly spawned hero, but we are actually spawning a whole hero prefab instead of just setting an image.
-		if (id == "archer") {
-			GameObject newHero = Instantiate (Resources.Load<GameObject>("PrefabsHeroes/Archer")) as GameObject;  
-			newHero.transform.SetParent (card.transform.Find("Image").transform, false);   
-		} else if (id == "footsoldier") {
-			GameObject newHero = Instantiate (Resources.Load<GameObject>("PrefabsHeroes/FootSoldier")) as GameObject;  
-			newHero.transform.SetParent (card.transform.Find("Image").transform, false);
-		} else if (id == "rogue") {
-			GameObject newHero = Instantiate (Resources.Load<GameObject>("PrefabsHeroes/Rogue")) as GameObject;  
-			newHero.transform.SetParent (card.transform.Find("Image").transform, false);
-		} else if (id == "druid") {
-			GameObject newHero = Instantiate (Resources.Load<GameObject>("PrefabsHeroes/Druid")) as GameObject;  
-			newHero.transform.SetParent (card.transform.Find("Image").transform, false);
+        if (id == "archer") {
+            GameObject newHero = Instantiate(Resources.Load<GameObject>("PrefabsHeroes/Archer")) as GameObject;
+            newHero.transform.SetParent(card.transform.Find("Image").transform, false);
+        } else if (id == "footsoldier") {
+            GameObject newHero = Instantiate(Resources.Load<GameObject>("PrefabsHeroes/FootSoldier")) as GameObject;
+            newHero.transform.SetParent(card.transform.Find("Image").transform, false);
+        } else if (id == "rogue") {
+            GameObject newHero = Instantiate(Resources.Load<GameObject>("PrefabsHeroes/Rogue")) as GameObject;
+            newHero.transform.SetParent(card.transform.Find("Image").transform, false);
+        } else if (id == "druid") {
+            GameObject newHero = Instantiate(Resources.Load<GameObject>("PrefabsHeroes/Druid")) as GameObject;
+            newHero.transform.SetParent(card.transform.Find("Image").transform, false);
         } else if (id == "knight") {
             GameObject newHero = Instantiate(Resources.Load<GameObject>("PrefabsHeroes/Knight")) as GameObject;
             newHero.transform.SetParent(card.transform.Find("Image").transform, false);
@@ -374,6 +381,105 @@ public class GlobalObject : MonoBehaviour {
             GameObject newHero = Instantiate(Resources.Load<GameObject>("PrefabsHeroes/CultSentinel")) as GameObject;
             newHero.transform.SetParent(card.transform.Find("Image").transform, false);
         }
+    }
+
+    /// <summary>
+    /// Creates list of all card entries to hold in data for use for card selection, etc.
+    /// </summary>
+    public void CreateCardEntryList(){
+        //TODO: Should these entries be made into prefabs and loaded in, instead of a hard coded list? how can we make this more flexible?
+
+        //Cards shared for all
+        CardEntry wallEntry = new CardEntry(GameConstants.Card.wall, 1, GameConstants.CardCommanderType.All);
+        allCardEntries.Add(wallEntry);
+        CardEntry tower = new CardEntry(GameConstants.Card.tower, 1, GameConstants.CardCommanderType.All);
+        allCardEntries.Add(tower);
+        CardEntry cavalry = new CardEntry(GameConstants.Card.cavalry, 1, GameConstants.CardCommanderType.All);
+        allCardEntries.Add(cavalry);
+        CardEntry diviner = new CardEntry(GameConstants.Card.diviner, 1, GameConstants.CardCommanderType.All);
+        allCardEntries.Add(diviner);
+        CardEntry crossbowman = new CardEntry(GameConstants.Card.crossbowman, 1, GameConstants.CardCommanderType.All);
+        allCardEntries.Add(crossbowman);
+
+        /*Cardinal exclusive cards*/
+        CardEntry druid = new CardEntry(GameConstants.Card.druid, 1, GameConstants.CardCommanderType.Cardinal);
+        allCardEntries.Add(druid);
+        CardEntry monk = new CardEntry(GameConstants.Card.monk, 1, GameConstants.CardCommanderType.Cardinal);
+        allCardEntries.Add(monk);
+        CardEntry footsoldier = new CardEntry(GameConstants.Card.footsoldier, 1, GameConstants.CardCommanderType.Cardinal);
+        allCardEntries.Add(footsoldier);
+        CardEntry knight = new CardEntry(GameConstants.Card.knight, 1, GameConstants.CardCommanderType.Cardinal);
+        allCardEntries.Add(knight);
+        CardEntry slinger = new CardEntry(GameConstants.Card.slinger, 1, GameConstants.CardCommanderType.Cardinal);
+        allCardEntries.Add(slinger);
+        //Cardinal spells
+        CardEntry heal = new CardEntry(GameConstants.Card.heal, 1, GameConstants.CardCommanderType.Cardinal);
+        allCardEntries.Add(heal);
+        CardEntry might = new CardEntry(GameConstants.Card.might, 1, GameConstants.CardCommanderType.Cardinal);
+        allCardEntries.Add(might);
+
+        /*Crusader exclusive cards*/
+        CardEntry paladin = new CardEntry(GameConstants.Card.paladin, 1, GameConstants.CardCommanderType.Crusader);
+        allCardEntries.Add(paladin);
+        CardEntry champion = new CardEntry(GameConstants.Card.champion, 1, GameConstants.CardCommanderType.Crusader);
+        allCardEntries.Add(champion);
+        CardEntry dwarf = new CardEntry(GameConstants.Card.dwarf, 1, GameConstants.CardCommanderType.Crusader);
+        allCardEntries.Add(dwarf);
+        CardEntry blacksmith = new CardEntry(GameConstants.Card.blacksmith, 1, GameConstants.CardCommanderType.Crusader);
+        allCardEntries.Add(blacksmith);
+        CardEntry wolf = new CardEntry(GameConstants.Card.wolf, 1, GameConstants.CardCommanderType.Crusader);
+        allCardEntries.Add(wolf);
+        //Crusader spells
+        CardEntry root = new CardEntry(GameConstants.Card.root, 1, GameConstants.CardCommanderType.Crusader);
+        allCardEntries.Add(root);
+        CardEntry windgust = new CardEntry(GameConstants.Card.windgust, 1, GameConstants.CardCommanderType.Crusader);
+        allCardEntries.Add(windgust);
+
+        /*Templar exclusive cards*/
+        CardEntry archer = new CardEntry(GameConstants.Card.archer, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(archer);
+        CardEntry ghost = new CardEntry(GameConstants.Card.ghost, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(ghost);
+        CardEntry sapper = new CardEntry(GameConstants.Card.sapper, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(sapper);
+        CardEntry rogue = new CardEntry(GameConstants.Card.rogue, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(rogue);
+        CardEntry chaosmage = new CardEntry(GameConstants.Card.chaosmage, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(chaosmage);
+        CardEntry sorcerer = new CardEntry(GameConstants.Card.sorcerer, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(sorcerer);
+        CardEntry assassin = new CardEntry(GameConstants.Card.assassin, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(assassin);
+        //Templar spells
+        CardEntry armor = new CardEntry(GameConstants.Card.armor, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(armor);
+        CardEntry rockthrow = new CardEntry(GameConstants.Card.rockthrow, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(rockthrow);
+
+        /*Warlock exclusive cards*/
+        CardEntry bloodknight = new CardEntry(GameConstants.Card.bloodknight, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(bloodknight);
+        CardEntry cultinitiate = new CardEntry(GameConstants.Card.cultinitiate, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(cultinitiate);
+        CardEntry cultadept = new CardEntry(GameConstants.Card.cultadept, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(cultadept);
+        CardEntry cultacolyte = new CardEntry(GameConstants.Card.cultacolyte, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(cultacolyte);
+        CardEntry cultsentinel = new CardEntry(GameConstants.Card.cultsentinel, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(cultsentinel);
+        CardEntry cultfanatic = new CardEntry(GameConstants.Card.cultfanatic, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(cultfanatic);
+        CardEntry bloodmage = new CardEntry(GameConstants.Card.bloodmage, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(bloodmage);
+        //Warlock spells
+        CardEntry drainlife = new CardEntry(GameConstants.Card.drainlife, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(drainlife);
+        CardEntry shroud = new CardEntry(GameConstants.Card.shroud, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(shroud);
+        CardEntry fireball = new CardEntry(GameConstants.Card.fireball, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(fireball);
+        CardEntry spellcardforced = new CardEntry(GameConstants.Card.spellcardforced, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(spellcardforced);
     }
 
     /* Commander data code*/

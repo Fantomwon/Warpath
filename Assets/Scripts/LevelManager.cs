@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -17,8 +18,9 @@ public class LevelManager : MonoBehaviour {
 		SetCurrentLevel();
 	}
 
+    //TODO: This is currently where the game loads the CardSelectScene which triggers behavior for the card select manager
     public void LoadLevel(int levelIndex) {
-        //Debug.Log ("Level load requested for "+ name);
+        Debug.Log ("HELLO! Level load requested for "+ name);
         SceneManager.LoadScene(levelIndex);
         SetCurrentLevel();
     }
@@ -31,6 +33,11 @@ public class LevelManager : MonoBehaviour {
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 //		SetCurrentLevel();
  	}
+
+    //Load list of cards for upcoming selection
+    //public void SetCardsListForSelectionScene() {
+        /*load entire cards list from this point on*/
+    //}
  	
  	public void SetCurrentLevel(){
 		PlayerPrefs.SetString("Current Level", SceneManager.GetActiveScene().name);

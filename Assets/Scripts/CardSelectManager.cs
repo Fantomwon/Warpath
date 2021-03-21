@@ -7,6 +7,16 @@ public class CardSelectManager : MonoBehaviour
 {
     public List<string> cards;
     public static CardSelectManager instance;
+    private int _numCardsForSelection = 3;
+
+    public int NumCardsForSelection {
+        get {
+            return this._numCardsForSelection;
+        }
+        set {
+            this._numCardsForSelection = value;
+        }
+    }
 
     private void Awake() {
         if (CardSelectManager.instance == null) {
@@ -22,6 +32,9 @@ public class CardSelectManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
         if ( scene.buildIndex == GameConstants.SCENE_INDEX_POST_BATTLE_CARD_SELECT) {
+            //Set cards for select
+            this.UpdateSelectionCards();
+            //Create actual game objects from list
             this.InstantiatePlayerCards();
         }
     }
@@ -30,6 +43,27 @@ public class CardSelectManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void UpdateSelectionCards() {
+        //Start with creating list to hold all card entries
+        GameConstants.CardCommanderType type = GlobalObject.instance.humanPlayerCommanderData.CardCommanderType;
+        //filter to only have cards matching commander type
+        List<CardEntry> filteredCardEntries = GlobalObject.instance.allCardEntries.FindAll(c => c.CommanderType == type || c.CommanderType == GameConstants.CardCommanderType.All);
+        List<string> randomSelection = new List<string>();
+        //Grab random cards from list
+        for(int i = 0; i < this.NumCardsForSelection; i++) {
+            int randomIndex = Random.Range(0, filteredCardEntries.Count);
+            randomSelection.Add(filteredCardEntries[randomIndex].Card.ToString());
+            //Splice out the entry from original list to avoid repeats
+            filteredCardEntries.RemoveAt(randomIndex);
+            //Break loop if we have exhausted all careds
+            if( filteredCardEntries.Count == 0) {
+                break;
+            }
+        }
+        //Set the cards list from our random selection
+        this.SetCardsForSelect(randomSelection);
     }
 
     public void SetCardsForSelect( List<string> selectionCards) {

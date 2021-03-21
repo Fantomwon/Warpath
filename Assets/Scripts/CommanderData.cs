@@ -8,9 +8,9 @@ public class CommanderData {
 
     }
 
-    public CommanderData(string characterName, GameConstants.FactionType faction, int commanderHP, int startingHandSize, string prefabResourcePath, GameConstants.CommanderAbilityChargeType abilityChargeType, int abilityChargeCost, GameConstants.CommanderAbilityTargetType abilityTargetType, List<CardEntry> deck) {
+    public CommanderData(string characterName, GameConstants.CardCommanderType cardCommanderType, int commanderHP, int startingHandSize, string prefabResourcePath, GameConstants.CommanderAbilityChargeType abilityChargeType, int abilityChargeCost, GameConstants.CommanderAbilityTargetType abilityTargetType, List<CardEntry> deck) {
         this._charName = characterName;
-        this._faction = faction;
+        this._cardCommanderType = cardCommanderType;
         this._hp = commanderHP;
         this._startingHandSize = startingHandSize;
         this._prefabPath = prefabResourcePath;
@@ -53,14 +53,14 @@ public class CommanderData {
     /// The commander's faction. Determines what faction cards are supplied
     /// </summary>
     [SerializeField]
-    private GameConstants.FactionType _faction;
+    private GameConstants.CardCommanderType _cardCommanderType;
 
     /// <summary>
     /// Gets the commander's faction. Used for determining which cards to supply in certain contexts.
     /// </summary>
-    public GameConstants.FactionType Faction {
+    public GameConstants.CardCommanderType CardCommanderType {
         get {
-            return this._faction;
+            return this._cardCommanderType;
         }
     }
 
@@ -221,6 +221,14 @@ public class CardEntry {
         CardAmount = cardAmount;
     }
 
+    public CardEntry(GameConstants.Card card, int cardAmount, GameConstants.CardCommanderType commanderType) {
+        Card = card;
+        CardAmount = cardAmount;
+        CommanderType = commanderType;
+    }
+
+    [SerializeField]
+    public GameConstants.CardCommanderType CommanderType;
 
     [SerializeField]
     public GameConstants.Card Card;
