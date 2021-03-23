@@ -47,5 +47,4 @@ public class CardinalCommander : Commander {
         this.commanderUIPanel.SetCommanderAbilityButtonActive(false);
         return true;
     }
-
 }

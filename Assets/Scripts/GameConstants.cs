@@ -2,7 +2,7 @@
 
 public static class GameConstants
 {
-    public const string RESOURCE_PATH_PREFIX_COMMANDERS = "PrefabsCommanders/";
+    public const string RESOURCE_PATH_PREFIX_COMMANDERS = "PrefabsCommanders/PlayerCommanders/";
 
     //Scene Indices
     public const int SCENE_INDEX_BOSS_SELECT = 3;

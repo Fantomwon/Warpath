@@ -742,7 +742,7 @@ public class PlayField : MonoBehaviour {
 			}
 		} else if (!player1Turn && heroTypeToSearchFor == "enemy" && optionalFunctionIdentifier == "root") {
 			foreach (Transform hero in player1.transform) {
-				//Check the hero to see if they already have the Shroud buff. If they do, don't add them.
+				//Check the hero to see if they already have the Root buff. If they do, don't add them.
 				if ((buffManager.CheckForExistingBuff(hero, "root") != true) && (FindClosestHeroToTheRight(hero) > 1)) {
 					Debug.Log("ADDING VALID HERO FOR THE SPELL: ROOT!!!!!!!!!!!! Hero is: " + hero);
 					validHeroes.Add(hero);	
