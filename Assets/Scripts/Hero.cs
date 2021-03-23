@@ -125,11 +125,9 @@ public class Hero : MonoBehaviour {
         //Debug.Log("RUNNING CheckForValidTargetsToAttack()");
         if (currentHero.GetComponent<Hero>().id == "rogue" && playField.TargetCheckCardinalDirections(currentHero, "enemy").Count > 0) {
             StartCoroutine("PlayAttackAnimation");
-        } else if (currentHero.GetComponent<Hero>().id == "tower" && playField.TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
-            StartCoroutine("PlayAttackAnimation");
         } else if ((currentHero.GetComponent<Hero>().id == "archer" || currentHero.GetComponent<Hero>().id == "slinger" || currentHero.GetComponent<Hero>().id == "cultadept") && playField.TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
             StartCoroutine("PlayAttackAnimation");
-        } else if ((currentHero.GetComponent<Hero>().id == "sapper" || currentHero.GetComponent<Hero>().id == "cultfanatic") && playField.TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
+        } else if ((currentHero.GetComponent<Hero>().id == "sapper" || currentHero.GetComponent<Hero>().id == "cultfanatic" || currentHero.GetComponent<Hero>().id == "tower") && playField.TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
             StartCoroutine("PlayAttackAnimation");
         } else if (currentHero.GetComponent<Hero>().id == "chaosmage" && playField.TargetCheckEntireBoardRandomHeroes(currentHero, "enemy", 2).Count > 0) {
             StartCoroutine("PlayAttackAnimation");
@@ -244,10 +242,12 @@ public class Hero : MonoBehaviour {
 	public bool TakeDamage (int dmg) {
         bool wasLethal = false;
 
+        //GHOST LOGIC - Always reduce incoming damage to 1
 		if (hero.GetComponent<Hero>().id == "ghost") {
 			dmg = 1;
 		}
 
+        //Do the actual damage
 		if (currentArmor > 0 && (currentArmor - dmg) >= 0) {
 			hero.currentArmor -= dmg;
 		} else if (currentArmor > 0) {
@@ -257,9 +257,13 @@ public class Hero : MonoBehaviour {
 			hero.currentHealth -= dmg;
 		}
 
+        //Run any logic that is supposed to happen when a hero takes damage
+        OnDamageEffects();
+
 		//If the hero's health is zero or below check if their death causes the enemy to score a point and also destroy them.
 		if (hero.currentHealth <= 0) {
             wasLethal = true;
+            OnDeathEffects();
 //			Debug.Log("RUNNING HERO DEATH CODE");
             //DISABLING THIS FOR THE WIN CONDITION PROTOTYPE
 			//ScoreCheckDeath(gameObject);
@@ -284,6 +288,8 @@ public class Hero : MonoBehaviour {
 
 		GameObject x = Instantiate(combatText, new Vector3 (hero.transform.position.x, hero.transform.position.y + 0.5f, hero.transform.position.z), Quaternion.identity) as GameObject;
 		x.GetComponentInChildren<TextMesh>().text = "Dodge!";
+
+        OnDodgeEffects();
 	}
 
 	public void HealFull () {
@@ -402,6 +408,7 @@ public class Hero : MonoBehaviour {
 	}
 
 	void OnSpawnEffects () {
+        //WOLF LOGIC - The Wolf moves and attacks immediately upon being spawned
 		if (id == "wolf") {
 			usingHaste = true;
 			if (playField.player1Turn) {
@@ -411,4 +418,16 @@ public class Hero : MonoBehaviour {
 			}
 		}
 	}
+
+    void OnDamageEffects() {
+
+    }
+
+    void OnDodgeEffects() {
+
+    }
+
+    void OnDeathEffects() {
+
+    }
 }

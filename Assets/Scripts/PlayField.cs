@@ -526,11 +526,9 @@ public class PlayField : MonoBehaviour {
 	public void HeroTargetCheck (Transform currentHero) {
         if (currentHero.GetComponent<Hero>().id == "rogue" && TargetCheckCardinalDirections(currentHero, "enemy").Count > 0) {
             AttackEnemiesInList(currentHero, TargetCheckCardinalDirections(currentHero, "enemy"));
-        } else if (currentHero.GetComponent<Hero>().id == "tower" && TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
-            AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy", null));
         } else if ((currentHero.GetComponent<Hero>().id == "archer" || currentHero.GetComponent<Hero>().id == "slinger" || currentHero.GetComponent<Hero>().id == "cultadept") && TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
             AttackEnemiesInList(currentHero, TargetCheckAllHeroesInRange(currentHero, "enemy"));
-        } else if ((currentHero.GetComponent<Hero>().id == "sapper" || currentHero.GetComponent<Hero>().id == "cultfanatic") && TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
+        } else if ((currentHero.GetComponent<Hero>().id == "sapper" || currentHero.GetComponent<Hero>().id == "cultfanatic" || currentHero.GetComponent<Hero>().id == "tower") && TargetCheckAllDirections(currentHero, "enemy", null).Count > 0) {
             AttackEnemiesInList(currentHero, TargetCheckAllDirections(currentHero, "enemy", null));
         } else if (currentHero.GetComponent<Hero>().id == "chaosmage" & tempTransformList.Count > 0) {
             AttackEnemiesInList(currentHero, tempTransformList);
@@ -559,7 +557,7 @@ public class PlayField : MonoBehaviour {
 				return;
 			}
 
-			//If the attacker is a Dwarf check if the enemy has any armor. If they do, destroy all of that armor and then do damage to the enemy. Otherwise, just do damage to the enemy.
+			//DWARF LOGIC - If the attacker is a Dwarf check if the enemy has any armor. If they do, destroy all of that armor and then do damage to the enemy. Otherwise, just do damage to the enemy.
 			if (currentHero.GetComponent<Hero>().id == "dwarf") {
 				if (enemy.GetComponent<Hero>().currentArmor > 0) {
 					enemy.GetComponent<Hero>().currentArmor = 0;
@@ -568,7 +566,7 @@ public class PlayField : MonoBehaviour {
 				return;
 			}
 
-			//If the attacker is an assassin and the target is below a specific health threshold, kill the target
+			//ASSASSIN LOGIC - If the attacker is an assassin and the target is below a specific health threshold, kill the target
 			if (currentHero.GetComponent<Hero>().id == "assassin") {
 				if (enemy.GetComponent<Hero>().currentHealth < 5) {
                     this.DamageHero( enemy.GetComponent<Hero>(), enemy.GetComponent<Hero>().currentHealth + enemy.GetComponent<Hero>().currentArmor);
@@ -576,7 +574,7 @@ public class PlayField : MonoBehaviour {
 				}
 			}
 
-			//If the defender is a monk and the attacker is further away than melee range, the monk will dodge the incoming attack
+			//MONK LOGIC If the defender is a monk and the attacker is further away than melee range, the monk will dodge the incoming attack
 			if (enemy.GetComponent<Hero>().id == "monk") {
 				if (Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) != 1 && 
 				Mathf.RoundToInt(enemy.transform.position.x) - Mathf.RoundToInt(currentHero.transform.position.x) != -1) {
@@ -586,7 +584,7 @@ public class PlayField : MonoBehaviour {
 				}
 			}
 
-			//If the attacker is a sorcerer add extra damage for each enemy in the sorcerer's row
+			//SORCERER LOGIC - If the attacker is a sorcerer add extra damage for each enemy in the sorcerer's row
 			if (currentHero.GetComponent<Hero>().id == "sorcerer") {
                 PlayField.instance.DamageHero(enemy.GetComponent<Hero>(), currentHero.GetComponent<Hero>().power + (1 * CountEnemiesInMyRow(currentHero)) );
 				return;
@@ -1355,10 +1353,9 @@ public class PlayField : MonoBehaviour {
     }
 
 	void StartOfTurnEffects () {
-		//Add mana for each Diviner that the player has on the field
+		//DIVINER LOGIC - Add mana for each Diviner that the player has on the field
 		BuildFullHeroTransformList ();
 		List<Transform> divinerList = new List<Transform>();
-
 		foreach (Transform hero in fullHeroTransformList) {
 			if (hero.GetComponent<Hero>().id == "diviner") {
 				divinerList.Add(hero);
@@ -1369,13 +1366,11 @@ public class PlayField : MonoBehaviour {
 				if (player1Mana < player1ManaMax) {
 					Instantiate (manaParticle, diviner.transform.position, Quaternion.identity);
 				}
-
 				Player1AddMana(1);
 			} else if (!player1Turn && diviner.tag == "player2") {
 				if (player2Mana < player2ManaMax) {
 					Instantiate (manaParticle, diviner.transform.position, Quaternion.identity);
 				}
-
 				Player2AddMana(1);
 			}
 		}
@@ -1424,6 +1419,7 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 
+        //DRUID LOGIC - Heal allies in squares around each Druid
 		foreach (Transform druid in druidList) {
 			if (player1Turn && druid.tag == "player1") {
 				HealHeroesInList(druid, TargetCheckAllDirections(druid, "ally", "ghost"));
@@ -1432,6 +1428,7 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 
+        //BLACKSMITH LOGIC - Add armor to a random ally in a square around each Blacksmith
 		foreach (Transform blacksmith in blacksmithList) {
 			if (player1Turn && blacksmith.tag == "player1") {
 				ArmorHeroesInList(blacksmith, TargetCheckAllDirectionsOneRandomHero(blacksmith, "ally", "ghost"));
@@ -1440,7 +1437,8 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 
-		foreach (Transform paladin in paladinList) {
+        //PALADIN LOGIC - Heal a random ally in a square around each Paladin
+        foreach (Transform paladin in paladinList) {
 			if (player1Turn && paladin.tag == "player1") {
 				HealHeroesInList(paladin, TargetCheckAllDirectionsOneRandomHero(paladin, "ally", "ghost"));
 			} else if (!player1Turn && paladin.tag == "player2") {
@@ -1448,6 +1446,7 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 
+        //ACOLYTE LOGIC - Heal a random ally in anywhere on the board for each Acolyte
         foreach (Transform cultAcolyte in cultAcolyteList) {
             Debug.LogWarning("FOUND AN ACOLYTE!!! 002");
             if (player1Turn && cultAcolyte.tag == "player1") {
