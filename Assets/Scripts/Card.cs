@@ -531,6 +531,8 @@ public class Card : MonoBehaviour {
 			return true;
         } else if (cardId.ToString() == "drainlife" && playField.TargetSpellCheckEntireBoardOneRandomHero("enemy").Count > 0) {
             return true;
+        } else if (cardId.ToString() == "haste" && playField.TargetSpellCheckEntireBoardOneRandomHero("ally").Count > 0) {
+            return true;
         } else {
 			return false;
 		}

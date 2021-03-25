@@ -253,13 +253,13 @@ public class GlobalObject : MonoBehaviour {
         } else if (id == "tower") {
             return SetTemplateHeroCardAttributesConstructor("TowerCard", GameConstants.Card.tower, "heroStationary", 5, "Test:tower", "PrefabsHeroes/Tower", 1, 8, 0, 1);
         } else if (id == "champion") {
-            return SetTemplateHeroCardAttributesConstructor("ChampionCard", GameConstants.Card.champion, "hero", 5, "Test:champion", "PrefabsHeroes/Champion", 2, 5, 1, 1);
+            return SetTemplateHeroCardAttributesConstructor("ChampionCard", GameConstants.Card.champion, "hero", 4, "Test:champion", "PrefabsHeroes/Champion", 2, 5, 1, 1);
         } else if (id == "cavalry") {
-            return SetTemplateHeroCardAttributesConstructor("CavalryCard", GameConstants.Card.cavalry, "hero", 5, "Test:cavalry", "PrefabsHeroes/Cavalry", 2, 7, 3, 1);
+            return SetTemplateHeroCardAttributesConstructor("CavalryCard", GameConstants.Card.cavalry, "hero", 4, "Test:cavalry", "PrefabsHeroes/Cavalry", 2, 6, 3, 1);
         } else if (id == "diviner") {
             return SetTemplateHeroCardAttributesConstructor("DivinerCard", GameConstants.Card.diviner, "hero", 5, "Test:diviner", "PrefabsHeroes/Diviner", 1, 5, 1, 3);
         } else if (id == "crossbowman") {
-            return SetTemplateHeroCardAttributesConstructor("CrossbowmanCard", GameConstants.Card.crossbowman, "hero", 3, "Test:crossbowman", "PrefabsHeroes/Crossbowman", 2, 3, 2, 3);
+            return SetTemplateHeroCardAttributesConstructor("CrossbowmanCard", GameConstants.Card.crossbowman, "hero", 3, "Test:crossbowman", "PrefabsHeroes/Crossbowman", 3, 3, 2, 3);
         } else if (id == "bloodknight") {
             return SetTemplateHeroCardAttributesConstructor("BloodknightCard", GameConstants.Card.bloodknight, "hero", 5, "Test:bloodknight", "PrefabsHeroes/Bloodknight", 2, 6, 1, 1);
         } else if (id == "cultinitiate") {
@@ -271,17 +271,10 @@ public class GlobalObject : MonoBehaviour {
         } else if (id == "cultsentinel") {
             return SetTemplateHeroCardAttributesConstructor("CultSentinelCard", GameConstants.Card.cultsentinel, "hero", 3, "Test:cultsentinel", "PrefabsHeroes/CultSentinel", 4, 10, 1, 1);
         } else if (id == "cultfanatic") {
-            return SetTemplateHeroCardAttributesConstructor("CultFanaticCard", GameConstants.Card.cultfanatic, "hero", 2, "Test:cultfanatic", "PrefabsHeroes/CultFanatic", 2, 2, 2, 1);
+            return SetTemplateHeroCardAttributesConstructor("CultFanaticCard", GameConstants.Card.cultfanatic, "hero", 1, "Test:cultfanatic", "PrefabsHeroes/CultFanatic", 2, 2, 2, 1);
         } else {
             return null;
         }
-    }
-
-    public GameObject SetTemplateHeroUnitAttributes(string id) {
-        if (id == "archer") {
-            return SetTemplateHeroCardAttributesConstructor("ArcherCard", GameConstants.Card.archer, "hero", 2, "Test: Archer", "PrefabsHeroes/Archer", 2, 2, 2, 3);
-        }
-        return null;
     }
 
     public GameObject SetTemplateSpellCardAttributes(string id) {
@@ -303,6 +296,10 @@ public class GlobalObject : MonoBehaviour {
             return SetTemplateSpellCardAttributesConstructor("FireballCard", GameConstants.Card.fireball, "spell", 2, "Test:fireball", "Particles/FireballParticle", "Images/Icons/SpellIcons/FireballIcon");
         } else if (id == "drainlife") {
             return SetTemplateSpellCardAttributesConstructor("DrainLifeCard", GameConstants.Card.drainlife, "spell", 1, "Test:drainlife", "Particles/DrainLifeParticle", "Images/Icons/SpellIcons/DrainLifeIcon");
+        } else if (id == "haste") {
+            return SetTemplateSpellCardAttributesConstructor("HasteCard", GameConstants.Card.haste, "spell", 2, "Test:haste", "Particles/HasteParticle", "Images/Icons/SpellIcons/HasteIcon");
+        } else if (id == "blessing") {
+            return SetTemplateSpellCardAttributesConstructor("BlessingCard", GameConstants.Card.blessing, "spell", 2, "Test:blessing", "Particles/HealHeavyParticleGameObject", "Images/Icons/SpellIcons/BlessingIcon");
         } else {
             return null;
         }
@@ -323,7 +320,7 @@ public class GlobalObject : MonoBehaviour {
     }
 
     public GameObject SetTemplateHeroUnitAttributesConstructor() {
-        templateHeroUnit.GetComponent<Hero>().id = Card.selectedCard.GetComponent<Card>().name;
+        templateHeroUnit.GetComponent<Hero>().id = Card.selectedCard.GetComponent<Card>().cardId.ToString();
         templateHeroUnit.GetComponent<Hero>().maxHealth = Card.selectedCard.GetComponent<Card>().maxHealth;
         templateHeroUnit.GetComponent<Hero>().currentHealth = Card.selectedCard.GetComponent<Card>().maxHealth;
         templateHeroUnit.GetComponent<Hero>().power = Card.selectedCard.GetComponent<Card>().power;
@@ -390,26 +387,20 @@ public class GlobalObject : MonoBehaviour {
         //TODO: Should these entries be made into prefabs and loaded in, instead of a hard coded list? how can we make this more flexible?
 
         //Cards shared for all
-        CardEntry wallEntry = new CardEntry(GameConstants.Card.wall, 1, GameConstants.CardCommanderType.All);
-        allCardEntries.Add(wallEntry);
-        CardEntry tower = new CardEntry(GameConstants.Card.tower, 1, GameConstants.CardCommanderType.All);
-        allCardEntries.Add(tower);
+        CardEntry footsoldier = new CardEntry(GameConstants.Card.footsoldier, 1, GameConstants.CardCommanderType.All);
+        allCardEntries.Add(footsoldier);
+        CardEntry archer = new CardEntry(GameConstants.Card.archer, 1, GameConstants.CardCommanderType.All);
+        allCardEntries.Add(archer);
+        CardEntry rogue = new CardEntry(GameConstants.Card.rogue, 1, GameConstants.CardCommanderType.All);
+        allCardEntries.Add(rogue);
         CardEntry cavalry = new CardEntry(GameConstants.Card.cavalry, 1, GameConstants.CardCommanderType.All);
         allCardEntries.Add(cavalry);
-        CardEntry diviner = new CardEntry(GameConstants.Card.diviner, 1, GameConstants.CardCommanderType.All);
-        allCardEntries.Add(diviner);
-        CardEntry crossbowman = new CardEntry(GameConstants.Card.crossbowman, 1, GameConstants.CardCommanderType.All);
-        allCardEntries.Add(crossbowman);
 
         /*Cardinal exclusive cards*/
         CardEntry druid = new CardEntry(GameConstants.Card.druid, 1, GameConstants.CardCommanderType.Cardinal);
         allCardEntries.Add(druid);
         CardEntry monk = new CardEntry(GameConstants.Card.monk, 1, GameConstants.CardCommanderType.Cardinal);
         allCardEntries.Add(monk);
-        CardEntry footsoldier = new CardEntry(GameConstants.Card.footsoldier, 1, GameConstants.CardCommanderType.Cardinal);
-        allCardEntries.Add(footsoldier);
-        CardEntry knight = new CardEntry(GameConstants.Card.knight, 1, GameConstants.CardCommanderType.Cardinal);
-        allCardEntries.Add(knight);
         CardEntry slinger = new CardEntry(GameConstants.Card.slinger, 1, GameConstants.CardCommanderType.Cardinal);
         allCardEntries.Add(slinger);
         //Cardinal spells
@@ -419,42 +410,50 @@ public class GlobalObject : MonoBehaviour {
         allCardEntries.Add(might);
 
         /*Crusader exclusive cards*/
-        CardEntry paladin = new CardEntry(GameConstants.Card.paladin, 1, GameConstants.CardCommanderType.Crusader);
-        allCardEntries.Add(paladin);
-        CardEntry champion = new CardEntry(GameConstants.Card.champion, 1, GameConstants.CardCommanderType.Crusader);
-        allCardEntries.Add(champion);
-        CardEntry dwarf = new CardEntry(GameConstants.Card.dwarf, 1, GameConstants.CardCommanderType.Crusader);
-        allCardEntries.Add(dwarf);
+        CardEntry crossbowman = new CardEntry(GameConstants.Card.crossbowman, 1, GameConstants.CardCommanderType.Crusader);
+        allCardEntries.Add(crossbowman);
+        CardEntry knight = new CardEntry(GameConstants.Card.knight, 1, GameConstants.CardCommanderType.Crusader);
+        allCardEntries.Add(knight);
         CardEntry blacksmith = new CardEntry(GameConstants.Card.blacksmith, 1, GameConstants.CardCommanderType.Crusader);
         allCardEntries.Add(blacksmith);
-        CardEntry wolf = new CardEntry(GameConstants.Card.wolf, 1, GameConstants.CardCommanderType.Crusader);
-        allCardEntries.Add(wolf);
+        CardEntry champion = new CardEntry(GameConstants.Card.champion, 1, GameConstants.CardCommanderType.Crusader);
+        allCardEntries.Add(champion);
         //Crusader spells
-        CardEntry root = new CardEntry(GameConstants.Card.root, 1, GameConstants.CardCommanderType.Crusader);
-        allCardEntries.Add(root);
-        CardEntry windgust = new CardEntry(GameConstants.Card.windgust, 1, GameConstants.CardCommanderType.Crusader);
-        allCardEntries.Add(windgust);
+        CardEntry blessing = new CardEntry(GameConstants.Card.blessing, 1, GameConstants.CardCommanderType.Crusader);
+        allCardEntries.Add(blessing);
 
         /*Templar exclusive cards*/
-        CardEntry archer = new CardEntry(GameConstants.Card.archer, 1, GameConstants.CardCommanderType.Templar);
-        allCardEntries.Add(archer);
         CardEntry ghost = new CardEntry(GameConstants.Card.ghost, 1, GameConstants.CardCommanderType.Templar);
         allCardEntries.Add(ghost);
         CardEntry sapper = new CardEntry(GameConstants.Card.sapper, 1, GameConstants.CardCommanderType.Templar);
         allCardEntries.Add(sapper);
-        CardEntry rogue = new CardEntry(GameConstants.Card.rogue, 1, GameConstants.CardCommanderType.Templar);
-        allCardEntries.Add(rogue);
         CardEntry chaosmage = new CardEntry(GameConstants.Card.chaosmage, 1, GameConstants.CardCommanderType.Templar);
         allCardEntries.Add(chaosmage);
         CardEntry sorcerer = new CardEntry(GameConstants.Card.sorcerer, 1, GameConstants.CardCommanderType.Templar);
         allCardEntries.Add(sorcerer);
         CardEntry assassin = new CardEntry(GameConstants.Card.assassin, 1, GameConstants.CardCommanderType.Templar);
         allCardEntries.Add(assassin);
+        CardEntry wallEntry = new CardEntry(GameConstants.Card.wall, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(wallEntry);
+        CardEntry tower = new CardEntry(GameConstants.Card.tower, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(tower);
+        CardEntry diviner = new CardEntry(GameConstants.Card.diviner, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(diviner);
+        CardEntry dwarf = new CardEntry(GameConstants.Card.dwarf, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(dwarf);
+        CardEntry paladin = new CardEntry(GameConstants.Card.paladin, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(paladin);
+        CardEntry wolf = new CardEntry(GameConstants.Card.wolf, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(wolf);
         //Templar spells
         CardEntry armor = new CardEntry(GameConstants.Card.armor, 1, GameConstants.CardCommanderType.Templar);
         allCardEntries.Add(armor);
         CardEntry rockthrow = new CardEntry(GameConstants.Card.rockthrow, 1, GameConstants.CardCommanderType.Templar);
         allCardEntries.Add(rockthrow);
+        CardEntry root = new CardEntry(GameConstants.Card.root, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(root);
+        CardEntry windgust = new CardEntry(GameConstants.Card.windgust, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(windgust);
 
         /*Warlock exclusive cards*/
         CardEntry bloodknight = new CardEntry(GameConstants.Card.bloodknight, 1, GameConstants.CardCommanderType.Warlock);

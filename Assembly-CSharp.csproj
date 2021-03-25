@@ -69,17 +69,20 @@
     <Compile Include="Assets\Scripts\Buff.cs" />
     <Compile Include="Assets\Scripts\BuffManager.cs" />
     <Compile Include="Assets\Scripts\Card.cs" />
-    <Compile Include="Assets\Scripts\CardinalCommander.cs" />
     <Compile Include="Assets\Scripts\CardReference.cs" />
     <Compile Include="Assets\Scripts\CardSelectManager.cs" />
     <Compile Include="Assets\Scripts\CardsSelected.cs" />
     <Compile Include="Assets\Scripts\CombatText.cs" />
     <Compile Include="Assets\Scripts\Commander.cs" />
     <Compile Include="Assets\Scripts\CommanderData.cs" />
+    <Compile Include="Assets\Scripts\Commanders\AiCommanders\ConjurerCommander.cs" />
+    <Compile Include="Assets\Scripts\Commanders\PlayerCommanders\CardinalCommander.cs" />
+    <Compile Include="Assets\Scripts\Commanders\PlayerCommanders\CrusaderCommander.cs" />
+    <Compile Include="Assets\Scripts\Commanders\PlayerCommanders\KnightCommander.cs" />
+    <Compile Include="Assets\Scripts\Commanders\PlayerCommanders\WarlockCommander.cs" />
     <Compile Include="Assets\Scripts\CommanderSelectUI.cs" />
     <Compile Include="Assets\Scripts\CommanderSelectUIManager.cs" />
     <Compile Include="Assets\Scripts\CommanderUIPanel.cs" />
-    <Compile Include="Assets\Scripts\CrusaderCommander.cs" />
     <Compile Include="Assets\Scripts\DebugManager.cs" />
     <Compile Include="Assets\Scripts\Deck.cs" />
     <Compile Include="Assets\Scripts\Encounter.cs" />
@@ -89,7 +92,6 @@
     <Compile Include="Assets\Scripts\HandHider.cs" />
     <Compile Include="Assets\Scripts\Hero.cs" />
     <Compile Include="Assets\Scripts\IEventListener.cs" />
-    <Compile Include="Assets\Scripts\KnightCommander.cs" />
     <Compile Include="Assets\Scripts\LevelManager.cs" />
     <Compile Include="Assets\Scripts\LevelToggleScript.cs" />
     <Compile Include="Assets\Scripts\MapManager.cs" />
@@ -102,7 +104,6 @@
     <Compile Include="Assets\Scripts\TestObject.cs" />
     <Compile Include="Assets\Scripts\TooltipHeroes.cs" />
     <Compile Include="Assets\Scripts\TooltipSpells.cs" />
-    <Compile Include="Assets\Scripts\WarlockCommander.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Derek/Documents/Warpath/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

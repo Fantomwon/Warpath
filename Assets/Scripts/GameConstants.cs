@@ -72,7 +72,9 @@ public static class GameConstants
 	might,
 	fireball,
     spellcardforced,
-    drainlife
+    drainlife,
+    haste,
+    blessing
     }
 
     //Tags

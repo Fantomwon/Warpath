@@ -1106,8 +1106,10 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 
-		//If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
-		 if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
+        //If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
+        if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero) && (currentHero.transform.position.x + currentHero.GetComponent<Hero>().speed >= player2HomeColumn)) {
+            currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack((player2HomeColumn - currentHero.transform.position.x) - 1);
+        } else if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
 			currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(currentHero.GetComponent<Hero>().speed);
 		} else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
 			currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(Mathf.RoundToInt(closestHero)-1);
@@ -1134,8 +1136,10 @@ public class PlayField : MonoBehaviour {
 			}
 		}
 
-		//If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
-		if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
+        //If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
+        if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero) && (currentHero.transform.position.x - player1HomeColumn <= currentHero.GetComponent<Hero>().speed)) {
+            currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack((currentHero.transform.position.x - player1HomeColumn) - 1);
+        } else if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
 			currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(currentHero.GetComponent<Hero>().speed);
 		} else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
 			currentHero.GetComponent<Hero>().MoveSingleHeroLeftAndAttack(Mathf.RoundToInt(closestHero)-1);

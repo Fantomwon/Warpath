@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 
-public class WarlockCommander : Commander {
+public class ConjurerCommander : Commander {
 
     // Use this for initialization
     void Start() {

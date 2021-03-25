@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class CrusaderCommander : Commander{
 
-    protected readonly int COMMANDER_ABILITY_ARMOR = 2;
+    private PlayField playField;
     
     // Use this for initialization
     void Start() {
@@ -19,6 +19,8 @@ public class CrusaderCommander : Commander{
     public override void OnBattleStart() {
         //Register for turn started event
         BattleEventManager._instance.RegisterForEvent(BattleEventManager.EventType.UnitReceiveDamage, this);
+        //Find the PlayField and set the playField variable
+        playField = FindObjectOfType<PlayField>();
     }
 
     /// <summary>
@@ -37,9 +39,14 @@ public class CrusaderCommander : Commander{
     }
 
     public override bool ActivateCommanderAbility(Hero heroTarget) {
-        Debug.LogWarning("CRUSADER COMMANDER USING HEAVENLY HAMMA!!");
-        //Grant ability target shield
-        heroTarget.AddArmor( this.COMMANDER_ABILITY_ARMOR );
+        Debug.LogWarning("CRUSADER COMMANDER USING CHARGE!!");
+        //Grant ability target haste
+        heroTarget.transform.GetComponent<Hero>().usingHaste = true;
+        if (playField.player1Turn) {
+            playField.Player1MoveHasteCheck(heroTarget.transform);
+        } else {
+            playField.Player2MoveHasteCheck(heroTarget.transform);
+        }
         //Drain resource
         this.currentAbilityCharge = 0;
         //Update UI 
