@@ -1,0 +1,16 @@
+SOLDIER_ARCHER_NAME,Archer
+SOLDIER_ARCHER_DESC,Attacks all enemies that are within range
+SOLDIER_FOOTSOLDIER_NAME,Foot Soldier
+SOLDIER_FOOTSOLDIER_DESC,"Has no special properties, but costs low mana"
+SOLDIER_ROGUE_NAME,Rogue
+SOLDIER_ROGUE_DESC,"Attacks in all cardinal directions (up, down, left, right)"
+SOLDIER_KNIGHT_NAME,Knight
+SOLDIER_KNIGHT_DESC,"High health and attack power, but moves slowly"
+SPELL_ROCKTHROW_NAME,Rock Throw
+SPELL_ROCKTHROW_DESC,Deal 1 damage to target enemy
+SPELL_MIGHT_NAME,Might
+SPELL_MIGHT_DESC,Target ally gains +1 damage for 2 turns
+SPELL_FIREBALL_NAME,Fireball
+SPELL_FIREBALL_DESC,Deal 3 damage to target enemy
+SOLDIER_CAVALRY_NAME,Cavalry
+SOLDIER_CAVALRY_DESC,"When moving, advances to the nearest enemy in his row"

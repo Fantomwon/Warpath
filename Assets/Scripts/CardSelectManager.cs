@@ -78,7 +78,8 @@ public class CardSelectManager : MonoBehaviour
             GameObject newCard = Instantiate(GlobalObject.instance.templateHeroCard) as GameObject;
             newCard.transform.SetParent(GameObject.Find("CardSelectionScrollList/Viewport/Content/Card Container").transform, false);
             GlobalObject.instance.SetTemplateHeroCardImage(newCard.GetComponent<Card>().cardId.ToString(), newCard);
+            //Enable the selection button
+            newCard.GetComponent<Card>().selectionButton.SetActive(true);
         }
-
     }
 }

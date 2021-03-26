@@ -10,10 +10,11 @@ public class Card : MonoBehaviour {
 	public static GameObject selectedHero;
 	public static GameObject selectedCard;
 	public GameObject heroPrefab;
-	public Text ManaCost, NameText, PowerText, HealthText, SpeedText, RangeText;
+	public Text ManaCost, NameText, DescriptionText, PowerText, HealthText, SpeedText, RangeText;
 	public GameConstants.Card cardId;
 	public string cardName;
-	public string type;
+    public string cardDescription;
+    public string type;
 	public GameObject image;
     public int power;
     public int maxHealth;
@@ -24,6 +25,7 @@ public class Card : MonoBehaviour {
 	public int spellDamage;
 	public int spellCooldownStart, spellCooldownCurrent;
 	public GameObject spellParticle;
+    public GameObject selectionButton;
 
 	private PlayField playField;
 	private Deck deck;
@@ -36,22 +38,14 @@ public class Card : MonoBehaviour {
 
         //Need to set all of this in Awake() and NOT Start() or else on the NPC's first turn the stats don't get set in time before the NPC spawns their first hero for some reason
         ManaCost.text = manaCost.ToString();
-        if (type != "Spell") {
-            NameText.text = cardName.ToString();
-        }
+        NameText.text = cardName.ToString();
+        DescriptionText.text = cardDescription.ToString();
         if (type == "hero" || type == "heroStationary") {
             //Set text values on the card
             PowerText.text = power.ToString();
             HealthText.text = maxHealth.ToString();
             SpeedText.text = speed.ToString();
             RangeText.text = range.ToString();
-            //Set the hero stats on the hero prefab associated with this card
-            //heroPrefab.GetComponent<Hero>().power = power;
-            //heroPrefab.GetComponent<Hero>().maxHealth = maxHealth;
-            //heroPrefab.GetComponent<Hero>().currentHealth = maxHealth;
-            //heroPrefab.GetComponent<Hero>().range = range;
-            //heroPrefab.GetComponent<Hero>().speed = speed;
-            //heroPrefab.GetComponent<Hero>().id = cardId;
         }
     }
 

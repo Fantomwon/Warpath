@@ -97,6 +97,7 @@
     <Compile Include="Assets\Scripts\MapManager.cs" />
     <Compile Include="Assets\Scripts\NextButtonScript.cs" />
     <Compile Include="Assets\Scripts\PlayField.cs" />
+    <Compile Include="Assets\Scripts\ReadWriteCSV.cs" />
     <Compile Include="Assets\Scripts\SelectBoss.cs" />
     <Compile Include="Assets\Scripts\SelectCardForDeck.cs" />
     <Compile Include="Assets\Scripts\SelectPlayerClass.cs" />
