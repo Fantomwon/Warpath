@@ -122,4 +122,15 @@ public class Commander : MonoBehaviour, IEventListener {
 
     }
 
+    /// <summary>
+    /// Override this event in commander or unit when listening to event fired when a unit is summoned
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /// <param name="playerId"></param>
+    /// <param name="summonedUnitCard"></param>
+    public virtual void EventUnitSummoned(object sender, EventArgs e, int playerId, Hero summonedHero) {
+
+    }
+
 }

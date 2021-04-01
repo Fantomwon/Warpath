@@ -63,6 +63,7 @@ public static class GameConstants
     cultacolyte,
     cultsentinel,
     cultfanatic,
+    zealot,
     armor, //Start spells
 	rockthrow,
 	root,

@@ -180,11 +180,18 @@ public class PlayField : MonoBehaviour {
 
 		//Spawn the selectedHero at the appropriate location on the game grid	
 		if (Card.selectedCard.GetComponent<Card>().type != "SpellCard") {
-				if (player1Turn) {
-				SpawnHeroForPlayer1 (roundedPos);
-			} else if (!player1Turn) {
-				SpawnHeroForPlayer2 (roundedPos);
-			}
+			if (player1Turn) {
+				Card card = SpawnHeroForPlayer1 (roundedPos);
+                //Fire event for summoned unit for event listeners
+                Hero hero = card.heroPrefab.GetComponent<Hero>();
+                BattleEventManager._instance.NotifyUnitSpawned(GameConstants.HUMAN_PLAYER_ID, hero);
+
+            } else if (!player1Turn) {
+                Card card = SpawnHeroForPlayer2 (roundedPos);
+                //Fire event for summoned unit for event listeners
+                Hero hero = card.heroPrefab.GetComponent<Hero>();
+                BattleEventManager._instance.NotifyUnitSpawned(GameConstants.HUMAN_PLAYER_ID, hero);
+            }
 		}
 
 		//This is here to catch any special-cased 'Class Spell' cards that did not get cast above (e.g. the 'Wall' and 'Tower' cards)
@@ -199,54 +206,100 @@ public class PlayField : MonoBehaviour {
 		ClearSelectedHeroAndSelectedCard ();
 	}
 
-	public void SpawnHeroForPlayer1 (Vector2 roundedPos) {
-        //Set the data of the template hero based on what the currently 'Card.selectedCard' is
-        FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetTemplateHeroUnitAttributesConstructor();
-        //Instantiate the template hero with its newly defined data
-        GameObject x = Instantiate (FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().templateHeroUnit, roundedPos, Quaternion.identity) as GameObject;
-        //Spawn the appropriate visual prefab for the newly spawned hero
-        FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetHeroUnitPrefab(x, Card.selectedCard.GetComponent<Card>().heroPrefab);
-        //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
-        x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
+	public Card SpawnHeroForPlayer1 (Vector2 roundedPos) {
+        Card selectedCard = Card.selectedCard.GetComponent<Card>();
+        //If this is a new soldier card type then instead load from the specified prefab path
+        if (selectedCard.loadFromPrefab) {
+            //GameObject heroPrefab = Resources.Load<GameObject>(selectedCard.heroPrefab);
+            GameObject spawnedHeroObject = GameObject.Instantiate(selectedCard.heroPrefab) as GameObject;
+            //Set attributes from data - TODO: will need to revisit this as part of refactor
+            FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetSpawnedHeroUnitAttributesConstructor(spawnedHeroObject);
+            //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
+            spawnedHeroObject.transform.position = new Vector3(roundedPos.x, roundedPos.y, 0);
 
-		//Child the newly spawned hero to the appropriate player
-		x.transform.SetParent(player1.transform, false);
-		x.gameObject.tag = "player1";
-		Color xAlpha = x.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color;
-		xAlpha.a = 0.5f;
-		x.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color = xAlpha;
-		SubtractMana();
+            //Child the newly spawned hero to the appropriate player
+            spawnedHeroObject.transform.SetParent(player1.transform, false);
+            spawnedHeroObject.gameObject.tag = "player1";
+            Color spawnedHeroObjectAlpha = spawnedHeroObject.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color;
+            spawnedHeroObjectAlpha.a = 0.5f;
+            spawnedHeroObject.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color = spawnedHeroObjectAlpha;
+            SubtractMana();
+            Card summonedCard = Card.selectedCard.GetComponent<Card>();
+            return summonedCard;
+        } else {
+            //Set the data of the template hero based on what the currently 'Card.selectedCard' is
+            FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetTemplateHeroUnitAttributesConstructor();
+            //Instantiate the template hero with its newly defined data
+            GameObject x = Instantiate(FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().templateHeroUnit, roundedPos, Quaternion.identity) as GameObject;
+            //Spawn the appropriate visual prefab for the newly spawned hero
+            FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetHeroUnitPrefab(x, selectedCard.heroPrefab);
+            //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
+            x.transform.position = new Vector3(roundedPos.x, roundedPos.y, 0);
+
+            //Child the newly spawned hero to the appropriate player
+            x.transform.SetParent(player1.transform, false);
+            x.gameObject.tag = "player1";
+            Color xAlpha = x.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color;
+            xAlpha.a = 0.5f;
+            x.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color = xAlpha;
+            SubtractMana();
+            Card summonedCard = Card.selectedCard.GetComponent<Card>();
+            return summonedCard;
+        }
+        
 	}
 
-	public void SpawnHeroForPlayer2 (Vector2 roundedPos) {
-        //Set the data of the template hero based on what the currently 'Card.selectedCard' is
-        FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetTemplateHeroUnitAttributesConstructor();
-        //Instantiate the template hero with its newly defined data
-        GameObject x = Instantiate(FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().templateHeroUnit, roundedPos, Quaternion.identity) as GameObject;
-        //Spawn the appropriate visual prefab for the newly spawned hero
-        FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetHeroUnitPrefab(x, Card.selectedCard.GetComponent<Card>().heroPrefab);
-        //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
-        x.transform.position = new Vector3(roundedPos.x,roundedPos.y,0);
+	public Card SpawnHeroForPlayer2 (Vector2 roundedPos) {
+        Card selectedCard = Card.selectedCard.GetComponent<Card>();
+        if (selectedCard.loadFromPrefab) {
+            //GameObject heroPrefab = Resources.Load<GameObject>(selectedCard.heroPrefab);
+            GameObject spawnedHeroObject = GameObject.Instantiate(selectedCard.heroPrefab) as GameObject;
+            //Set attributes from data - TODO: will need to revisit this as part of refactor
+            FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetSpawnedHeroUnitAttributesConstructor(spawnedHeroObject);
+            //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
+            spawnedHeroObject.transform.position = new Vector3(roundedPos.x, roundedPos.y, 0);
 
-        //Flip the hero so it faces to the left
-        Vector3 scale = x.transform.GetComponent<RectTransform>().transform.localScale;
-        scale.x = (scale.x *= -1);
-        x.transform.GetComponent<RectTransform>().transform.localScale = scale;
-        //Flip the health and armor stats so the numbers aren't backwards
-        Vector3 scaleStats = x.transform.Find("StatsCanvas/Stats").GetComponent<RectTransform>().transform.localScale;
-        scaleStats.x = (scaleStats.x *= -1);
-        x.transform.Find("StatsCanvas/Stats").GetComponent<RectTransform>().transform.localScale = scaleStats;
+            //Child the newly spawned hero to the appropriate player
+            spawnedHeroObject.transform.SetParent(player1.transform, false);
+            spawnedHeroObject.gameObject.tag = "player1";
+            Color spawnedHeroObjectAlpha = spawnedHeroObject.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color;
+            spawnedHeroObjectAlpha.a = 0.5f;
+            spawnedHeroObject.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color = spawnedHeroObjectAlpha;
+            SubtractMana();
+            Card summonedCard = Card.selectedCard.GetComponent<Card>();
+            return summonedCard;
+        } else {
+            //Set the data of the template hero based on what the currently 'Card.selectedCard' is
+            FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetTemplateHeroUnitAttributesConstructor();
+            //Instantiate the template hero with its newly defined data
+            GameObject x = Instantiate(FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().templateHeroUnit, roundedPos, Quaternion.identity) as GameObject;
+            //Spawn the appropriate visual prefab for the newly spawned hero
+            FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetHeroUnitPrefab(x, Card.selectedCard.GetComponent<Card>().heroPrefab);
+            //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
+            x.transform.position = new Vector3(roundedPos.x, roundedPos.y, 0);
 
-        //Child the newly spawned hero to the appropriate player
-        x.transform.SetParent (player2.transform, false);
-		x.gameObject.tag = "player2";
-		Color xAlpha = x.transform.Find("Player2Indicator").GetComponent<SpriteRenderer>().color;
-		xAlpha.a = 0.5f;
-		x.transform.Find("Player2Indicator").GetComponent<SpriteRenderer>().color = xAlpha;
-		if (!GlobalObject.storyEnabled) {
-			SubtractMana ();
-		}
-	}
+            //Flip the hero so it faces to the left
+            Vector3 scale = x.transform.GetComponent<RectTransform>().transform.localScale;
+            scale.x = (scale.x *= -1);
+            x.transform.GetComponent<RectTransform>().transform.localScale = scale;
+            //Flip the health and armor stats so the numbers aren't backwards
+            Vector3 scaleStats = x.transform.Find("StatsCanvas/Stats").GetComponent<RectTransform>().transform.localScale;
+            scaleStats.x = (scaleStats.x *= -1);
+            x.transform.Find("StatsCanvas/Stats").GetComponent<RectTransform>().transform.localScale = scaleStats;
+
+            //Child the newly spawned hero to the appropriate player
+            x.transform.SetParent(player2.transform, false);
+            x.gameObject.tag = "player2";
+            Color xAlpha = x.transform.Find("Player2Indicator").GetComponent<SpriteRenderer>().color;
+            xAlpha.a = 0.5f;
+            x.transform.Find("Player2Indicator").GetComponent<SpriteRenderer>().color = xAlpha;
+            if (!GlobalObject.storyEnabled) {
+                SubtractMana();
+            }
+            Card summonedCard = Card.selectedCard.GetComponent<Card>();
+            return summonedCard;
+        } 
+    }
 	
 	public Vector2 SnapToGrid(Vector2 rawWorldPosition){
 		float newX = Mathf.RoundToInt(rawWorldPosition.x);
@@ -344,29 +397,33 @@ public class PlayField : MonoBehaviour {
 	}
 
 	public void MoveHeroes () {
-		//Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
-
-		// If there are no more heroes left to move then end my turn
-		if (sortedHeroCoords.ToArray().Length <= 0) {
+        //Debug.LogWarning("sortedHeroCoords has " + sortedHeroCoords.ToArray().Length + " entries");
+        Debug.LogWarning("1 - RUNNING MOVEHEROES");
+        // If there are no more heroes left to move then end my turn
+        if (sortedHeroCoords.ToArray().Length <= 0) {
 			//Debug.Log("CHANGING PLAYER TURNS");
 			EndOfTurnEffects ();
 			StartCoroutine("SwitchPlayerTurns");
 			return;
 		}
-		//Debug.LogWarning("RUNNING MOVEHEROES");
+		Debug.LogWarning("2 - RUNNING MOVEHEROES");
 
 		//Search each hero to see if their coords match the first set of coords in the 'sortedCoords' list. If they do, move that hero, then remove that hero's
 		//coords from the sortedHeroCoords list and wait for this "MoveHeroes" method to be called again.
 		if (player1Turn) {
 			for (int i = 0; i < 1; i++) {
-				foreach (Transform child in player1.transform) {
-					if (child.transform.position.x == sortedHeroCoords [i].x && child.transform.position.y == sortedHeroCoords [i].y) {
-						Player1MoveCheck (child);
+                Debug.LogWarning("2A - RUNNING MOVEHEROES - looop step 0");
+                foreach (Transform child in player1.transform) {
+                    Debug.LogWarning("2B - RUNNING MOVEHEROES - looop step 1");
+                    if (child.transform.position.x == sortedHeroCoords [i].x && child.transform.position.y == sortedHeroCoords [i].y) {
+                        Debug.LogWarning("2C - RUNNING MOVEHEROES - looop step 2");
+                        Player1MoveCheck (child);
 						sortedHeroCoords.RemoveAt(i);
 						//Debug.Log("sortedHeroCoords has this many heroes: " + sortedHeroCoords.ToArray().Length);
 						break;
 					}
-				}
+                    Debug.LogWarning("3 - RUNNING MOVEHEROES - breaking from if");
+                }
 			}
 		} else if (!player1Turn) {
 			for (int i = 0; i < 1; i++) {
@@ -393,11 +450,13 @@ public class PlayField : MonoBehaviour {
 	}
 
 	void Player1MoveCheck (Transform currentHero) {
+        Debug.Log("1 - player 1 move check ");
 		BuildFullHeroList ();
 		float closestHero = 999f;
 		foreach (Vector2 hero in fullHeroCoords) {
-			//Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
-			if (hero.y == currentHero.transform.position.y && ((hero.x - currentHero.transform.position.x) < closestHero) && ((hero.x - currentHero.transform.position.x) > 0)) {
+            Debug.Log("2 - player 1 move check");
+            //Check for the hero that is closest to me on the x-axis in the direction that I'll be heading
+            if (hero.y == currentHero.transform.position.y && ((hero.x - currentHero.transform.position.x) < closestHero) && ((hero.x - currentHero.transform.position.x) > 0)) {
 				closestHero = hero.x - currentHero.transform.position.x;
 				//Debug.Log("FOUND A HERO IN MY WAY. I AM: " + currentHero.GetComponent<Hero>().name + " and there is another hero at: " + hero.x + "," + hero.y);
 			}
@@ -420,14 +479,17 @@ public class PlayField : MonoBehaviour {
 				return;
 			}
 		}
-
+        Debug.Log("3 - player 1 move check");
         //If there's nothing in my way move me forward by my full 'speed' stat, else move me forward as far as I am able to
         if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero) && (currentHero.transform.position.x + currentHero.GetComponent<Hero>().speed >= player2HomeColumn)) {
+            Debug.Log("3A - player 1 move check: speed =" + currentHero.GetComponent<Hero>().speed.ToString());
             currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack((player2HomeColumn-currentHero.transform.position.x)-1);
         } else if (currentHero.GetComponent<Hero>().speed < Mathf.RoundToInt(closestHero)) {
-			currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(currentHero.GetComponent<Hero>().speed);
+            Debug.Log("3B - player 1 move check: speed =" + currentHero.GetComponent<Hero>().speed.ToString());
+            currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(currentHero.GetComponent<Hero>().speed);
 		} else if (currentHero.GetComponent<Hero>().speed >= Mathf.RoundToInt(closestHero)) {
-			currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(Mathf.RoundToInt(closestHero)-1);
+            Debug.Log("3C - player 1 move check: speed =" + currentHero.GetComponent<Hero>().speed.ToString());
+            currentHero.GetComponent<Hero>().MoveSingleHeroRightAndAttack(Mathf.RoundToInt(closestHero)-1);
 		}
 	}
 
@@ -524,6 +586,8 @@ public class PlayField : MonoBehaviour {
 
 	//Gets called from AnimationEvents.cs via an animation event on the hero's attack animation
 	public void HeroTargetCheck (Transform currentHero) {
+        Debug.Log("$A$ Hero Target Check" );
+        Debug.Log("$A-1$ Hero Target Check" + currentHero.GetComponent<Hero>().id.ToString());
         if (currentHero.GetComponent<Hero>().id == "rogue" && TargetCheckCardinalDirections(currentHero, "enemy").Count > 0) {
             AttackEnemiesInList(currentHero, TargetCheckCardinalDirections(currentHero, "enemy"));
         } else if ((currentHero.GetComponent<Hero>().id == "archer" || currentHero.GetComponent<Hero>().id == "slinger" || currentHero.GetComponent<Hero>().id == "cultadept") && TargetCheckAllHeroesInRange(currentHero, "enemy").Count > 0) {
@@ -534,7 +598,9 @@ public class PlayField : MonoBehaviour {
             AttackEnemiesInList(currentHero, tempTransformList);
         } else if (TargetCheckClosestHeroInRange(currentHero, "enemy").Count > 0) {
             AttackEnemiesInList(currentHero, TargetCheckClosestHeroInRange(currentHero, "enemy"));
+            Debug.Log("$B$ Hero Target Check");
         } else {
+            Debug.Log("$C$ Hero Target Check");
             LosePlayerHealth(currentHero.GetComponent<Hero>().power);
         }
 

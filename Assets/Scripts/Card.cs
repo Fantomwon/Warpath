@@ -32,6 +32,10 @@ public class Card : MonoBehaviour {
 	private BuffManager buffManager;
 	private GameObject player1,player2;
 
+    /*Holdover variables to jerry rig different system for loading in new cards until we do something better or a full refactor*/
+    public bool loadFromPrefab = false;
+    //public string prefabPath = "";
+
 	void Awake () {
 		//Debug.Log("Running Awake() function for: " + cardName);
 		playField = FindObjectOfType<PlayField>();

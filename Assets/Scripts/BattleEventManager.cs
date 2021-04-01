@@ -39,6 +39,12 @@ public class BattleEventManager : MonoBehaviour {
         }
     }
 
+    public void NotifyUnitSpawned( int playerId, Hero summonedUnit) {
+        if( OnUnitSummoned != null) {
+            OnUnitSummoned(null, null, playerId, summonedUnit);
+        }
+    }
+
     /// <summary>
     /// Call this method to register for an event
     /// </summary>
@@ -53,6 +59,9 @@ public class BattleEventManager : MonoBehaviour {
             case BattleEventManager.EventType.UnitReceiveDamage:
                 BattleEventManager._instance.OnUnitReceiveDamage += listener.EventUnitReceiveDamage;
                 break;
+            case BattleEventManager.EventType.UnitSummoned:
+                BattleEventManager._instance.OnUnitSummoned += listener.EventUnitSummoned;
+                break;
             default:
                 break;
         }
@@ -61,9 +70,11 @@ public class BattleEventManager : MonoBehaviour {
 
     public delegate void OnTurnStartHandler(object sender, EventArgs e, int playerId);
     public delegate void OnUnitReceiveDamageHandler(object sender, EventArgs e, int playerId, Hero damageReceiver);
+    public delegate void OnUnitSummonedHandler(object sender, EventArgs e, int playerId, Hero summonedHero);
     public event OnTurnStartHandler OnTurnStart;
     public event OnUnitReceiveDamageHandler OnUnitReceiveDamage;
+    public event OnUnitSummonedHandler OnUnitSummoned;
 
     //Possible Event Types
-    public enum EventType { StartTurn, UnitDeath, UnitReceiveDamage };
+    public enum EventType { StartTurn, UnitDeath, UnitReceiveDamage, UnitSummoned };
 }
