@@ -348,7 +348,8 @@ public class GlobalObject : MonoBehaviour {
         return templateHeroUnit;
     }
 
-    public GameObject SetSpawnedHeroUnitAttributesConstructor( GameObject spawnedHero) {
+    public GameObject SetSpawnedHeroUnitAttributesConstructor( int playerId, GameObject spawnedHero) {
+        spawnedHero.GetComponent<Hero>().playerId = playerId;
         spawnedHero.GetComponent<Hero>().id = Card.selectedCard.GetComponent<Card>().cardId.ToString();
         spawnedHero.GetComponent<Hero>().maxHealth = Card.selectedCard.GetComponent<Card>().maxHealth;
         spawnedHero.GetComponent<Hero>().currentHealth = Card.selectedCard.GetComponent<Card>().maxHealth;

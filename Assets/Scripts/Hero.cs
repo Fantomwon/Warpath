@@ -9,6 +9,7 @@ public class Hero : MonoBehaviour, IEventListener {
 	public Text armorDisplay;
 	public Image armorImage;
 	public Text healthDisplay;
+    public int playerId;
 	public string id;
 	public int maxHealth;
 	public int currentHealth;
@@ -32,14 +33,12 @@ public class Hero : MonoBehaviour, IEventListener {
 	public Transform buffList;
 	public GameObject attackTellBox;
 	public GameObject combatText;
+    public Transform myTransform;
 
-	private float distToMove = 1f;
+    private float distToMove = 1f;
 	private PlayField playField;
-	private Transform myTransform;
 	private Hero hero;
 	private Animator myAnimator;
-
-
 
 	// Use this for initialization
 	void Start () {

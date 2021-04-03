@@ -181,15 +181,17 @@ public class PlayField : MonoBehaviour {
 		//Spawn the selectedHero at the appropriate location on the game grid	
 		if (Card.selectedCard.GetComponent<Card>().type != "SpellCard") {
 			if (player1Turn) {
-				Card card = SpawnHeroForPlayer1 (roundedPos);
+				//Card card = SpawnHeroForPlayer1 (roundedPos);
+                Hero hero = SpawnHeroForPlayer1(roundedPos);
+                
                 //Fire event for summoned unit for event listeners
-                Hero hero = card.heroPrefab.GetComponent<Hero>();
+                Transform t = hero.myTransform;
                 BattleEventManager._instance.NotifyUnitSpawned(GameConstants.HUMAN_PLAYER_ID, hero);
 
             } else if (!player1Turn) {
-                Card card = SpawnHeroForPlayer2 (roundedPos);
+                Hero hero = SpawnHeroForPlayer2 (roundedPos);
+                
                 //Fire event for summoned unit for event listeners
-                Hero hero = card.heroPrefab.GetComponent<Hero>();
                 BattleEventManager._instance.NotifyUnitSpawned(GameConstants.HUMAN_PLAYER_ID, hero);
             }
 		}
@@ -206,14 +208,14 @@ public class PlayField : MonoBehaviour {
 		ClearSelectedHeroAndSelectedCard ();
 	}
 
-	public Card SpawnHeroForPlayer1 (Vector2 roundedPos) {
+	public Hero SpawnHeroForPlayer1 (Vector2 roundedPos) {
         Card selectedCard = Card.selectedCard.GetComponent<Card>();
         //If this is a new soldier card type then instead load from the specified prefab path
         if (selectedCard.loadFromPrefab) {
             //GameObject heroPrefab = Resources.Load<GameObject>(selectedCard.heroPrefab);
             GameObject spawnedHeroObject = GameObject.Instantiate(selectedCard.heroPrefab) as GameObject;
             //Set attributes from data - TODO: will need to revisit this as part of refactor
-            FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetSpawnedHeroUnitAttributesConstructor(spawnedHeroObject);
+            FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetSpawnedHeroUnitAttributesConstructor(GameConstants.HUMAN_PLAYER_ID, spawnedHeroObject);
             //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
             spawnedHeroObject.transform.position = new Vector3(roundedPos.x, roundedPos.y, 0);
 
@@ -224,8 +226,8 @@ public class PlayField : MonoBehaviour {
             spawnedHeroObjectAlpha.a = 0.5f;
             spawnedHeroObject.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color = spawnedHeroObjectAlpha;
             SubtractMana();
-            Card summonedCard = Card.selectedCard.GetComponent<Card>();
-            return summonedCard;
+            
+            return spawnedHeroObject.GetComponent<Hero>();
         } else {
             //Set the data of the template hero based on what the currently 'Card.selectedCard' is
             FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetTemplateHeroUnitAttributesConstructor();
@@ -235,6 +237,8 @@ public class PlayField : MonoBehaviour {
             FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetHeroUnitPrefab(x, selectedCard.heroPrefab);
             //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
             x.transform.position = new Vector3(roundedPos.x, roundedPos.y, 0);
+            //Set id of summoned soldier
+            x.GetComponent<Hero>().playerId = GameConstants.ENEMY_PLAYER_ID;
 
             //Child the newly spawned hero to the appropriate player
             x.transform.SetParent(player1.transform, false);
@@ -243,19 +247,20 @@ public class PlayField : MonoBehaviour {
             xAlpha.a = 0.5f;
             x.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color = xAlpha;
             SubtractMana();
-            Card summonedCard = Card.selectedCard.GetComponent<Card>();
-            return summonedCard;
+            
+            //Card summonedCard = Card.selectedCard.GetComponent<Card>();
+            return x.GetComponent<Hero>();
         }
         
 	}
 
-	public Card SpawnHeroForPlayer2 (Vector2 roundedPos) {
+	public Hero SpawnHeroForPlayer2 (Vector2 roundedPos) {
         Card selectedCard = Card.selectedCard.GetComponent<Card>();
         if (selectedCard.loadFromPrefab) {
             //GameObject heroPrefab = Resources.Load<GameObject>(selectedCard.heroPrefab);
             GameObject spawnedHeroObject = GameObject.Instantiate(selectedCard.heroPrefab) as GameObject;
             //Set attributes from data - TODO: will need to revisit this as part of refactor
-            FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetSpawnedHeroUnitAttributesConstructor(spawnedHeroObject);
+            FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetSpawnedHeroUnitAttributesConstructor(GameConstants.ENEMY_PLAYER_ID, spawnedHeroObject);
             //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
             spawnedHeroObject.transform.position = new Vector3(roundedPos.x, roundedPos.y, 0);
 
@@ -266,8 +271,8 @@ public class PlayField : MonoBehaviour {
             spawnedHeroObjectAlpha.a = 0.5f;
             spawnedHeroObject.transform.Find("Player1Indicator").GetComponent<SpriteRenderer>().color = spawnedHeroObjectAlpha;
             SubtractMana();
-            Card summonedCard = Card.selectedCard.GetComponent<Card>();
-            return summonedCard;
+            
+            return spawnedHeroObject.GetComponent<Hero>();
         } else {
             //Set the data of the template hero based on what the currently 'Card.selectedCard' is
             FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetTemplateHeroUnitAttributesConstructor();
@@ -277,7 +282,8 @@ public class PlayField : MonoBehaviour {
             FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetHeroUnitPrefab(x, Card.selectedCard.GetComponent<Card>().heroPrefab);
             //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
             x.transform.position = new Vector3(roundedPos.x, roundedPos.y, 0);
-
+            //Set player id in hero script for easy way to check ownership
+            x.GetComponent<Hero>().playerId = GameConstants.HUMAN_PLAYER_ID;
             //Flip the hero so it faces to the left
             Vector3 scale = x.transform.GetComponent<RectTransform>().transform.localScale;
             scale.x = (scale.x *= -1);
@@ -296,8 +302,8 @@ public class PlayField : MonoBehaviour {
             if (!GlobalObject.storyEnabled) {
                 SubtractMana();
             }
-            Card summonedCard = Card.selectedCard.GetComponent<Card>();
-            return summonedCard;
+            
+            return x.GetComponent<Hero>();
         } 
     }
 	
