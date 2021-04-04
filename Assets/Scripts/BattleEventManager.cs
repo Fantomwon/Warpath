@@ -65,7 +65,22 @@ public class BattleEventManager : MonoBehaviour {
             default:
                 break;
         }
-        
+    }
+
+    public void UnregisterForEvent(BattleEventManager.EventType eventType, IEventListener listener) {
+        switch (eventType) {
+            case BattleEventManager.EventType.StartTurn:
+                BattleEventManager._instance.OnTurnStart -= listener.EventStartTurn;
+                break;
+            case BattleEventManager.EventType.UnitReceiveDamage:
+                BattleEventManager._instance.OnUnitReceiveDamage -= listener.EventUnitReceiveDamage;
+                break;
+            case BattleEventManager.EventType.UnitSummoned:
+                BattleEventManager._instance.OnUnitSummoned -= listener.EventUnitSummoned;
+                break;
+            default:
+                break;
+        }
     }
 
     public delegate void OnTurnStartHandler(object sender, EventArgs e, int playerId);

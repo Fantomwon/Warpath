@@ -951,26 +951,36 @@ public class PlayField : MonoBehaviour {
 		float currentHeroX = currentHero.transform.position.x;
 		float currentHeroY = currentHero.transform.position.y;
 		int currentHeroRange = currentHero.GetComponent<Hero>().range;
-
+        Debug.Log("Playfield => TargetCheckCardinalDirections: fullHeroTransformList.Count=>" + fullHeroTransformList.Count);
+        Debug.Log(" Playfield => TargetCheckCardinalDirections: CURRENT HERO => X: " + Mathf.RoundToInt(currentHeroX).ToString() + " Y: " + Mathf.RoundToInt(currentHeroY).ToString() );
+        int i = 0;
 		foreach (Transform otherHero in fullHeroTransformList) {
-			if ( //Check all of the squares around my hero (cardinal directions only) to see if "otherHero" is in range... then based on which type I'm checking for ("enemy" or "ally") add them to the appropriate list
+            Debug.Log(i.ToString() + ") " + "otherHero is:" + otherHero.gameObject.name );
+            Debug.Log(i.ToString() + ") Playfield => TargetCheckCardinalDirections: otherHero X: " + Mathf.RoundToInt(otherHero.transform.position.x).ToString() + ", Y:" + Mathf.RoundToInt(otherHero.transform.position.y).ToString() );
+            
+            if ( //Check all of the squares around my hero (cardinal directions only) to see if "otherHero" is in range... then based on which type I'm checking for ("enemy" or "ally") add them to the appropriate list
 				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
 				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) - currentHeroRange && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
 				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) + currentHeroRange) ||
 				(Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) - currentHeroRange)
 				) {
-					if (heroTypeToSearchFor == "enemy") {
+                Debug.Log("A) Playfield => TargetCheckCardinalDirections i:" + i.ToString());
+
+                    if (heroTypeToSearchFor == "enemy") {
 						if (currentHero.tag != otherHero.tag) {
+                            Debug.Log("B) Playfield => TargetCheckCardinalDirections i:" + i.ToString());
 							validHeroes.Add(otherHero);
 							heroAttackedATarget = true;
 						}
 					} else if (heroTypeToSearchFor == "ally") {
 						if (currentHero.tag == otherHero.tag) {
+                            Debug.Log("C) Playfield => TargetCheckCardinalDirections i:" + i.ToString());
 							validHeroes.Add(otherHero);
 						}
 					}
 			}
-		}
+            i++;
+        }
 		return validHeroes;
 	}
 
@@ -1140,7 +1150,48 @@ public class PlayField : MonoBehaviour {
 		return validHero;
 	}
 
-	private int CountEnemiesInMyRow (Transform currentHero) {
+    //Takes a 'currentHero' and a 'herotype' to search for (valid types are "enemy" and "ally"). It then returns a list of the given herotypes that are currently located in any CARDINAL direction around the currenthero, NOT including diagonals
+    public List<Transform> AdjacencyCheckCardinalDirections(Transform currentHero, string heroTypeToSearchFor) {
+
+        List<Transform> validHeroes = new List<Transform>();
+        BuildFullHeroTransformList();
+        float currentHeroX = currentHero.transform.position.x;
+        float currentHeroY = currentHero.transform.position.y;
+        int checkDistance = 1;
+        Debug.Log("Playfield => TargetCheckCardinalDirections: fullHeroTransformList.Count=>" + fullHeroTransformList.Count);
+        Debug.Log(" Playfield => TargetCheckCardinalDirections: CURRENT HERO => X: " + Mathf.RoundToInt(currentHeroX).ToString() + " Y: " + Mathf.RoundToInt(currentHeroY).ToString());
+        int i = 0;
+        foreach (Transform otherHero in fullHeroTransformList) {
+            Debug.Log(i.ToString() + ") " + "otherHero is:" + otherHero.gameObject.name);
+            Debug.Log(i.ToString() + ") Playfield => TargetCheckCardinalDirections: otherHero X: " + Mathf.RoundToInt(otherHero.transform.position.x).ToString() + ", Y:" + Mathf.RoundToInt(otherHero.transform.position.y).ToString());
+
+            if ( //Check all of the squares around my hero (cardinal directions only) to see if "otherHero" is in range... then based on which type I'm checking for ("enemy" or "ally") add them to the appropriate list
+                (Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) + checkDistance && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
+                (Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) - checkDistance && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY)) ||
+                (Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) + checkDistance) ||
+                (Mathf.RoundToInt(otherHero.transform.position.x) == Mathf.RoundToInt(currentHeroX) && Mathf.RoundToInt(otherHero.transform.position.y) == Mathf.RoundToInt(currentHeroY) - checkDistance)
+                ) {
+                Debug.Log("A) Playfield => TargetCheckCardinalDirections i:" + i.ToString());
+
+                if (heroTypeToSearchFor == "enemy") {
+                    if (currentHero.tag != otherHero.tag) {
+                        Debug.Log("B) Playfield => TargetCheckCardinalDirections i:" + i.ToString());
+                        validHeroes.Add(otherHero);
+                        heroAttackedATarget = true;
+                    }
+                } else if (heroTypeToSearchFor == "ally") {
+                    if (currentHero.tag == otherHero.tag) {
+                        Debug.Log("C) Playfield => TargetCheckCardinalDirections i:" + i.ToString());
+                        validHeroes.Add(otherHero);
+                    }
+                }
+            }
+            i++;
+        }
+        return validHeroes;
+    }
+
+    private int CountEnemiesInMyRow (Transform currentHero) {
 		int enemyCount = 0;
 		if (player1Turn) {
 			foreach (Transform hero in player2.transform) {

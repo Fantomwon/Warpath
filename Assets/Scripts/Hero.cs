@@ -433,7 +433,7 @@ public class Hero : MonoBehaviour, IEventListener {
 
     }
 
-    void OnDeathEffects() {
+    public virtual void OnDeathEffects() {
 
     }
 

@@ -19,10 +19,11 @@ public class ZealotHero : Hero {
         if(this.playerId == playerId) {
             Debug.Log("ZEALOT: Hero had the same owning player~~~");
             //Then check if it was summoned in a cardinal direction to this hero (adjacent)
-            List<Transform> adjacentAllies = PlayField.instance.TargetCheckCardinalDirections(summonedHero.GetComponent<Transform>(), "ally");
+            PlayField playField = FindObjectOfType<PlayField>();
+            List<Transform> adjacentAllies = playField.AdjacencyCheckCardinalDirections(this.GetComponent<Transform>(), "ally");
             foreach (Transform t in adjacentAllies) {
                 Debug.Log("ZEALOT:checkin transform loop");
-                if (t == this.GetComponent<Transform>()) {
+                if (t == summonedHero.GetComponent<Transform>()) {
                     Debug.Log("ZEALOT: Hero was adjacent!!!!");
                     this.power += 1;
                     //TODO: Replace this with other particle
@@ -31,5 +32,10 @@ public class ZealotHero : Hero {
                 }
             }
         }
+    }
+
+    public override void OnDeathEffects() {
+        //Unsubscribe from events to allow the object to be garbage collected and avoid null references
+        BattleEventManager._instance.UnregisterForEvent(BattleEventManager.EventType.UnitSummoned, this);
     }
 }
