@@ -284,6 +284,8 @@ public class GlobalObject : MonoBehaviour {
             return SetTemplateHeroCardAttributesConstructor("CultSentinelCard", GameConstants.Card.cultsentinel, "hero", 3, "Test:cultsentinel", "cardDesc", "PrefabsHeroes/CultSentinel", 4, 10, 1, 1);
         } else if (id == "cultfanatic") {
             return SetTemplateHeroCardAttributesConstructor("CultFanaticCard", GameConstants.Card.cultfanatic, "hero", 1, "Test:cultfanatic", "cardDesc", "PrefabsHeroes/CultFanatic", 2, 2, 2, 1);
+        } else if (id == "zealot") {
+            return SetTemplateHeroCardAttributesConstructor("ZealotCard", GameConstants.Card.zealot, "hero", 2, "Test:zealot", "cardDesc", "PrefabsHeroes/Zealot", 1, 3, 1, 1, true);
         } else {
             return null;
         }
@@ -317,7 +319,7 @@ public class GlobalObject : MonoBehaviour {
         }
     }
 
-    private GameObject SetTemplateHeroCardAttributesConstructor(string name, GameConstants.Card cardId, string type, int manaCost, string cardName, string cardDesc, string heroPrefab, int power, int maxHealth, int speed, int range) {
+    private GameObject SetTemplateHeroCardAttributesConstructor(string name, GameConstants.Card cardId, string type, int manaCost, string cardName, string cardDesc, string heroPrefab, int power, int maxHealth, int speed, int range, bool loadFromPrefab = false) {
         templateHeroCard.GetComponent<Card>().name = name;
         templateHeroCard.GetComponent<Card>().cardId = cardId;
         templateHeroCard.GetComponent<Card>().type = type;
@@ -329,6 +331,7 @@ public class GlobalObject : MonoBehaviour {
         templateHeroCard.GetComponent<Card>().maxHealth = maxHealth;
         templateHeroCard.GetComponent<Card>().speed = speed;
         templateHeroCard.GetComponent<Card>().range = range;
+        templateHeroCard.GetComponent<Card>().loadFromPrefab = loadFromPrefab;
         return templateHeroCard;
     }
 
@@ -343,6 +346,20 @@ public class GlobalObject : MonoBehaviour {
         templateHeroUnit.GetComponent<Hero>().heroPrefab = Card.selectedCard.GetComponent<Card>().heroPrefab;
         templateHeroUnit.GetComponent<Hero>().currentArmor = 0;
         return templateHeroUnit;
+    }
+
+    public GameObject SetSpawnedHeroUnitAttributesConstructor( int playerId, GameObject spawnedHero) {
+        spawnedHero.GetComponent<Hero>().playerId = playerId;
+        spawnedHero.GetComponent<Hero>().id = Card.selectedCard.GetComponent<Card>().cardId.ToString();
+        spawnedHero.GetComponent<Hero>().maxHealth = Card.selectedCard.GetComponent<Card>().maxHealth;
+        spawnedHero.GetComponent<Hero>().currentHealth = Card.selectedCard.GetComponent<Card>().maxHealth;
+        spawnedHero.GetComponent<Hero>().power = Card.selectedCard.GetComponent<Card>().power;
+        spawnedHero.GetComponent<Hero>().speed = Card.selectedCard.GetComponent<Card>().speed;
+        spawnedHero.GetComponent<Hero>().range = Card.selectedCard.GetComponent<Card>().range;
+        spawnedHero.GetComponent<Hero>().power = Card.selectedCard.GetComponent<Card>().power;
+        spawnedHero.GetComponent<Hero>().heroPrefab = Card.selectedCard.GetComponent<Card>().heroPrefab;
+        spawnedHero.GetComponent<Hero>().currentArmor = 0;
+        return spawnedHero;
     }
 
     private GameObject SetTemplateSpellCardAttributesConstructor(string name, GameConstants.Card cardId, string type, int manaCost, string cardName, string cardDesc, string spellParticle, string spellIcon) {

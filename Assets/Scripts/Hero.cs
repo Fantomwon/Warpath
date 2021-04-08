@@ -2,12 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
-public class Hero : MonoBehaviour {
+public class Hero : MonoBehaviour, IEventListener {
 
 	public Text armorDisplay;
 	public Image armorImage;
 	public Text healthDisplay;
+    public int playerId;
 	public string id;
 	public int maxHealth;
 	public int currentHealth;
@@ -31,10 +33,10 @@ public class Hero : MonoBehaviour {
 	public Transform buffList;
 	public GameObject attackTellBox;
 	public GameObject combatText;
+    public Transform myTransform;
 
-	private float distToMove = 1f;
+    private float distToMove = 1f;
 	private PlayField playField;
-	private Transform myTransform;
 	private Hero hero;
 	private Animator myAnimator;
 
@@ -47,11 +49,13 @@ public class Hero : MonoBehaviour {
 		myTransform = GetComponent<Transform>();
 		myAnimator = GetComponentInChildren<Animator>();
 		OnSpawnEffects ();
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		if (moveRightAndAttack) {
+        //Debug.Log("A) Hero: UPDATE 1");
+        if (moveRightAndAttack) {
+            Debug.Log("A) Hero: UPDATE => transform.position.x" + transform.position.x.ToString() + " and dist to move " + distToMove.ToString());
 			if (transform.position.x < distToMove) {
 				transform.Translate(Vector2.right * Time.deltaTime * 3);
 				myAnimator.SetTrigger("isWalking");
@@ -327,9 +331,11 @@ public class Hero : MonoBehaviour {
 	}
 
 	public void MoveSingleHeroRightAndAttack(float dist) {
+        Debug.Log("(1) MOVING SINGLE HERO! dist: " + dist.ToString() );
 		moveRightAndAttack = true;
 		distToMove = dist + transform.position.x;
-	}
+        Debug.Log("(2) MOVING SINGLE HERO! distToMove: " + distToMove.ToString());
+    }
 
 	public void MoveSingleHeroLeftAndAttack(float dist) {
 		moveLeftAndAttack = true;
@@ -407,7 +413,7 @@ public class Hero : MonoBehaviour {
 		armorDisplay.text = hero.currentArmor.ToString();
 	}
 
-	void OnSpawnEffects () {
+	public virtual void OnSpawnEffects () {
         //WOLF LOGIC - The Wolf moves and attacks immediately upon being spawned
 		if (id == "wolf") {
 			usingHaste = true;
@@ -427,7 +433,48 @@ public class Hero : MonoBehaviour {
 
     }
 
-    void OnDeathEffects() {
+    public virtual void OnDeathEffects() {
+
+    }
+
+    /********** Virtual methods for override **********/
+
+    /// <summary>
+    /// Commander overrides this with method calls, such as registering for events
+    /// </summary>
+    public virtual void OnBattleStart() {
+        //Get generic references to UI that all commanders will need
+    }
+
+    /********** Event listening methods for override **********/
+
+    /// <summary>
+    /// Override this event in commander or unit when listening to turn start event
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public virtual void EventStartTurn(object sender, EventArgs e, int playerId) {
+
+    }
+
+    /// <summary>
+    /// Override this event in commander or unit when listening to event fired when a unit receives damage
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /// <param name="playerId"></param>
+    public virtual void EventUnitReceiveDamage(object sender, EventArgs e, int playerId, Hero damageReceiver) {
+
+    }
+
+    /// <summary>
+    /// Override this event in commander or unit when listening to event fired when a unit is summoned
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /// <param name="playerId"></param>
+    /// <param name="summonedUnitCard"></param>
+    public virtual void EventUnitSummoned(object sender, EventArgs e, int playerId, Hero summonedHero) {
 
     }
 }
