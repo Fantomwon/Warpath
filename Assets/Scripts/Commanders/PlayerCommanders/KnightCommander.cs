@@ -36,7 +36,8 @@ public class KnightCommander : Commander {
         }
     }
 
-    public override bool ActivateCommanderAbility(Hero heroTarget) {
+    public override bool ActivateCommanderAbilityOnHero(Hero heroTarget) {
+        Debug.LogWarning("KNIGHT COMMANDER USING HEAVENLY HAMMA!!");
         //Apply damage to target per this ability
         PlayField.instance.DamageHero(heroTarget, this.COMMANDER_ABILITY_DAMAGE);
         //Drain resource

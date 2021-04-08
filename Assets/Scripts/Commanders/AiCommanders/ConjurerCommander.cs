@@ -4,9 +4,12 @@ using System;
 
 
 public class ConjurerCommander : Commander {
+    public override void OnBattleStart() {
+        // Use this for initialization
+    }
 
-    // Use this for initialization
     void Start() {
+
 
     }
 

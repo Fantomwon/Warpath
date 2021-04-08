@@ -135,6 +135,7 @@ public class GlobalObject : MonoBehaviour {
                 currCommander.commanderUIPanel.Initialize(currCommander.playerId);
                 currCommander.commanderUIPanel.SetCommanderResourceText(0, currCommander.abilityChargeCost);
                 //Fire off notification for Commanders that the battle has started
+                Debug.Log("SUHHHHHHHH************* " + currCommander.commanderName);
                 currCommander.OnBattleStart();
             }
 
@@ -277,7 +278,7 @@ public class GlobalObject : MonoBehaviour {
         } else if (id == "cultinitiate") {
             return SetTemplateHeroCardAttributesConstructor("CultInitiateCard", GameConstants.Card.cultinitiate, "hero", 2, "Test:cultinitiate", "cardDesc", "PrefabsHeroes/CultInitiate", 2, 4, 3, 1);
         } else if (id == "cultadept") {
-            return SetTemplateHeroCardAttributesConstructor("CultAdeptCard", GameConstants.Card.cultadept, "hero", 2, "Test:cultadept", "cardDesc", "PrefabsHeroes/CultAdept", 2, 3, 2, 3);
+            return SetTemplateHeroCardAttributesConstructor("CultAdeptCard", GameConstants.Card.cultadept, "hero", 1, "Test:cultadept", "cardDesc", "PrefabsHeroes/CultAdept", 2, 2, 2, 3);
         } else if (id == "cultacolyte") {
             return SetTemplateHeroCardAttributesConstructor("CultAcolyteCard", GameConstants.Card.cultacolyte, "hero", 3, "Test:cultacolyte", "cardDesc", "PrefabsHeroes/CultAcolyte", 2, 3, 2, 3);
         } else if (id == "cultsentinel") {
@@ -305,7 +306,7 @@ public class GlobalObject : MonoBehaviour {
         } else if (id == "shroud") {
             return SetTemplateSpellCardAttributesConstructor("ShroudCard", GameConstants.Card.shroud, "spell", 2, "Test:shroud", "cardDesc", "Particles/DodgeParticle", "Images/Icons/SpellIcons/ShroudIcon");
         } else if (id == "might") {
-            return SetTemplateSpellCardAttributesConstructor("MightCard", GameConstants.Card.might, "spell", 2, "SPELL_MIGHT_NAME", "SPELL_MIGHT_DESC", "Particles/DodgeParticle", "Images/Icons/SpellIcons/MightIcon");
+            return SetTemplateSpellCardAttributesConstructor("MightCard", GameConstants.Card.might, "spell", 1, "SPELL_MIGHT_NAME", "SPELL_MIGHT_DESC", "Particles/DodgeParticle", "Images/Icons/SpellIcons/MightIcon");
         } else if (id == "fireball") {
             return SetTemplateSpellCardAttributesConstructor("FireballCard", GameConstants.Card.fireball, "spell", 2, "SPELL_FIREBALL_NAME", "SPELL_FIREBALL_DESC", "Particles/FireballParticle", "Images/Icons/SpellIcons/FireballIcon");
         } else if (id == "drainlife") {

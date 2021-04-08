@@ -169,7 +169,7 @@ public class AiManager : MonoBehaviour {
                     int randomIndex = Random.Range(0, potentialEnemyTargets.Count);
                     Transform target = potentialEnemyTargets[randomIndex];
                     //Attempt to activate the commander ability on the selected target
-                    abilitySuccessfullyCast = enemyCommander.ActivateCommanderAbility(target.GetComponent<Hero>());
+                    abilitySuccessfullyCast = enemyCommander.ActivateCommanderAbilityOnHero(target.GetComponent<Hero>());
                 }
                 break;
             case (GameConstants.CommanderAbilityTargetType.Ally):
@@ -180,7 +180,13 @@ public class AiManager : MonoBehaviour {
                     int randomIndex = Random.Range(0, potentialAllyTargets.Count);
                     Transform target = potentialAllyTargets[randomIndex];
                     //Attempt to activate the commander ability on the selected target
-                    abilitySuccessfullyCast = enemyCommander.ActivateCommanderAbility(target.GetComponent<Hero>());
+                    abilitySuccessfullyCast = enemyCommander.ActivateCommanderAbilityOnHero(target.GetComponent<Hero>());
+                }
+                break;
+            case (GameConstants.CommanderAbilityTargetType.SpawnPoint):
+                Vector2 spawnPoint = ReturnValidHeroSpawnCoords();
+                if (spawnPoint != null) {
+                    abilitySuccessfullyCast = enemyCommander.ActivateCommanderAbilityOnSpawnPoint(spawnPoint);
                 }
                 break;
             default:
@@ -207,8 +213,8 @@ public class AiManager : MonoBehaviour {
 		validHeroSpawnCoords.Clear();
 		validHeroSpawnCoordsCopy.Clear();
 		for (int y = 1; y < 6; y++) {
-			validHeroSpawnCoords.Add(new Vector2(7,y));
-			validHeroSpawnCoordsCopy.Add(new Vector2(7,y));
+			validHeroSpawnCoords.Add(new Vector2(playField.player2HomeColumn,y));
+			validHeroSpawnCoordsCopy.Add(new Vector2(playField.player2HomeColumn,y));
 		}
 		//Go through each coordinate in the player 2 home row and remove the coords that already have a hero there (invalid coords don't belong in this list yo!)
 		foreach (Vector2 validCoord in validHeroSpawnCoordsCopy) {
@@ -369,23 +375,29 @@ public class AiManager : MonoBehaviour {
 		}
 	}
 
-	private void SpawnHero(string hero, Vector2 coords) {
+	public void SpawnHero(string hero, Vector2 coords, bool checkForValidCoords = true) {
         //Set the data on the template hero card according to which hero I want to spawn
         globalObject.SetTemplateHeroCardAttributes(hero);
         //Set the 'selectedCard' static var equal to the newly defined template hero card
         Card.selectedCard = globalObject.templateHeroCard;
-        //Check if the coords we are trying to spawn at are already occupied
-		playField.BuildFullHeroList();
-		Debug.Log("INITIAL COORDS: " + coords);
-		foreach (Vector2 heroCoords in playField.fullHeroCoords) {
-			Debug.Log("FOUND heroCoords and they are: " + heroCoords);
-			if (heroCoords == coords) {
-				coords = ReturnValidHeroSpawnCoords();
-				Debug.Log("heroCoords == coords and NEW coords are: " + coords);
-				break;
-			}
-		}
+        if (checkForValidCoords == true) {
+            //Check if the coords we are trying to spawn at are already occupied
+            playField.BuildFullHeroList();
+            Debug.Log("INITIAL COORDS: " + coords);
+            foreach (Vector2 heroCoords in playField.fullHeroCoords) {
+                Debug.Log("FOUND heroCoords and they are: " + heroCoords);
+                if (heroCoords == coords) {
+                    coords = ReturnValidHeroSpawnCoords();
+                    Debug.Log("heroCoords == coords and NEW coords are: " + coords);
+                    break;
+                }
+            }
+        }
         //Spawn the hero
-		playField.SpawnHeroForPlayer2(coords);
+        if (playField.player1Turn) {
+            playField.SpawnHeroForPlayer1(coords);
+        } else {
+            playField.SpawnHeroForPlayer2(coords);
+        }
 	}
 }

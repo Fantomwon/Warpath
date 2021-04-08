@@ -95,7 +95,6 @@ public class PlayField : MonoBehaviour {
             Debug.LogWarning("mouse down 2~~~");
             //Get the commander for this player assuming it's player's commander
             Commander commanderReference = playerCommander;
-            
             //Check under mouse for target with logic based on the commander's target type
             switch( commanderReference.abilityTargetType) {
                 case (GameConstants.CommanderAbilityTargetType.Enemy):
@@ -104,7 +103,7 @@ public class PlayField : MonoBehaviour {
                         //If there is an enemy in the square I clicked on then activate commander ability on the unit 
                         if (Mathf.RoundToInt(hero.transform.position.x) == this.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == this.roundedPos.y) {
                             Debug.LogWarning("mouse down 4.1~~~");
-                            commanderReference.ActivateCommanderAbility(hero.GetComponent<Hero>());
+                            commanderReference.ActivateCommanderAbilityOnHero(hero.GetComponent<Hero>());
                             this.commanderAbilityActiveOnMouse = false;
                             return;
                         }
@@ -116,10 +115,17 @@ public class PlayField : MonoBehaviour {
                         //If there is an ally in the square I clicked on then activate the commander ability o nthe ally
                         if (Mathf.RoundToInt(hero.transform.position.x) == this.roundedPos.x && Mathf.RoundToInt(hero.transform.position.y) == this.roundedPos.y) {
                             Debug.LogWarning("mouse down 4.1~~~");
-                            commanderReference.ActivateCommanderAbility(hero.GetComponent<Hero>());
+                            commanderReference.ActivateCommanderAbilityOnHero(hero.GetComponent<Hero>());
                             this.commanderAbilityActiveOnMouse = false;
                             return;
                         }
+                    }
+                    break;
+                case (GameConstants.CommanderAbilityTargetType.SpawnPoint):
+                    bool validSpawnPoint = CheckIfValidSpawnLocation(new Vector2(this.roundedPos.x, this.roundedPos.y), false);
+                    if (validSpawnPoint) {
+                        commanderReference.ActivateCommanderAbilityOnSpawnPoint(new Vector2(this.roundedPos.x, this.roundedPos.y));
+                        this.commanderAbilityActiveOnMouse = false;
                     }
                     break;
                 default:
@@ -157,26 +163,10 @@ public class PlayField : MonoBehaviour {
 			return;
 		}
 
-		//Check to make sure the player is placing their hero in an appropriate location (e.g. Towers/Walls cannot be placed in home rows, all other heroes MUST be placed in home rows, etc...)
-		if ((Card.selectedCard.GetComponent<Card>().type == "heroStationary") && (roundedPos.x == player1HomeColumn || roundedPos.x == player2HomeColumn)) {
-			Debug.LogWarning("THIS HERO CANNOT BE PLACED IN EITHER PLAYER'S HOME ROW");
-			return;
-		} else if (player1Turn && roundedPos.x != player1HomeColumn && Card.selectedCard.GetComponent<Card>().type != "heroStationary") {
-			Debug.LogWarning("YOU MUST PLACE THIS HERO IN THE PLAYER 1 HOME ROW");
-			return;
-		} else if (!player1Turn && roundedPos.x != player2HomeColumn && Card.selectedCard.GetComponent<Card>().type != "heroStationary") {
-			Debug.LogWarning("YOU MUST PLACE THIS HERO IN THE PLAYER 2 HOME ROW");
-			return;
-		}
-
-		//Build full hero list then check to make sure that there aren't any other heroes already at that location on the board. If there are, return.
-		BuildFullHeroList();
-		foreach (Vector2 heroCoords in fullHeroCoords) {
-			if (heroCoords == roundedPos) {
-				Debug.Log("CAN'T PLACE HERO HERE, THERE'S ALREADY A HERO OCCUPYING THIS LOCATION");
-				return;
-			}
-		}
+        //Check if the place that we are trying to spawn the hero is a valid spawn location
+        if (CheckIfValidSpawnLocation(roundedPos) == false) {
+            return;
+        }
 
 		//Spawn the selectedHero at the appropriate location on the game grid	
 		if (Card.selectedCard.GetComponent<Card>().type != "SpellCard") {
@@ -208,6 +198,31 @@ public class PlayField : MonoBehaviour {
 		ClearSelectedHeroAndSelectedCard ();
 	}
 
+    public bool CheckIfValidSpawnLocation(Vector2 roundedPos, bool placeOnBattlefield = false) {
+        //Check to make sure the player is placing their hero in an appropriate location (e.g. Towers/Walls cannot be placed in home rows, all other heroes MUST be placed in home rows, etc...)
+        if (placeOnBattlefield == true && (roundedPos.x == player1HomeColumn || roundedPos.x == player2HomeColumn)) {
+            Debug.LogWarning("THIS HERO CANNOT BE PLACED IN EITHER PLAYER'S HOME ROW");
+            return false;
+        } else if (player1Turn && roundedPos.x != player1HomeColumn && placeOnBattlefield == false) {
+            Debug.LogWarning("YOU MUST PLACE THIS HERO IN THE PLAYER 1 HOME ROW");
+            return false;
+        } else if (!player1Turn && roundedPos.x != player2HomeColumn && placeOnBattlefield == false) {
+            Debug.LogWarning("YOU MUST PLACE THIS HERO IN THE PLAYER 2 HOME ROW");
+            return false;
+        }
+
+        //Build full hero list then check to make sure that there aren't any other heroes already at that location on the board. If there are, return.
+        BuildFullHeroList();
+        foreach (Vector2 heroCoords in fullHeroCoords) {
+            if (heroCoords == roundedPos) {
+                Debug.Log("CAN'T PLACE HERO HERE, THERE'S ALREADY A HERO OCCUPYING THIS LOCATION");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 	public Hero SpawnHeroForPlayer1 (Vector2 roundedPos) {
         Card selectedCard = Card.selectedCard.GetComponent<Card>();
         //If this is a new soldier card type then instead load from the specified prefab path
@@ -218,7 +233,6 @@ public class PlayField : MonoBehaviour {
             FindObjectOfType<GlobalObject>().GetComponent<GlobalObject>().SetSpawnedHeroUnitAttributesConstructor(GameConstants.HUMAN_PLAYER_ID, spawnedHeroObject);
             //Updating the hero's transform.position b/c for some reason setting it in the Instantiate call above isn't actually setting the hero's coordinates (they always spawn at '0,0,0' no matter what)
             spawnedHeroObject.transform.position = new Vector3(roundedPos.x, roundedPos.y, 0);
-
             //Child the newly spawned hero to the appropriate player
             spawnedHeroObject.transform.SetParent(player1.transform, false);
             spawnedHeroObject.gameObject.tag = "player1";

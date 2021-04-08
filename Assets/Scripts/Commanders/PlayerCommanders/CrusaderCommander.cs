@@ -17,6 +17,7 @@ public class CrusaderCommander : Commander{
     /// Actions this commander performs on start of battle
     /// </summary>
     public override void OnBattleStart() {
+        Debug.Log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         //Register for turn started event
         BattleEventManager._instance.RegisterForEvent(BattleEventManager.EventType.UnitReceiveDamage, this);
         //Find the PlayField and set the playField variable
@@ -38,7 +39,7 @@ public class CrusaderCommander : Commander{
 
     }
 
-    public override bool ActivateCommanderAbility(Hero heroTarget) {
+    public override bool ActivateCommanderAbilityOnHero(Hero heroTarget) {
         Debug.LogWarning("CRUSADER COMMANDER USING CHARGE!!");
         //Grant ability target haste
         heroTarget.transform.GetComponent<Hero>().usingHaste = true;

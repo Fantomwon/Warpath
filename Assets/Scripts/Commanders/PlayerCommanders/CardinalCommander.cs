@@ -24,6 +24,7 @@ public class CardinalCommander : Commander {
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
+    /// <param name="playerId"></param>
     public override void EventStartTurn(object sender, EventArgs e, int playerId) {
         //Debug.Log("$ Knight Commander Event Start Turn $ and pId: " + playerId);
         if (playerId == this.playerId) {
@@ -35,7 +36,7 @@ public class CardinalCommander : Commander {
         }
     }
 
-    public override bool ActivateCommanderAbility(Hero heroTarget) {
+    public override bool ActivateCommanderAbilityOnHero(Hero heroTarget) {
         Debug.LogWarning("CARDINAL COMMANDER USING HEAVENLY HEALIN'!!");
         //Apply damage to target per this ability
         heroTarget.HealPartial(this.COMMANDER_ABILITY_HEALING);

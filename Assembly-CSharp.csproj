@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\Commander.cs" />
     <Compile Include="Assets\Scripts\CommanderData.cs" />
     <Compile Include="Assets\Scripts\Commanders\AiCommanders\ConjurerCommander.cs" />
+    <Compile Include="Assets\Scripts\Commanders\AiCommanders\VanquisherCommander.cs" />
     <Compile Include="Assets\Scripts\Commanders\PlayerCommanders\CardinalCommander.cs" />
     <Compile Include="Assets\Scripts\Commanders\PlayerCommanders\CrusaderCommander.cs" />
     <Compile Include="Assets\Scripts\Commanders\PlayerCommanders\KnightCommander.cs" />

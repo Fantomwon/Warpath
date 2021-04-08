@@ -34,7 +34,11 @@ public class Commander : MonoBehaviour, IEventListener {
         this.hp = Math.Max(0, this.hp - damageAmount);
     }
 
-    public virtual bool ActivateCommanderAbility(Hero heroTarget) {
+    public virtual bool ActivateCommanderAbilityOnHero(Hero heroTarget) {
+        return true;
+    }
+
+    public virtual bool ActivateCommanderAbilityOnSpawnPoint(Vector2 vec2) {
         return true;
     }
 
@@ -108,6 +112,7 @@ public class Commander : MonoBehaviour, IEventListener {
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
+    /// <param name="playerId"></param>
     public virtual void EventStartTurn(object sender, EventArgs e, int playerId) {
 
     }

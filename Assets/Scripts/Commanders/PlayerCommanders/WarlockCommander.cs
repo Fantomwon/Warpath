@@ -35,7 +35,7 @@ public class WarlockCommander : Commander {
 
     }
 
-    public override bool ActivateCommanderAbility(Hero heroTarget) {
+    public override bool ActivateCommanderAbilityOnHero(Hero heroTarget) {
         Debug.LogWarning("WARLOCK COMMANDER USING SHIELD!!");
         //Grant ability target shield
         heroTarget.AddArmor(this.COMMANDER_ABILITY_ARMOR);

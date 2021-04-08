@@ -21,7 +21,7 @@ public static class GameConstants
 
     // Certain cards are surfaced during selection process based on the selected Commander's faction
     [Serializable]
-    public enum CardCommanderType { All, Cardinal, Crusader, Templar, Warlock}
+    public enum CardCommanderType { All, Cardinal, Crusader, Templar, Warlock, Conjurer, Vanquisher}
 
     //Commander ability charge type. Will determine which combat events charge the commander's ability
     [Serializable]
@@ -29,7 +29,7 @@ public static class GameConstants
 
     //Commander ability target type. Will determine which units are affected by a commander's ability on activation
     [Serializable]
-    public enum CommanderAbilityTargetType { Enemy, Ally };
+    public enum CommanderAbilityTargetType { Enemy, Ally, SpawnPoint };
 
     //List of cards for use with creating enemy encounters and nodes, etc.
     [Serializable]
