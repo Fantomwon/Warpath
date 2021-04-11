@@ -92,6 +92,7 @@
     <Compile Include="Assets\Scripts\GlobalObject.cs" />
     <Compile Include="Assets\Scripts\HandHider.cs" />
     <Compile Include="Assets\Scripts\Hero.cs" />
+    <Compile Include="Assets\Scripts\Heroes\VesselOfLight.cs" />
     <Compile Include="Assets\Scripts\Heroes\ZealotHero.cs" />
     <Compile Include="Assets\Scripts\IEventListener.cs" />
     <Compile Include="Assets\Scripts\LevelManager.cs" />

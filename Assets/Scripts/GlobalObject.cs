@@ -287,6 +287,8 @@ public class GlobalObject : MonoBehaviour {
             return SetTemplateHeroCardAttributesConstructor("CultFanaticCard", GameConstants.Card.cultfanatic, "hero", 1, "Test:cultfanatic", "cardDesc", "PrefabsHeroes/CultFanatic", 2, 2, 2, 1);
         } else if (id == "zealot") {
             return SetTemplateHeroCardAttributesConstructor("ZealotCard", GameConstants.Card.zealot, "hero", 2, "Test:zealot", "cardDesc", "PrefabsHeroes/Zealot", 1, 3, 1, 1, true);
+        }else if(id == "vesselOfLight") {
+            return SetTemplateHeroCardAttributesConstructor("ZealotCard", GameConstants.Card.vesselOfLight, "hero", 2, "Test:vesselOfLight", "cardDesc", "PrefabsHeroes/VesselOfLight", 1, 3, 1, 2, true);
         } else {
             return null;
         }
@@ -455,28 +457,13 @@ public class GlobalObject : MonoBehaviour {
         allCardEntries.Add(blessing);
 
         /*Templar exclusive cards*/
-        CardEntry ghost = new CardEntry(GameConstants.Card.ghost, 1, GameConstants.CardCommanderType.Templar);
-        allCardEntries.Add(ghost);
-        CardEntry sapper = new CardEntry(GameConstants.Card.sapper, 1, GameConstants.CardCommanderType.Templar);
-        allCardEntries.Add(sapper);
-        CardEntry chaosmage = new CardEntry(GameConstants.Card.chaosmage, 1, GameConstants.CardCommanderType.Templar);
-        allCardEntries.Add(chaosmage);
-        CardEntry sorcerer = new CardEntry(GameConstants.Card.sorcerer, 1, GameConstants.CardCommanderType.Templar);
-        allCardEntries.Add(sorcerer);
-        CardEntry assassin = new CardEntry(GameConstants.Card.assassin, 1, GameConstants.CardCommanderType.Templar);
-        allCardEntries.Add(assassin);
-        CardEntry wallEntry = new CardEntry(GameConstants.Card.wall, 1, GameConstants.CardCommanderType.Templar);
-        allCardEntries.Add(wallEntry);
-        CardEntry tower = new CardEntry(GameConstants.Card.tower, 1, GameConstants.CardCommanderType.Templar);
-        allCardEntries.Add(tower);
-        CardEntry diviner = new CardEntry(GameConstants.Card.diviner, 1, GameConstants.CardCommanderType.Templar);
-        allCardEntries.Add(diviner);
-        CardEntry dwarf = new CardEntry(GameConstants.Card.dwarf, 1, GameConstants.CardCommanderType.Templar);
-        allCardEntries.Add(dwarf);
+        CardEntry zealot = new CardEntry(GameConstants.Card.zealot, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(zealot);
+        CardEntry vesselOfLight = new CardEntry(GameConstants.Card.vesselOfLight, 1, GameConstants.CardCommanderType.Templar);
+        allCardEntries.Add(vesselOfLight);
         CardEntry paladin = new CardEntry(GameConstants.Card.paladin, 1, GameConstants.CardCommanderType.Templar);
         allCardEntries.Add(paladin);
-        CardEntry wolf = new CardEntry(GameConstants.Card.wolf, 1, GameConstants.CardCommanderType.Templar);
-        allCardEntries.Add(wolf);
+
         //Templar spells
         CardEntry armor = new CardEntry(GameConstants.Card.armor, 1, GameConstants.CardCommanderType.Templar);
         allCardEntries.Add(armor);
@@ -488,6 +475,26 @@ public class GlobalObject : MonoBehaviour {
         allCardEntries.Add(windgust);
 
         /*Warlock exclusive cards*/
+        CardEntry diviner = new CardEntry(GameConstants.Card.diviner, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(diviner);
+        CardEntry dwarf = new CardEntry(GameConstants.Card.dwarf, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(dwarf);
+        CardEntry wolf = new CardEntry(GameConstants.Card.wolf, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(wolf);
+        CardEntry ghost = new CardEntry(GameConstants.Card.ghost, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(ghost);
+        CardEntry sapper = new CardEntry(GameConstants.Card.sapper, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(sapper);
+        CardEntry chaosmage = new CardEntry(GameConstants.Card.chaosmage, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(chaosmage);
+        CardEntry sorcerer = new CardEntry(GameConstants.Card.sorcerer, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(sorcerer);
+        CardEntry assassin = new CardEntry(GameConstants.Card.assassin, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(assassin);
+        CardEntry wallEntry = new CardEntry(GameConstants.Card.wall, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(wallEntry);
+        CardEntry tower = new CardEntry(GameConstants.Card.tower, 1, GameConstants.CardCommanderType.Warlock);
+        allCardEntries.Add(tower);
         CardEntry bloodknight = new CardEntry(GameConstants.Card.bloodknight, 1, GameConstants.CardCommanderType.Warlock);
         allCardEntries.Add(bloodknight);
         CardEntry cultinitiate = new CardEntry(GameConstants.Card.cultinitiate, 1, GameConstants.CardCommanderType.Warlock);

@@ -35,8 +35,9 @@ public class Hero : MonoBehaviour, IEventListener {
 	public GameObject combatText;
     public Transform myTransform;
 
+    protected PlayField playField;
+
     private float distToMove = 1f;
-	private PlayField playField;
 	private Hero hero;
 	private Animator myAnimator;
 
@@ -125,7 +126,7 @@ public class Hero : MonoBehaviour, IEventListener {
 	}
 
 	//Checks to see if there are any valid targets for the hero to attack. If there are any valid targets then the hero plays the 'PlayAttackAnimation' coroutine.
-	public void CheckForValidTargetsToAttack (Transform currentHero) {
+	public virtual void CheckForValidTargetsToAttack (Transform currentHero) {
         //Debug.Log("RUNNING CheckForValidTargetsToAttack()");
         if (currentHero.GetComponent<Hero>().id == "rogue" && playField.TargetCheckCardinalDirections(currentHero, "enemy").Count > 0) {
             StartCoroutine("PlayAttackAnimation");
@@ -413,6 +414,10 @@ public class Hero : MonoBehaviour, IEventListener {
 		armorDisplay.text = hero.currentArmor.ToString();
 	}
 
+    /// <summary>
+    /// Method called when this soldier is summoned to the battlefield. 
+    /// Use this to register for event listening via BattleEventManager._instance.RegisterForEvent and other initialization behaviors.
+    /// </summary>
 	public virtual void OnSpawnEffects () {
         //WOLF LOGIC - The Wolf moves and attacks immediately upon being spawned
 		if (id == "wolf") {
