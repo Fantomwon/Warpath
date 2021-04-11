@@ -1598,15 +1598,31 @@ public class PlayField : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Method called when player attempts to play a card. Subtracts the cost of the currently selected card from the mana of player who has current turn.
+    /// </summary>
 	public void SubtractMana () {
 		if (player1Turn) {
-			player1Mana = player1Mana - Card.selectedCard.GetComponent<Card>().manaCost;
-			player1ManaText.text = player1Mana.ToString();
+			this.ModifyMana(-Card.selectedCard.GetComponent<Card>().manaCost, GameConstants.HUMAN_PLAYER_ID);
 		} else if (!player1Turn) {
-			player2Mana = player2Mana - Card.selectedCard.GetComponent<Card>().manaCost;
-			player2ManaText.text = player2Mana.ToString();
-		}
+            this.ModifyMana(-Card.selectedCard.GetComponent<Card>().manaCost, GameConstants.ENEMY_PLAYER_ID);
+        }
 	}
+
+    /// <summary>
+    /// Method that can be called to modify a player's mana amount. Also updates corresponding UI.
+    /// </summary>
+    /// <param name="modifyAmount">How much mana should be added or subtracted from specified player.</param>
+    /// <param name="playerId">Player whose mana and corresponding UI should be adjusted.</param>
+    public void ModifyMana( int modifyAmount, int playerId ) {
+        if (playerId == GameConstants.HUMAN_PLAYER_ID) {
+            player1Mana = player1Mana + modifyAmount;
+            player1ManaText.text = player1Mana.ToString();
+        } else if (playerId == GameConstants.ENEMY_PLAYER_ID) {
+            player2Mana = player2Mana + modifyAmount;
+            player2ManaText.text = player2Mana.ToString();
+        }
+    }
 
 	void ReduceSpellCooldowns () {
 		if (player1Turn) {
