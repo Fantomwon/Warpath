@@ -14,3 +14,7 @@ SPELL_FIREBALL_NAME,Fireball
 SPELL_FIREBALL_DESC,Deal 3 damage to target enemy
 SOLDIER_CAVALRY_NAME,Cavalry
 SOLDIER_CAVALRY_DESC,"When moving, advances to the nearest enemy in his row"
+SOLDIER_ZEALOT_NAME,Zealot
+SOLDIER_ZEALOT_DESC,ADJ. ALLY SPAWN: +1 Power For Zealot
+SOLDIER_VESSELOFLIGHT_NAME,Vessel of Light
+SOLDIER_VESSELOFLIGHT_DESC,SPAWN: +1 Mana For Commander Per Adj. Ally

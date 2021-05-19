@@ -286,9 +286,9 @@ public class GlobalObject : MonoBehaviour {
         } else if (id == "cultfanatic") {
             return SetTemplateHeroCardAttributesConstructor("CultFanaticCard", GameConstants.Card.cultfanatic, "hero", 1, "Test:cultfanatic", "cardDesc", "PrefabsHeroes/CultFanatic", 2, 2, 2, 1);
         } else if (id == "zealot") {
-            return SetTemplateHeroCardAttributesConstructor("ZealotCard", GameConstants.Card.zealot, "hero", 2, "Test:zealot", "cardDesc", "PrefabsHeroes/Zealot", 1, 3, 1, 1, true);
+            return SetTemplateHeroCardAttributesConstructor("ZealotCard", GameConstants.Card.zealot, "hero", 2, "SOLDIER_ZEALOT_NAME", "SOLDIER_ZEALOT_DESC", "PrefabsHeroes/Zealot", 1, 3, 1, 1, true);
         }else if(id == "vesselOfLight") {
-            return SetTemplateHeroCardAttributesConstructor("ZealotCard", GameConstants.Card.vesselOfLight, "hero", 2, "Test:vesselOfLight", "cardDesc", "PrefabsHeroes/VesselOfLight", 1, 3, 1, 2, true);
+            return SetTemplateHeroCardAttributesConstructor("VesselOfLightCard", GameConstants.Card.vesselOfLight, "hero", 2, "SOLDIER_VESSELOFLIGHT_NAME", "SOLDIER_VESSELOFLIGHT_DESC", "PrefabsHeroes/VesselOfLight", 1, 3, 1, 2, true);
         } else {
             return null;
         }

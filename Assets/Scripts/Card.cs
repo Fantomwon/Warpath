@@ -37,8 +37,12 @@ public class Card : MonoBehaviour {
     //public string prefabPath = "";
 
 	void Awake () {
-		//Debug.Log("Running Awake() function for: " + cardName);
-		playField = FindObjectOfType<PlayField>();
+        deck = FindObjectOfType<Deck>();
+        buffManager = FindObjectOfType<BuffManager>();
+        player1 = GameObject.Find("player1");
+        player2 = GameObject.Find("player2");
+        //Debug.Log("Running Awake() function for: " + cardName);
+        playField = FindObjectOfType<PlayField>();
 
         //Need to set all of this in Awake() and NOT Start() or else on the NPC's first turn the stats don't get set in time before the NPC spawns their first hero for some reason
         ManaCost.text = manaCost.ToString();
@@ -55,10 +59,7 @@ public class Card : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		deck = FindObjectOfType<Deck>();
-		buffManager = FindObjectOfType<BuffManager>();
-		player1 = GameObject.Find("player1");
-		player2 = GameObject.Find("player2");
+
 	}
 
 	void OnMouseDown () {

@@ -804,6 +804,7 @@ public class PlayField : MonoBehaviour {
 			foreach (Transform hero in player2.transform) {
 				//Check the hero to see if they already have the Shroud buff. If they do, don't add them.
 				if (buffManager.CheckForExistingBuff(hero, "shroud") != true) {
+                    Debug.LogWarning("SHROUD MYSTERY: ADD POSSIBLE HERO");
 					validHeroes.Add(hero);	
 				}
 			}
